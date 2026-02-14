@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Estandarizada Decimetrix</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Outfit', sans-serif; }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #0a1628 0%, #1a365d 50%, #0d2137 100%);
+    }
+    
+    .card-glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .card-glass:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(56, 189, 248, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .glow-cyan {
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+    }
+    
+    .section-title {
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 40px rgba(14, 165, 233, 0.4);
+    }
+    
+    .btn-flight {
+      background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    }
+    
+    .btn-flight:hover {
+      box-shadow: 0 10px 40px rgba(245, 158, 11, 0.4);
+    }
+    
+    .btn-docs {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    
+    .btn-docs:hover {
+      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+    }
+    
+    .link-item {
+      transition: all 0.2s ease;
+    }
+    
+    .link-item:hover {
+      padding-left: 8px;
+      color: #38bdf8;
+    }
+    
+    .scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(56, 189, 248, 0.3) transparent;
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.3);
+      border-radius: 3px;
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .icon-box {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+    }
+
+    .form-input {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      color: white;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+    }
+
+    .form-label {
+      color: #cbd5e1;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .success-message {
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .sms-highlight {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 30px rgba(239, 68, 68, 0.4), 0 0 60px rgba(249, 115, 22, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 50px rgba(239, 68, 68, 0.6), 0 0 80px rgba(249, 115, 22, 0.3);
+      }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div class="h-full w-full gradient-bg overflow-auto scroll-container"><!-- Header -->
+   <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+     <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-4"><!-- Logo SVG -->
+       <div class="w-12 h-12 rounded-xl icon-box flex items-center justify-center animate-float">
+        <svg viewbox="0 0 48 48" class="w-8 h-8" fill="none"><path d="M24 4L8 14v20l16 10 16-10V14L24 4z" stroke="#38bdf8" stroke-width="2" fill="rgba(56, 189, 248, 0.1)" /> <path d="M24 14l-8 5v10l8 5 8-5V19l-8-5z" fill="#38bdf8" /> <circle cx="24" cy="24" r="3" fill="#0f172a" />
+        </svg>
+       </div>
+       <div>
+        <h1 id="main-title" class="text-xl md:text-2xl font-bold text-white">Biblioteca Estandarizada Decimetrix</h1>
+        <p id="subtitle" class="text-cyan-400 text-sm font-medium">Recursos técnicos y normativos UAS</p>
+       </div>
+      </div><!-- Quick Actions -->
+      <div class="flex gap-3 flex-wrap"><a href="https://coldroncolombia.my.canva.site/decimetrix" target="_blank" rel="noopener noreferrer" class="btn-flight btn-primary px-5 py-2.5 rounded-xl text-white font-semibold text-sm flex items-center gap-2 shadow-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+        </svg> 📖 Libro de Vuelo </a> <button onclick="openDocsModal()" class="btn-docs btn-primary px-5 py-2.5 rounded-xl text-white font-semibold text-sm flex items-center gap-2 shadow-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg> 📋 Documentos CDO Decimetrix </button>
+      </div>
+     </div>
+    </div>
+   </header><!-- Main Content -->
+   <main class="max-w-7xl mx-auto px-4 py-8"><!-- Stats Banner -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+     <div class="card-glass rounded-2xl p-4 text-center glow-cyan">
+      <div class="text-3xl font-bold text-cyan-400">
+       4
+      </div>
+      <div class="text-slate-400 text-sm">
+       Normas Colombia
+      </div>
+     </div>
+     <div class="card-glass rounded-2xl p-4 text-center">
+      <div class="text-3xl font-bold text-purple-400">
+       6
+      </div>
+      <div class="text-slate-400 text-sm">
+       Servicios Aerocivil
+      </div>
+     </div>
+     <div class="card-glass rounded-2xl p-4 text-center">
+      <div class="text-3xl font-bold text-rose-400">
+       11
+      </div>
+      <div class="text-slate-400 text-sm">
+       Reglamentos RAC
+      </div>
+     </div>
+     <div class="card-glass rounded-2xl p-4 text-center">
+      <div class="text-3xl font-bold text-amber-400">
+       1
+      </div>
+      <div class="text-slate-400 text-sm">
+       Visor Geográfico
+      </div>
+     </div>
+     <div class="card-glass rounded-2xl p-4 text-center">
+      <div class="text-3xl font-bold text-emerald-400">
+       6
+      </div>
+      <div class="text-slate-400 text-sm">
+       Tests Daypo
+      </div>
+     </div>
+    </div><!-- Sections Grid -->
+    <div class="grid lg:grid-cols-2 gap-6"><!-- Normas Colombia -->
+     <section class="card-glass rounded-3xl p-6 transition-all duration-300">
+      <div class="flex items-center gap-3 mb-5">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center">
+        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+        </svg>
+       </div>
+       <div>
+        <h2 class="section-title text-xl font-bold">🇨🇴 Normas Colombia</h2>
+        <p class="text-slate-500 text-sm">Marco legal y regulatorio</p>
+       </div>
+      </div>
+      <div class="space-y-3"><a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Decretos%2F1833376" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-cyan-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">⚖️</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Código de Comercio de Colombia</h3>
+          <p class="text-slate-400 text-xs mt-1">Decreto 410 de 1971</p>
+         </div>
+         <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+         </svg>
+        </div></a> <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?id=1080719" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-cyan-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">🛡️</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Estatuto de Seguridad y Vigilancia Privada</h3>
+          <p class="text-slate-400 text-xs mt-1">Decreto Ley 356 de 1994</p>
+         </div>
+         <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+         </svg>
+        </div></a> <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes%2F1682614" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-cyan-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">🌍</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Sistema Nacional de Gestión del Riesgo</h3>
+          <p class="text-slate-400 text-xs mt-1">Ley 1523 de 2012</p>
+         </div>
+         <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+         </svg>
+        </div></a> <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes%2F30021736" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-cyan-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">👮</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Código Nacional de Policía y Convivencia</h3>
+          <p class="text-slate-400 text-xs mt-1">Ley 1801 de 2016</p>
+         </div>
+         <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+         </svg>
+        </div></a>
+      </div>
+     </section><!-- Personal Aeronáutico -->
+     <section class="card-glass rounded-3xl p-6 transition-all duration-300">
+      <div class="flex items-center gap-3 mb-5">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+       </div>
+       <div>
+        <h2 class="section-title text-xl font-bold">✈️ Personal Aeronáutico</h2>
+        <p class="text-slate-500 text-sm">Registro y licenciamiento</p>
+       </div>
+      </div>
+      <div class="space-y-3"><a href="https://www.aerocivil.gov.co/loader.php?id=11953&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-purple-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">📄</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Guía de Registro Personal Aeronáutico</h3>
+          <p class="text-slate-400 text-xs mt-1">PDF - Registro o actualización de datos</p>
+         </div><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded-lg font-medium">PDF</span>
+        </div></a> <a href="https://siga.aerocivil.gov.co:8443/SIGAWEB/paginas/indice.jsf" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-purple-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">🖥️</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Plataforma SIGA</h3>
+          <p class="text-slate-400 text-xs mt-1">Sistema de Información de Gestión Aeronáutica</p>
+         </div><span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-lg font-medium">PORTAL</span>
+        </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/publicaciones/3664/sistema-de-informacion-de-gestion-aeronautica-siga/" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-purple-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">ℹ️</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Información SIGA</h3>
+          <p class="text-slate-400 text-xs mt-1">Página informativa del sistema</p>
+         </div>
+         <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+         </svg>
+        </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/publicaciones/3648/licenciamiento-de-personal-aeronautico/" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-purple-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">🎫</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Licenciamiento Personal Aeronáutico</h3>
+          <p class="text-slate-400 text-xs mt-1">Información de licencias</p>
+         </div>
+         <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+         </svg>
+        </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/publicaciones/3649/tramites-de-licenciamiento-personal-aeronautico/" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-purple-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">📋</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Trámites de Licenciamiento</h3>
+          <p class="text-slate-400 text-xs mt-1">Procedimientos y requisitos</p>
+         </div>
+         <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+         </svg>
+        </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/consultas-en-linea/licencias-de-personal-aeronautico/" target="_blank" rel="noopener noreferrer" class="link-item block p-4 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-purple-500/30">
+        <div class="flex items-start gap-3"><span class="text-2xl">🔍</span>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Consulta de Licencias</h3>
+          <p class="text-slate-400 text-xs mt-1">Verificar licencias en línea</p>
+         </div><span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-lg font-medium">CONSULTA</span>
+        </div></a>
+      </div>
+     </section><!-- Reglamentación Aeronáutica -->
+     <section class="card-glass rounded-3xl p-6 transition-all duration-300 lg:col-span-2">
+      <div class="flex items-center gap-3 mb-5">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center">
+        <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+       </div>
+       <div>
+        <h2 class="section-title text-xl font-bold">📚 Reglamentación Aeronáutica</h2>
+        <p class="text-slate-500 text-sm">Reglamentos Aeronáuticos de Colombia (RAC) y Resoluciones</p>
+       </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4"><!-- Páginas principales -->
+       <div class="col-span-2">
+        <h3 class="text-cyan-400 font-semibold text-sm mb-3">📄 Acceso a Reglamentación</h3>
+        <div class="space-y-2"><a href="https://www.aerocivil.gov.co/autoridad_aeronautica/publicaciones/3612/reglamentacion-aeronautica/" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-rose-500/30">
+          <div class="flex items-center gap-2"><span class="text-xl">🔗</span> <span class="text-white text-sm font-medium">Reglamentación Aeronáutica - Página Oficial</span>
+           <svg class="w-4 h-4 text-slate-500 ml-auto" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+           </svg>
+          </div></a> <a href="https://www.aerocivil.gov.co/documentos/254/reglamentos-aeronauticos-de-colombia-rac/" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-rose-500/30">
+          <div class="flex items-center gap-2"><span class="text-xl">📚</span> <span class="text-white text-sm font-medium">RAC - Página Principal</span>
+           <svg class="w-4 h-4 text-slate-500 ml-auto" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+           </svg>
+          </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/normatividad/13-reglamentos-aeronauticos-de-colombia-rac" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-rose-500/30">
+          <div class="flex items-center gap-2"><span class="text-xl">🔄</span> <span class="text-white text-sm font-medium">RAC - Página Alterna</span>
+           <svg class="w-4 h-4 text-slate-500 ml-auto" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+           </svg>
+          </div></a>
+        </div>
+       </div><!-- RAC PDFs -->
+       <div>
+        <h3 class="text-amber-400 font-semibold text-sm mb-3">📄 Reglamentos RAC (PDF)</h3>
+        <div class="space-y-2"><a href="https://www.aerocivil.gov.co/autoridad_aeronautica/loader.php?id=26675&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-amber-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">1️⃣</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">RAC 1: Cuestiones Preliminares</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/loader.php?id=26799&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-amber-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">1️⃣1️⃣</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">RAC 11: Desarrollo y Enmienda</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/loader.php?id=26737&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-amber-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">1️⃣3️⃣</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">RAC 13: Régimen Sancionatorio</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/loader.php?id=26879&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-amber-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">9️⃣1️⃣</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">RAC 91: Reglas Generales de Vuelo</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a>
+        </div>
+       </div><!-- UAS RAC & Resoluciones -->
+       <div>
+        <h3 class="text-emerald-400 font-semibold text-sm mb-3">🚁 UAS &amp; Normativas</h3>
+        <div class="space-y-2"><a href="https://www.aerocivil.gov.co/autoridad_aeronautica/loader.php?id=27158&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-emerald-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">🚁</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">RAC 100: Operación UAS</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/loader.php?id=26686&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-emerald-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">🛡️</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">RAC 219: Gestión Seguridad</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a> <a href="https://www.aerocivil.gov.co/normatividad/Resoluciones%20TA%202018/RESL.%20%20N%C2%B0%2004201%20%20DIC%2027%20de%20%202018.pdf" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-emerald-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">⚖️</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">Resolución 04201 (2018)</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a> <a href="https://www.aerocivil.gov.co/loader.php?id=8993&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-emerald-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">📋</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">Decreto 1294 de 2021</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a>
+        </div>
+       </div><!-- Circulares y Gestión Normativa -->
+       <div>
+        <h3 class="text-blue-400 font-semibold text-sm mb-3">📢 Circulares &amp; Normativas</h3>
+        <div class="space-y-2"><a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=172506" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-blue-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">🔗</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">D.1294/21 - Gestor Normativo</p><span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded mt-1 inline-block">OFICIAL</span>
+           </div>
+          </div></a> <a href="https://www.aerocivil.gov.co/loader.php?idFile=16424&amp;lFuncion=descargar&amp;lServicio=Tools2&amp;lTipo=descargas" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-blue-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">📄</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">Circular 4000-09-11 (2022)</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a> <a href="https://aerobarranquilla.aerocivil.gov.co/loader.php?id=24136&amp;lFuncion=visorpdf&amp;lServicio=Tools2&amp;lTipo=descargas&amp;pdf=1" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-blue-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">📃</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">Resolución 01983 (2023)</p><span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded mt-1 inline-block">PDF</span>
+           </div>
+          </div></a> <a href="https://www.aerocivil.gov.co/autoridad_aeronautica/publicaciones/3643/circulares-informativas/" target="_blank" rel="noopener noreferrer" class="link-item block p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-blue-500/30">
+          <div class="flex items-start gap-2"><span class="text-lg">📢</span>
+           <div class="flex-1">
+            <p class="text-white text-xs font-medium">Todas las Circulares</p>
+            <svg class="w-4 h-4 text-slate-500 ml-auto" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+           </div>
+          </div></a>
+        </div>
+       </div>
+      </div>
+     </section><!-- Visor Geográfico UAS -->
+     <section class="card-glass rounded-3xl p-6 transition-all duration-300">
+      <div class="flex items-center gap-3 mb-5">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center">
+        <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+       </div>
+       <div>
+        <h2 class="section-title text-xl font-bold">🗺️ Visor Geográfico UAS</h2>
+        <p class="text-slate-500 text-sm">Mapa oficial de restricciones</p>
+       </div>
+      </div><a href="https://aerocivil.maps.arcgis.com/apps/instant/media/index.html?appid=b4be4d501c8d4bcabd0c35297521c16e&amp;center=-74.3578%3B4.7377&amp;level=10" target="_blank" rel="noopener noreferrer" class="block p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:scale-[1.02]">
+       <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center">
+         <svg class="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+         </svg>
+        </div>
+        <div class="flex-1">
+         <h3 class="text-white font-bold text-lg">Visor Geográfico UAS - Aerocivil</h3>
+         <p class="text-slate-400 text-sm mt-1">Mapa interactivo de zonas de vuelo y restricciones en Colombia</p>
+         <div class="flex items-center gap-2 mt-3"><span class="px-3 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-full font-medium">OFICIAL</span> <span class="px-3 py-1 bg-slate-700/50 text-slate-400 text-xs rounded-full">ArcGIS</span>
+         </div>
+        </div>
+        <svg class="w-8 h-8 text-amber-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+       </div></a>
+     </section><!-- OVA - Objetos Virtuales de Aprendizaje -->
+     <section class="card-glass rounded-3xl p-6 transition-all duration-300 lg:col-span-2">
+      <div class="flex items-center gap-3 mb-5">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20 flex items-center justify-center">
+        <svg class="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <div>
+        <h2 id="ova-title" class="section-title text-xl font-bold">🎓 Objetos Virtuales de Aprendizaje</h2>
+        <p class="text-slate-500 text-sm">Recursos educativos interactivos</p>
+       </div>
+      </div>
+      <div class="space-y-3"><!-- SMS - DESTACADO --> <a href="https://coldroncolombia.my.canva.site/ova-seguridadoperacional" target="_blank" rel="noopener noreferrer" class="block p-6 rounded-2xl bg-gradient-to-br from-red-600/40 via-orange-600/30 to-red-600/40 border-2 border-red-500/70 hover:border-red-400/90 transition-all duration-300 shadow-2xl shadow-red-600/30 relative overflow-hidden group sms-highlight">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div class="absolute top-0 right-0 w-48 h-48 bg-red-500/25 rounded-full blur-3xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
+        <div class="relative z-10 flex items-start gap-4">
+         <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-red-500/50 to-orange-500/50 flex items-center justify-center flex-shrink-0 border-2 border-red-400/70 shadow-lg shadow-red-500/40 group-hover:scale-110 transition-transform duration-300"><span class="text-3xl animate-bounce">🛡️</span>
+         </div>
+         <div class="flex-1">
+          <div class="flex items-center gap-3 mb-2 flex-wrap">
+           <h3 class="text-white font-bold text-lg md:text-xl">Seguridad Operacional SMS</h3><span class="px-3 py-1 bg-gradient-to-r from-red-600 to-orange-600 text-white text-xs rounded-full font-bold shadow-lg shadow-red-500/40 animate-pulse">¡OBLIGATORIO!</span>
+          </div>
+          <p class="text-red-100 text-base font-semibold mb-2">Sistema de Gestión de Seguridad Operacional RAC 219</p>
+          <p class="text-slate-200 text-sm leading-relaxed mb-3">Formación integral sobre SMS: gestión de riesgos operacionales, auditorías de seguridad, investigación de incidentes y accidentes, reportes de seguridad, cultura just, cumplimiento normativo RAC 219 y procedimientos críticos para operadores UAS profesionales.</p>
+          <div class="flex items-center gap-2 flex-wrap"><span class="px-3 py-1.5 bg-red-600/60 text-red-100 text-xs rounded-full font-bold border border-red-400/60 shadow-md">⭐ NIVEL 2-3</span> <span class="px-3 py-1.5 bg-orange-600/60 text-orange-100 text-xs rounded-full font-bold border border-orange-400/60">⏱️ 5.5 horas</span> <span class="px-3 py-1.5 bg-yellow-600/60 text-yellow-100 text-xs rounded-full font-bold border border-yellow-400/60">🔴 CRÍTICO</span>
+          </div>
+         </div>
+        </div></a>
+       <div class="p-5 rounded-2xl bg-gradient-to-br from-violet-500/10 to-indigo-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all duration-300">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-xl bg-violet-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">📱</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold">Fundamentos de Operación UAS</h3>
+          <p class="text-slate-400 text-xs mt-2">Introducción a conceptos básicos de drones, componentes y sistemas de control. Diseñado para operadores principiantes.</p>
+          <div class="flex items-center gap-2 mt-3"><span class="px-3 py-1 bg-violet-500/20 text-violet-400 text-xs rounded-full font-medium">NIVEL 1</span> <span class="px-3 py-1 bg-slate-700/50 text-slate-400 text-xs rounded-full">2h</span>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="p-5 rounded-2xl bg-gradient-to-br from-violet-500/10 to-indigo-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all duration-300">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">📋</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold">Planificación de Vuelos</h3>
+          <p class="text-slate-400 text-xs mt-2">Aprende a planificar misiones seguras siguiendo protocolos Decimetrix. Evaluación de riesgos y condiciones meteorológicas.</p>
+          <div class="flex items-center gap-2 mt-3"><span class="px-3 py-1 bg-indigo-500/20 text-indigo-400 text-xs rounded-full font-medium">NIVEL 2</span> <span class="px-3 py-1 bg-slate-700/50 text-slate-400 text-xs rounded-full">3h</span>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="p-5 rounded-2xl bg-gradient-to-br from-violet-500/10 to-indigo-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all duration-300">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">🛡️</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold">Normativa y Seguridad Aérea</h3>
+          <p class="text-slate-400 text-xs mt-2">Marco regulatorio RAC 100, normas de seguridad, espacio aéreo colombiano y responsabilidades legales del operador.</p>
+          <div class="flex items-center gap-2 mt-3"><span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full font-medium">NIVEL 2</span> <span class="px-3 py-1 bg-slate-700/50 text-slate-400 text-xs rounded-full">2.5h</span>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="p-5 rounded-2xl bg-gradient-to-br from-fuchsia-500/10 to-indigo-500/10 border border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all duration-300">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-xl bg-fuchsia-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">🚁</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold">Operaciones Avanzadas</h3>
+          <p class="text-slate-400 text-xs mt-2">Técnicas de vuelo autónomo, misiones complejas, manejo de emergencias y procedimientos post-operacionales.</p>
+          <div class="flex items-center gap-2 mt-3"><span class="px-3 py-1 bg-fuchsia-500/20 text-fuchsia-400 text-xs rounded-full font-medium">NIVEL 3</span> <span class="px-3 py-1 bg-slate-700/50 text-slate-400 text-xs rounded-full">4h</span>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </section><!-- Simulador Examen RAC 100 -->
+     <section class="card-glass rounded-3xl p-6 transition-all duration-300 lg:col-span-2">
+      <div class="flex items-center gap-3 mb-5">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center">
+        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+       </div>
+       <div>
+        <h2 id="simulator-title" class="section-title text-xl font-bold">📊 Simulador Examen RAC 100</h2>
+        <p class="text-slate-500 text-sm">Preparación para certificación - Banco de Tests</p>
+       </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-3"><!-- RAC 100 --> <a href="https://www.daypo.com/rac-100-3.html#test" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300 hover:scale-[1.02]">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">🚁</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">RAC 100: Operación UAS</h3>
+          <p class="text-slate-400 text-xs mt-1">Reglamentos y operación de drones</p><span class="px-3 py-1 bg-orange-500/20 text-orange-400 text-xs rounded-full font-medium inline-block mt-2">PRINCIPAL</span>
+         </div>
+        </div></a> <!-- Aerodinámica --> <a href="https://www.daypo.com/aerodinamica-aplicada-2.html#test" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 hover:scale-[1.02]">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">🌪️</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Aerodinámica Aplicada</h3>
+          <p class="text-slate-400 text-xs mt-1">Principios aerodinámicos de vuelo</p><span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full font-medium inline-block mt-2">TÉCNICA</span>
+         </div>
+        </div></a> <!-- Derecho Aéreo --> <a href="https://www.daypo.com/derecho-aereo-regulaciones-aeronauticas-2.html#test" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 hover:scale-[1.02]">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">⚖️</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Derecho Aéreo y Regulaciones</h3>
+          <p class="text-slate-400 text-xs mt-1">Marco legal aeronáutico</p><span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full font-medium inline-block mt-2">NORMATIVA</span>
+         </div>
+        </div></a> <!-- Planificación de Vuelo --> <a href="https://www.daypo.com/planificacion-vuelo-2.html#test" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 hover:border-green-500/40 transition-all duration-300 hover:scale-[1.02]">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">📍</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Planificación de Vuelo</h3>
+          <p class="text-slate-400 text-xs mt-1">Planificación segura de misiones</p><span class="px-3 py-1 bg-green-500/20 text-green-400 text-xs rounded-full font-medium inline-block mt-2">OPERACIONAL</span>
+         </div>
+        </div></a> <!-- Gestión de Seguridad --> <a href="https://www.daypo.com/sistema-gestion-seguridad-operacional-1.html#test" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl bg-gradient-to-br from-red-500/10 to-rose-500/10 border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:scale-[1.02]">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">🛡️</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Sistema de Gestión Seguridad</h3>
+          <p class="text-slate-400 text-xs mt-1">Gestión operacional de riesgos</p><span class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-full font-medium inline-block mt-2">SEGURIDAD</span>
+         </div>
+        </div></a> <!-- Factores Humanos --> <a href="https://www.daypo.com/factores-humanos-31.html#test" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:scale-[1.02]">
+        <div class="flex items-start gap-3">
+         <div class="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0"><span class="text-xl">👤</span>
+         </div>
+         <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm">Factores Humanos</h3>
+          <p class="text-slate-400 text-xs mt-1">Limitaciones y desempeño humano</p><span class="px-3 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-full font-medium inline-block mt-2">COMPETENCIAS</span>
+         </div>
+        </div></a>
+      </div>
+      <div class="p-4 rounded-xl bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 mt-4">
+       <p class="text-orange-300 text-xs text-center">⚠️ <strong>Nota Importante:</strong> Los simulacros de Daypo son complementarios para preparación. Para información oficial sobre el examen RAC 100, consulta a Aerocivil.</p>
+      </div>
+     </section>
+    </div>
+   </main><!-- Footer -->
+   <footer class="border-t border-slate-700/50 mt-8">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+       <div class="w-8 h-8 rounded-lg icon-box flex items-center justify-center">
+        <svg viewbox="0 0 48 48" class="w-5 h-5" fill="none"><path d="M24 4L8 14v20l16 10 16-10V14L24 4z" stroke="#38bdf8" stroke-width="2" fill="rgba(56, 189, 248, 0.1)" /> <path d="M24 14l-8 5v10l8 5 8-5V19l-8-5z" fill="#38bdf8" />
+        </svg>
+       </div><span class="text-slate-400 text-sm">© 2026 Biblioteca Estandarizada Decimetrix</span>
+      </div>
+      <div class="flex items-center gap-4"><span class="text-slate-500 text-xs">Recursos técnicos e informativos - Aerocivil y Daypo</span>
+      </div>
+     </div>
+    </div>
+   </footer><!-- Modal Documentos CDO -->
+   <div id="docsModal" class="fixed inset-0 z-[100] hidden">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeDocsModal()"></div>
+    <div class="absolute inset-4 md:inset-10 lg:inset-20 bg-slate-900 rounded-3xl border border-slate-700 overflow-hidden flex flex-col">
+     <div class="p-6 border-b border-slate-700 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
+        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+       </div>
+       <div>
+        <h3 class="text-white font-bold text-lg">Documentos Proceso CDO Decimetrix</h3>
+        <p class="text-slate-400 text-sm">Documentación operativa estandarizada</p>
+       </div>
+      </div><button onclick="closeDocsModal()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+     <div class="flex-1 overflow-auto p-6 scroll-container">
+      <div class="grid md:grid-cols-2 gap-4">
+       <div class="p-5 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+        <div class="flex items-center gap-3 mb-3"><span class="text-2xl">📋</span>
+         <h4 class="text-white font-semibold">Checklist Pre-Vuelo</h4>
+        </div>
+        <p class="text-slate-400 text-sm">Lista de verificación antes de operaciones</p>
+       </div>
+       <div class="p-5 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+        <div class="flex items-center gap-3 mb-3"><span class="text-2xl">📊</span>
+         <h4 class="text-white font-semibold">Registro de Operaciones</h4>
+        </div>
+        <p class="text-slate-400 text-sm">Formato de bitácora de vuelos</p>
+       </div>
+       <div class="p-5 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+        <div class="flex items-center gap-3 mb-3"><span class="text-2xl">⚠️</span>
+         <h4 class="text-white font-semibold">Evaluación de Riesgos</h4>
+        </div>
+        <p class="text-slate-400 text-sm">Matriz de análisis de riesgos operacionales</p>
+       </div>
+       <div class="p-5 rounded-2xl bg-slate-800/50 border border-slate-700/50 cursor-pointer hover:border-emerald-500/40 transition-all" onclick="openMaintenanceForm()">
+        <div class="flex items-center gap-3 mb-3"><span class="text-2xl">🔧</span>
+         <h4 class="text-white font-semibold">Mantenimiento UAS</h4>
+        </div>
+        <p class="text-slate-400 text-sm">Registro de mantenimiento de aeronaves</p>
+        <div class="mt-3 text-emerald-400 text-xs font-medium">
+         Registrar mantenimiento →
+        </div>
+       </div>
+       <div class="p-5 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+        <div class="flex items-center gap-3 mb-3"><span class="text-2xl">🌤️</span>
+         <h4 class="text-white font-semibold">Evaluación Meteorológica</h4>
+        </div>
+        <p class="text-slate-400 text-sm">Formato de condiciones climáticas</p>
+       </div>
+       <div class="p-5 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+        <div class="flex items-center gap-3 mb-3"><span class="text-2xl">📍</span>
+         <h4 class="text-white font-semibold">Plan de Vuelo</h4>
+        </div>
+        <p class="text-slate-400 text-sm">Documentación de misión y coordenadas</p>
+       </div>
+      </div>
+      <div class="mt-6 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+       <p class="text-cyan-400 text-sm text-center">📌 Para acceder a los documentos completos, consulte con el administrador de Decimetrix</p>
+      </div>
+     </div>
+    </div>
+   </div><!-- Modal Registro de Mantenimiento -->
+   <div id="maintenanceModal" class="fixed inset-0 z-[110] hidden">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeMaintenanceForm()"></div>
+    <div class="absolute inset-4 md:inset-10 lg:inset-32 bg-slate-900 rounded-3xl border border-slate-700 overflow-hidden flex flex-col max-h-[90vh]"><!-- Header -->
+     <div class="p-6 border-b border-slate-700 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center"><span class="text-lg">🔧</span>
+       </div>
+       <div>
+        <h3 class="text-white font-bold text-lg">Registro de Mantenimiento UAS</h3>
+        <p class="text-slate-400 text-sm">Documentar tareas de mantenimiento</p>
+       </div>
+      </div><button onclick="closeMaintenanceForm()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div><!-- Form Content -->
+     <div class="flex-1 overflow-auto p-6 scroll-container">
+      <form id="maintenanceForm" onsubmit="submitMaintenance(event)" class="space-y-5 max-w-2xl"><!-- Sección 1: Información General -->
+       <div class="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+        <h4 class="text-emerald-400 font-semibold text-sm mb-4">📋 Información General</h4>
+        <div class="space-y-4">
+         <div><label for="uas-id" class="form-label block mb-2">ID de Aeronave / Serie</label> <input type="text" id="uas-id" required placeholder="Ej: DM-001" class="form-input w-full px-4 py-2 rounded-lg">
+         </div>
+         <div><label for="maintenance-date" class="form-label block mb-2">Fecha de Mantenimiento</label> <input type="date" id="maintenance-date" required class="form-input w-full px-4 py-2 rounded-lg">
+         </div>
+         <div><label for="technician" class="form-label block mb-2">Técnico Responsable</label> <input type="text" id="technician" required placeholder="Nombre completo" class="form-input w-full px-4 py-2 rounded-lg">
+         </div>
+        </div>
+       </div><!-- Sección 2: Tipo de Mantenimiento -->
+       <div class="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+        <h4 class="text-cyan-400 font-semibold text-sm mb-4">🔍 Tipo de Mantenimiento</h4>
+        <div class="space-y-3"><label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="radio" name="maintenance-type" value="preventivo" required class="w-4 h-4"> <span class="text-white text-sm font-medium">Mantenimiento Preventivo</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="radio" name="maintenance-type" value="correctivo" required class="w-4 h-4"> <span class="text-white text-sm font-medium">Mantenimiento Correctivo</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="radio" name="maintenance-type" value="inspeccione" required class="w-4 h-4"> <span class="text-white text-sm font-medium">Inspección General</span> </label>
+        </div>
+       </div><!-- Sección 3: Áreas de Mantenimiento -->
+       <div class="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+        <h4 class="text-blue-400 font-semibold text-sm mb-4">🛠️ Áreas de Mantenimiento</h4>
+        <div class="space-y-3"><label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="checkbox" class="w-4 h-4" name="maintenance-area" value="bateria"> <span class="text-white text-sm">Batería y Carga</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="checkbox" class="w-4 h-4" name="maintenance-area" value="motores"> <span class="text-white text-sm">Motores y Hélices</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="checkbox" class="w-4 h-4" name="maintenance-area" value="sensores"> <span class="text-white text-sm">Sensores y Cámaras</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="checkbox" class="w-4 h-4" name="maintenance-area" value="gps"> <span class="text-white text-sm">GPS y Estabilización</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="checkbox" class="w-4 h-4" name="maintenance-area" value="comunicaciones"> <span class="text-white text-sm">Comunicaciones</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="checkbox" class="w-4 h-4" name="maintenance-area" value="estructura"> <span class="text-white text-sm">Estructura y Fuselaje</span> </label>
+        </div>
+       </div><!-- Sección 4: Descripción y Hallazgos -->
+       <div class="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+        <h4 class="text-amber-400 font-semibold text-sm mb-4">📝 Descripción de Trabajo</h4><textarea id="description" placeholder="Describe el trabajo realizado, componentes reemplazados, hallazgos importantes..." rows="4" class="form-input w-full px-4 py-2 rounded-lg resize-none"></textarea>
+       </div><!-- Sección 5: Horas de Vuelo -->
+       <div class="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+        <h4 class="text-purple-400 font-semibold text-sm mb-4">⏱️ Horas de Operación</h4>
+        <div class="space-y-4">
+         <div><label for="flight-hours" class="form-label block mb-2">Horas de Vuelo Acumuladas</label> <input type="number" id="flight-hours" step="0.1" min="0" placeholder="Ej: 125.5" class="form-input w-full px-4 py-2 rounded-lg">
+         </div>
+         <div><label for="cycles" class="form-label block mb-2">Ciclos de Operación</label> <input type="number" id="cycles" min="0" placeholder="Ej: 250" class="form-input w-full px-4 py-2 rounded-lg">
+         </div>
+        </div>
+       </div><!-- Sección 6: Estado Final -->
+       <div class="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+        <h4 class="text-emerald-400 font-semibold text-sm mb-4">✅ Estado Después de Mantenimiento</h4>
+        <div class="space-y-3"><label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="radio" name="status-final" value="operacional" required class="w-4 h-4"> <span class="text-white text-sm font-medium">✅ Operacional - Apto para Vuelo</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="radio" name="status-final" value="con-restricciones" required class="w-4 h-4"> <span class="text-white text-sm font-medium">⚠️ Operacional con Restricciones</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 cursor-pointer transition-colors"> <input type="radio" name="status-final" value="no-operacional" required class="w-4 h-4"> <span class="text-white text-sm font-medium">❌ No Operacional - Requiere Mantenimiento</span> </label>
+        </div>
+       </div><!-- Sección 7: Próximo Mantenimiento -->
+       <div class="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+        <h4 class="text-rose-400 font-semibold text-sm mb-4">📅 Próximo Mantenimiento Programado</h4><input type="date" id="next-maintenance" class="form-input w-full px-4 py-2 rounded-lg">
+       </div><!-- Botones de Acción -->
+       <div class="flex gap-3 pt-4"><button type="button" onclick="closeMaintenanceForm()" class="flex-1 px-6 py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-semibold transition-all"> Cancelar </button> <button type="submit" class="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold transition-all shadow-lg"> ✅ Guardar Registro </button>
+       </div>
+      </form><!-- Success Message -->
+      <div id="successMessage" class="hidden success-message fixed top-8 left-1/2 -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full shadow-lg font-semibold">
+       ✅ Registro de mantenimiento guardado correctamente
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: 'Biblioteca Estandarizada Decimetrix',
+      subtitle: 'Recursos técnicos y normativos UAS',
+      ova_section_title: 'Objetos Virtuales de Aprendizaje',
+      simulator_section_title: 'Simulador Examen RAC 100',
+      background_color: '#0a1628',
+      surface_color: '#1e293b',
+      text_color: '#f8fafc',
+      primary_action_color: '#0ea5e9',
+      secondary_action_color: '#38bdf8',
+      font_family: 'Outfit',
+      font_size: 16
+    };
+
+    function openDocsModal() {
+      document.getElementById('docsModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDocsModal() {
+      document.getElementById('docsModal').classList.add('hidden');
+      closeMaintenanceForm();
+      document.body.style.overflow = '';
+    }
+
+    function openMaintenanceForm() {
+      document.getElementById('maintenanceModal').classList.remove('hidden');
+    }
+
+    function closeMaintenanceForm() {
+      document.getElementById('maintenanceModal').classList.add('hidden');
+      document.getElementById('maintenanceForm').reset();
+    }
+
+    function submitMaintenance(e) {
+      e.preventDefault();
+
+      // Recopilar datos del formulario
+      const maintenanceData = {
+        uas_id: document.getElementById('uas-id').value,
+        fecha: document.getElementById('maintenance-date').value,
+        tecnico: document.getElementById('technician').value,
+        tipo: document.querySelector('input[name="maintenance-type"]:checked').value,
+        areas: Array.from(document.querySelectorAll('input[name="maintenance-area"]:checked')).map(cb => cb.value),
+        descripcion: document.getElementById('description').value,
+        horas_vuelo: document.getElementById('flight-hours').value || '0',
+        ciclos: document.getElementById('cycles').value || '0',
+        estado: document.querySelector('input[name="status-final"]:checked').value,
+        proximo_mantenimiento: document.getElementById('next-maintenance').value
+      };
+
+      // Mostrar éxito
+      const successMsg = document.getElementById('successMessage');
+      successMsg.classList.remove('hidden');
+      
+      setTimeout(() => {
+        successMsg.classList.add('hidden');
+        closeMaintenanceForm();
+      }, 2500);
+
+      console.log('Datos guardados:', maintenanceData);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeMaintenanceForm();
+        closeDocsModal();
+      }
+    });
+
+    async function onConfigChange(config) {
+      const mainTitle = document.getElementById('main-title');
+      const subtitle = document.getElementById('subtitle');
+      const ovaTitle = document.getElementById('ova-title');
+      const simulatorTitle = document.getElementById('simulator-title');
+      
+      if (mainTitle) {
+        mainTitle.textContent = config.main_title || defaultConfig.main_title;
+        mainTitle.style.fontFamily = `${config.font_family || defaultConfig.font_family}, sans-serif`;
+      }
+      
+      if (subtitle) {
+        subtitle.textContent = config.subtitle || defaultConfig.subtitle;
+        subtitle.style.fontFamily = `${config.font_family || defaultConfig.font_family}, sans-serif`;
+      }
+
+      if (ovaTitle) {
+        ovaTitle.textContent = config.ova_section_title ? `🎓 ${config.ova_section_title}` : `🎓 ${defaultConfig.ova_section_title}`;
+        ovaTitle.style.fontFamily = `${config.font_family || defaultConfig.font_family}, sans-serif`;
+      }
+
+      if (simulatorTitle) {
+        simulatorTitle.textContent = config.simulator_section_title ? `📊 ${config.simulator_section_title}` : `📊 ${defaultConfig.simulator_section_title}`;
+        simulatorTitle.style.fontFamily = `${config.font_family || defaultConfig.font_family}, sans-serif`;
+      }
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => { config.surface_color = value; window.elementSdk.setConfig({ surface_color: value }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => { config.primary_action_color = value; window.elementSdk.setConfig({ primary_action_color: value }); }
+          },
+          {
+            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => { config.secondary_action_color = value; window.elementSdk.setConfig({ secondary_action_color: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => { config.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => { config.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['subtitle', config.subtitle || defaultConfig.subtitle],
+        ['ova_section_title', config.ova_section_title || defaultConfig.ova_section_title],
+        ['simulator_section_title', config.simulator_section_title || defaultConfig.simulator_section_title]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cda229f12e53efa',t:'MTc3MTA0NjYyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
