@@ -1,0 +1,1626 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DECIMETRIX | Registro de Mantenimiento UAS (Online)</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Excel (SheetJS) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --blue1:#01498c;
+      --blue2:#0a64b6;
+      --ink:#0b1f35;
+      --bg:#eaf2f7;
+      --card:#ffffff;
+      --muted:#6b7a8a;
+      --shadow: 0 12px 28px rgba(9,38,66,.12);
+      --ring: 0 0 0 4px rgba(37,99,235,.18);
+      --border: rgba(15, 23, 42, .10);
+    }
+    *{ font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body{ background: var(--bg); color: var(--ink); }
+    .topbar{
+      background: linear-gradient(180deg, var(--blue1) 0%, var(--blue2) 100%);
+      box-shadow: 0 10px 28px rgba(0,0,0,.18);
+    }
+    .tabbar{
+      background: linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(0,0,0,.08) 100%);
+    }
+    .tab{
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.95);
+    }
+    .tab:hover{ background: rgba(255,255,255,.16); }
+    .tabActive{
+      background: #fff !important;
+      color: #0b1f35 !important;
+      border: 2px solid rgba(0,0,0,.75) !important;
+    }
+    .pill{
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      color: #fff;
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+    }
+    .soft{
+      background: #f7fbff;
+      border: 1px solid rgba(15,23,42,.08);
+      border-radius: 14px;
+    }
+    .input{
+      background: #fff;
+      border: 1px solid rgba(15,23,42,.14);
+      border-radius: 12px;
+      padding: 10px 12px;
+      outline: none;
+    }
+    .input:focus{ box-shadow: var(--ring); border-color: rgba(37,99,235,.45); }
+    .btn{
+      border-radius: 14px;
+      padding: 10px 14px;
+      border: 1px solid rgba(15,23,42,.14);
+      background: #fff;
+    }
+    .btn:hover{ background: #f6f9ff; }
+    .btnPrimary{
+      background: linear-gradient(180deg, #1477ff 0%, #0b5ed7 100%);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.25);
+      box-shadow: 0 10px 18px rgba(11,94,215,.22);
+    }
+    .btnPrimary:hover{ filter: brightness(1.02); }
+    .muted{ color: var(--muted); }
+    .kpiIcon{
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff;
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+    }
+    .barWrap{
+      height: 16px;
+      background: rgba(15,23,42,.06);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar{
+      height: 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #13d39a 0%, #0aa178 100%);
+    }
+    #sigCanvas{ touch-action:none; width:100%; display:block; background:#fff; }
+    .print-surface{ background:#fff; color:#111827; }
+    @media print{
+      .no-print{ display:none !important; }
+      #printArea{ display:block !important; }
+      body{ background:#fff !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- TOP HEADER -->
+  <header class="topbar no-print">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3l9 5-9 5-9-5 9-5Z" fill="white" opacity=".95"/>
+              <path d="M3 12l9 5 9-5" stroke="white" stroke-width="2" opacity=".85"/>
+              <path d="M3 16l9 5 9-5" stroke="white" stroke-width="2" opacity=".65"/>
+            </svg>
+          </div>
+          <div class="leading-tight">
+            <div class="text-white font-extrabold tracking-wide text-xl">DECIMETRIX</div>
+            <div class="text-white/90 text-sm">Registro de Mantenimiento UAS (Online)</div>
+          </div>
+        </div>
+
+        <div class="pill rounded-full px-4 py-2 flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-yellow-300 inline-block"></span>
+          <span class="text-sm font-medium">Decimetrx OnLine</span>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabbar mt-4 rounded-2xl p-2 flex flex-wrap gap-2">
+        <button class="tab tabActive px-4 py-2 rounded-xl flex items-center gap-2" data-view="dashboard">
+          <span>📊</span><span class="font-semibold">Dashboard</span>
+        </button>
+        <button class="tab px-4 py-2 rounded-xl flex items-center gap-2" data-view="nuevo">
+          <span>🛠️</span><span class="font-semibold">Nuevo Mantenimiento</span>
+        </button>
+        <button class="tab px-4 py-2 rounded-xl flex items-center gap-2" data-view="historial">
+          <span>🧾</span><span class="font-semibold">Historial</span>
+        </button>
+        <button class="tab px-4 py-2 rounded-xl flex items-center gap-2" data-view="catalogos">
+          <span>📁</span><span class="font-semibold">Catálogos</span>
+          <span class="w-2 h-2 rounded-full bg-yellow-300 inline-block"></span>
+        </button>
+        <button class="tab px-4 py-2 rounded-xl flex items-center gap-2" data-view="config">
+          <span>⚙️</span><span class="font-semibold">Configuración</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <!-- FILTER STRIP -->
+    <section class="card p-4 no-print">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+        <div class="md:col-span-3">
+          <label class="text-sm muted">Rango rápido</label>
+          <select id="fRango" class="input w-full mt-1">
+            <option value="CUSTOM">Personalizado</option>
+            <option value="DAY_TODAY">Día: Hoy</option>
+            <option value="WEEK_LAST7">Semana: Últimos 7 días</option>
+            <option value="WEEK_THIS">Semana: Esta semana</option>
+            <option value="MONTH_THIS">Mes: Este mes</option>
+            <option value="MONTH_LAST30">Mes: Últimos 30 días</option>
+            <option value="YEAR_THIS">Año: Este año</option>
+            <option value="YEAR_LAST365">Año: Últimos 365 días</option>
+          </select>
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm muted">Desde</label>
+          <input id="fDesde" type="date" class="input w-full mt-1" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="text-sm muted">Hasta</label>
+          <input id="fHasta" type="date" class="input w-full mt-1" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="text-sm muted">Drone</label>
+          <select id="fDrone" class="input w-full mt-1"></select>
+        </div>
+        <div class="md:col-span-3">
+          <label class="text-sm muted">Piloto</label>
+          <select id="fPiloto" class="input w-full mt-1"></select>
+        </div>
+
+        <div class="md:col-span-12 flex justify-end gap-2 flex-wrap">
+          <button id="btnAplicar" class="btn btnPrimary px-6">Aplicar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD VIEW -->
+    <section id="view-dashboard" class="mt-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="card p-4 flex items-center gap-4">
+          <div class="kpiIcon" style="background:linear-gradient(180deg,#1477ff,#0b5ed7);">🛠️</div>
+          <div>
+            <div class="text-xs muted font-semibold">TOTAL MANTENIMIENTOS</div>
+            <div id="kpiTotal" class="text-2xl font-extrabold">0</div>
+          </div>
+        </div>
+
+        <div class="card p-4 flex items-center gap-4">
+          <div class="kpiIcon" style="background:linear-gradient(180deg,#17c964,#0aa178);">⏱️</div>
+          <div>
+            <div class="text-xs muted font-semibold">ABIERTOS</div>
+            <div id="kpiAbiertos" class="text-2xl font-extrabold">0</div>
+          </div>
+        </div>
+
+        <div class="card p-4 flex items-center gap-4">
+          <div class="kpiIcon" style="background:linear-gradient(180deg,#ffa629,#f08a00);">🏭</div>
+          <div>
+            <div class="text-xs muted font-semibold">% A SKYMOTION</div>
+            <div id="kpiSky" class="text-2xl font-extrabold">0%</div>
+          </div>
+        </div>
+
+        <div class="card p-4 flex items-center gap-4">
+          <div class="kpiIcon" style="background:linear-gradient(180deg,#ff4d6d,#d61f3c);">✅</div>
+          <div>
+            <div class="text-xs muted font-semibold">ENVIADOS</div>
+            <div id="kpiCrit" class="text-2xl font-extrabold">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        <div class="card p-4">
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">📊</div>
+            <div class="font-extrabold">Mantenimientos por Dron</div>
+          </div>
+          <div id="chartDron" class="mt-4 space-y-3"></div>
+        </div>
+
+        <div class="card p-4">
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">🧑‍✈️</div>
+            <div class="font-extrabold">Mantenimientos por Piloto</div>
+          </div>
+          <div id="chartPiloto" class="mt-4 space-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NUEVO MANTENIMIENTO VIEW -->
+    <section id="view-nuevo" class="mt-6 hidden">
+      <div class="card p-5">
+        <div class="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <div class="text-xl font-extrabold">Registro de mantenimiento</div>
+            <div class="muted text-sm mt-1">Crea un registro y, si aplica, autoriza el envío a SKYMOTION con aval del jefe.</div>
+          </div>
+          <div class="flex gap-2">
+            <button id="btnNuevoLimpiar" class="btn">Limpiar</button>
+            <button id="btnGuardar" class="btn btnPrimary">Guardar</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-5">
+          <!-- aeronave -->
+          <div class="soft p-4">
+            <div class="font-extrabold">Aeronave (UAS)</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+              <div>
+                <label class="text-sm muted">Drone</label>
+                <div class="flex gap-2 mt-1">
+                  <select id="nDrone" class="input w-full"></select>
+                  <button id="quickAddUAS" class="btn" title="Agregar UAS">＋</button>
+                </div>
+              </div>
+              <div>
+                <label class="text-sm muted">Serial</label>
+                <input id="nSerial" class="input w-full mt-1" placeholder="SN-..." />
+              </div>
+              <div>
+                <label class="text-sm muted">Fecha</label>
+                <input id="nFecha" type="date" class="input w-full mt-1" />
+              </div>
+              <div>
+                <label class="text-sm muted">Estado</label>
+                <select id="nEstado" class="input w-full mt-1">
+                  <option>Abierto</option>
+                  <option>En proceso</option>
+                  <option>Cerrado</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-sm muted">Tipo de mantenimiento</label>
+                <select id="nTipo" class="input w-full mt-1">
+                  <option value="">Selecciona…</option>
+                  <option>Preventivo</option>
+                  <option>Correctivo</option>
+                  <option>Inspección</option>
+                  <option>Firmware / Software</option>
+                  <option>Calibración</option>
+                  <option>Baterías / Energía</option>
+                  <option>Cámara / Gimbal</option>
+                  <option>Radio / Telemetría</option>
+                  <option>Estructural</option>
+                  <option>Otro</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-sm muted">Responsable (técnico)</label>
+                <div class="flex gap-2 mt-1">
+                  <select id="nResponsable" class="input w-full"></select>
+                  <button id="quickAddResp" class="btn" title="Agregar responsable">＋</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <label class="text-sm muted">Hallazgos / descripción</label>
+              <textarea id="nHallazgos" rows="4" class="input w-full mt-1" placeholder="Describe síntomas, alertas, diagnóstico, etc."></textarea>
+            </div>
+            <div class="mt-3">
+              <label class="text-sm muted">Acciones realizadas</label>
+              <textarea id="nAcciones" rows="3" class="input w-full mt-1" placeholder="Ajustes, pruebas, reemplazos…"></textarea>
+            </div>
+          </div>
+
+          <!-- tercero -->
+          <div class="soft p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="font-extrabold">Redirección a mantenimiento tercerizado</div>
+                <div class="muted text-sm mt-1">Si se envía a <b>SKYMOTION</b>, agrega relato del piloto y aval del jefe.</div>
+              </div>
+              <label class="flex items-center gap-2 select-none cursor-pointer">
+                <input id="nEnvio" type="checkbox" class="h-5 w-5 accent-blue-600">
+                <span class="text-sm font-semibold">Enviar</span>
+              </label>
+            </div>
+
+            <div id="blockTercero" class="hidden mt-4 space-y-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="text-sm muted">Proveedor</label>
+                  <input id="nProveedor" class="input w-full mt-1" value="SKYMOTION" />
+                </div>
+                <div>
+                  <label class="text-sm muted">Fecha de envío</label>
+                  <input id="nEnvioFecha" type="date" class="input w-full mt-1" />
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="text-sm muted">OT / Guía / Radicado</label>
+                  <input id="nOT" class="input w-full mt-1" placeholder="OT-2026-..." />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="text-sm muted">Piloto</label>
+                  <div class="flex gap-2 mt-1">
+                    <select id="nPiloto" class="input w-full"></select>
+                    <button id="quickAddPiloto" class="btn" title="Agregar piloto">＋</button>
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm muted">Jefe de pilotos (aval)</label>
+                  <select id="nJefe" class="input w-full mt-1"></select>
+                </div>
+              </div>
+
+              <div>
+                <label class="text-sm muted">Explicación del piloto (¿qué sucedió?)</label>
+                <textarea id="nRelato" rows="4" class="input w-full mt-1" placeholder="Relato claro del evento por parte del piloto…"></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="text-sm muted">Fecha aval</label>
+                  <input id="nAvalFecha" type="date" class="input w-full mt-1" />
+                </div>
+                <div class="flex items-end">
+                  <label class="flex items-center gap-2 cursor-pointer select-none mt-2">
+                    <input id="nAval" type="checkbox" class="h-5 w-5 accent-blue-600">
+                    <span class="font-semibold">Jefe avala el envío</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label class="text-sm muted">Observaciones del jefe</label>
+                <textarea id="nObsJefe" rows="2" class="input w-full mt-1" placeholder="Condiciones del envío, recomendaciones…"></textarea>
+              </div>
+
+              <div class="mt-1">
+                <div class="flex items-center justify-between">
+                  <div class="font-extrabold">Firma (jefe)</div>
+                  <button id="btnClearSig" class="btn">Limpiar</button>
+                </div>
+                <div class="mt-2 rounded-2xl overflow-hidden border border-slate-200">
+                  <canvas id="sigCanvas" height="150"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div id="nuevoMsg" class="mt-4 text-sm muted"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORIAL VIEW -->
+    <section id="view-historial" class="mt-6 hidden">
+      <div class="card p-5">
+        <div class="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <div class="text-xl font-extrabold">Historial</div>
+            <div class="muted text-sm mt-1">Descargas se generan con el historial filtrado (barra superior).</div>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <button id="btnExcelFiltrado" class="btn">Descargar Excel</button>
+            <button id="btnPdfFiltrado" class="btn btnPrimary">Reporte PDF</button>
+            <button id="btnCSV" class="btn">Exportar CSV</button>
+            <button id="btnBorrarTodo" class="btn">Borrar todo</button>
+          </div>
+        </div>
+
+        <div class="mt-4 overflow-auto rounded-2xl border border-slate-200">
+          <table class="min-w-full text-sm">
+            <thead class="bg-slate-50">
+              <tr class="text-left">
+                <th class="px-3 py-2">Fecha</th>
+                <th class="px-3 py-2">Drone</th>
+                <th class="px-3 py-2">Serial</th>
+                <th class="px-3 py-2">Tipo</th>
+                <th class="px-3 py-2">Estado</th>
+                <th class="px-3 py-2">Responsable</th>
+                <th class="px-3 py-2">SKYMOTION</th>
+                <th class="px-3 py-2">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="histRows" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+
+        <div id="histEmpty" class="muted text-sm mt-4 hidden">No hay registros con esos filtros.</div>
+      </div>
+    </section>
+
+    <!-- CATALOGOS VIEW -->
+    <section id="view-catalogos" class="mt-6 hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- UAS -->
+        <div class="card p-5">
+          <div class="text-lg font-extrabold">Catálogo UAS</div>
+          <div class="muted text-sm mt-1">Agrega drones para que aparezcan en “Drone”.</div>
+
+          <div class="mt-4 space-y-3">
+            <input id="cUasNombre" class="input w-full" placeholder="Nombre (Ej: Mini 4 / Mavic 3)" />
+            <input id="cUasModelo" class="input w-full" placeholder="Marca/Modelo (Ej: DJI Mini 4 Pro)" />
+            <select id="cUasTipo" class="input w-full">
+              <option value="">Tipo UAS…</option>
+              <option>Multirrotor</option><option>Ala fija</option><option>FPV</option><option>Otro</option>
+            </select>
+            <button id="btnAddUAS" class="btn btnPrimary w-full">Adicionar UAS</button>
+          </div>
+
+          <div class="mt-4">
+            <div id="listUAS" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <!-- Pilotos -->
+        <div class="card p-5">
+          <div class="text-lg font-extrabold">Catálogo Pilotos</div>
+          <div class="muted text-sm mt-1">Se usan en filtros y en envío a SKYMOTION.</div>
+
+          <div class="mt-4 space-y-3">
+            <input id="cPilNombre" class="input w-full" placeholder="Nombre" />
+            <input id="cPilDoc" class="input w-full" placeholder="Documento (opcional)" />
+            <input id="cPilCont" class="input w-full" placeholder="Contacto (opcional)" />
+            <button id="btnAddPil" class="btn btnPrimary w-full">Adicionar Piloto</button>
+          </div>
+
+          <div class="mt-4">
+            <div id="listPil" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <!-- Responsables -->
+        <div class="card p-5">
+          <div class="text-lg font-extrabold">Responsables</div>
+          <div class="muted text-sm mt-1">Técnicos y Jefe de pilotos (aval).</div>
+
+          <div class="mt-4 space-y-3">
+            <input id="cResNombre" class="input w-full" placeholder="Nombre" />
+            <select id="cResRol" class="input w-full">
+              <option value="">Rol…</option>
+              <option>Técnico</option>
+              <option>Jefe de pilotos</option>
+              <option>Responsable</option>
+            </select>
+            <input id="cResDoc" class="input w-full" placeholder="Documento (opcional)" />
+            <input id="cResCont" class="input w-full" placeholder="Contacto (opcional)" />
+            <button id="btnAddRes" class="btn btnPrimary w-full">Adicionar Responsable</button>
+          </div>
+
+          <div class="mt-4">
+            <div id="listRes" class="space-y-2"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIG VIEW -->
+    <section id="view-config" class="mt-6 hidden">
+      <div class="card p-5">
+        <div class="text-xl font-extrabold">Configuración</div>
+        <div class="muted text-sm mt-1">Herramientas rápidas.</div>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button id="btnSeed" class="btn">Cargar demo (Mini 4 / Mavic 3)</button>
+          <button id="btnResetAll" class="btn">Reiniciar todo</button>
+        </div>
+
+        <div class="muted text-sm mt-4">
+          Nota: Local.
+        </div>
+      </div>
+    </section>
+
+    <!-- MODAL DETALLE -->
+    <dialog id="dlg" class="rounded-2xl p-0 w-[min(920px,96vw)] bg-transparent no-print">
+      <div class="card overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-start justify-between gap-3">
+          <div>
+            <div class="font-extrabold">Detalle del mantenimiento</div>
+            <div id="dlgSub" class="muted text-sm mt-1"></div>
+          </div>
+          <button id="dlgClose" class="btn">Cerrar</button>
+        </div>
+        <div class="px-5 py-4">
+          <div class="flex flex-wrap gap-2">
+            <button id="dlgPdf" class="btn btnPrimary">Acta PDF</button>
+            <button id="dlgDel" class="btn">Eliminar</button>
+          </div>
+          <div id="dlgBody" class="mt-4 text-sm"></div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- PRINT/PDF AREA -->
+    <section id="printArea" class="hidden">
+      <div id="acta" class="print-surface p-8"></div>
+    </section>
+  </main>
+
+<script>
+/* ------------------ STORAGE ------------------ */
+const K = {
+  uas: "dmx_uas_v1",
+  pilots: "dmx_pilots_v1",
+  people: "dmx_people_v1",
+  maint: "dmx_maint_v1",
+  filters: "dmx_filters_v2",
+};
+
+const $ = (id) => document.getElementById(id);
+
+const uid = () => "ID-" + Math.random().toString(16).slice(2).toUpperCase() + "-" + Date.now().toString(16).toUpperCase();
+
+function load(key, fallback){
+  try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+  catch { return fallback; }
+}
+function save(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+
+function todayISO(){
+  const d = new Date();
+  const p = (n) => String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+}
+function addDays(date, days){
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+function isoOf(d){
+  const p = (n) => String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+}
+function startOfWeek(d){
+  const x = new Date(d);
+  const day = (x.getDay() + 6) % 7; // monday=0
+  x.setDate(x.getDate() - day);
+  x.setHours(0,0,0,0);
+  return x;
+}
+function startOfMonth(d){
+  const x = new Date(d.getFullYear(), d.getMonth(), 1);
+  x.setHours(0,0,0,0);
+  return x;
+}
+function startOfYear(d){
+  const x = new Date(d.getFullYear(), 0, 1);
+  x.setHours(0,0,0,0);
+  return x;
+}
+
+function inRange(dateISO, desde, hasta){
+  if(!dateISO) return false;
+  if(desde && dateISO < desde) return false;
+  if(hasta && dateISO > hasta) return false;
+  return true;
+}
+
+/* ------------------ DEFAULTS / SEED ------------------ */
+function ensureSeedIfEmpty(){
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+  const people = load(K.people, []);
+
+  if(uas.length || pilots.length || people.length) return;
+
+  const uasSeed = [
+    { id: uid(), nombre:"Mini 4", modelo:"DJI Mini 4 Pro", tipo:"Multirrotor" },
+    { id: uid(), nombre:"Mavic 3", modelo:"DJI Mavic 3", tipo:"Multirrotor" },
+  ];
+  const pilSeed = [
+    { id: uid(), nombre:"Oscar Cruz", doc:"", contacto:"" },
+  ];
+  const pplSeed = [
+    { id: uid(), nombre:"Jefe Pilotos", rol:"Jefe de pilotos", doc:"", contacto:"" },
+    { id: uid(), nombre:"Técnico Decimetrix", rol:"Técnico", doc:"", contacto:"" },
+  ];
+
+  save(K.uas, uasSeed);
+  save(K.pilots, pilSeed);
+  save(K.people, pplSeed);
+}
+ensureSeedIfEmpty();
+
+/* ------------------ NAV ------------------ */
+const views = ["dashboard","nuevo","historial","catalogos","config"];
+function showView(name){
+  views.forEach(v => {
+    const el = $("view-"+v);
+    if(el) el.classList.toggle("hidden", v !== name);
+  });
+  document.querySelectorAll("[data-view]").forEach(b=>{
+    b.classList.toggle("tabActive", b.getAttribute("data-view")===name);
+  });
+}
+document.querySelectorAll("[data-view]").forEach(btn=>{
+  btn.addEventListener("click", ()=> showView(btn.getAttribute("data-view")));
+});
+
+/* ------------------ FILTERS BAR ------------------ */
+const fRango = $("fRango");
+const fDesde = $("fDesde");
+const fHasta = $("fHasta");
+const fDrone = $("fDrone");
+const fPiloto = $("fPiloto");
+const btnAplicar = $("btnAplicar");
+
+function setQuickRange(mode){
+  const now = new Date();
+  const today = isoOf(now);
+
+  if(mode === "CUSTOM") return;
+
+  if(mode === "DAY_TODAY"){
+    fDesde.value = today;
+    fHasta.value = today;
+    return;
+  }
+
+  if(mode === "WEEK_LAST7"){
+    const start = isoOf(addDays(now, -6));
+    fDesde.value = start;
+    fHasta.value = today;
+    return;
+  }
+
+  if(mode === "WEEK_THIS"){
+    fDesde.value = isoOf(startOfWeek(now));
+    fHasta.value = today;
+    return;
+  }
+
+  if(mode === "MONTH_THIS"){
+    fDesde.value = isoOf(startOfMonth(now));
+    fHasta.value = today;
+    return;
+  }
+
+  if(mode === "MONTH_LAST30"){
+    fDesde.value = isoOf(addDays(now, -29));
+    fHasta.value = today;
+    return;
+  }
+
+  if(mode === "YEAR_THIS"){
+    fDesde.value = isoOf(startOfYear(now));
+    fHasta.value = today;
+    return;
+  }
+
+  if(mode === "YEAR_LAST365"){
+    fDesde.value = isoOf(addDays(now, -364));
+    fHasta.value = today;
+    return;
+  }
+}
+
+fRango.addEventListener("change", ()=>{
+  setQuickRange(fRango.value);
+});
+
+function loadFilters(){
+  const f = load(K.filters, null);
+  if(!f){
+    // default: este mes
+    fRango.value = "MONTH_THIS";
+    setQuickRange("MONTH_THIS");
+    fDrone.value = "ALL";
+    fPiloto.value = "ALL";
+    return;
+  }
+  fRango.value = f.rango || "CUSTOM";
+  fDesde.value = f.desde || "";
+  fHasta.value = f.hasta || "";
+  fDrone.value = f.drone || "ALL";
+  fPiloto.value = f.piloto || "ALL";
+
+  // si viene con rango rápido, recalcula (por si guardó hace días)
+  if(fRango.value !== "CUSTOM"){
+    setQuickRange(fRango.value);
+  }
+}
+
+function saveFilters(){
+  save(K.filters, {
+    rango: fRango.value,
+    desde: fDesde.value,
+    hasta: fHasta.value,
+    drone: fDrone.value,
+    piloto: fPiloto.value,
+  });
+}
+
+btnAplicar.addEventListener("click", ()=>{
+  saveFilters();
+  refreshAll();
+});
+
+/* ------------------ CATALOGS RENDER ------------------ */
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+function optAll(label){ return `<option value="ALL">${label}</option>`; }
+
+function renderDropdowns(){
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+  const people = load(K.people, []);
+
+  fDrone.innerHTML = optAll("Todos") + uas.map(u=>`<option value="${u.id}">${escapeHtml(u.nombre)}</option>`).join("");
+  fPiloto.innerHTML = optAll("Todos") + pilots.map(p=>`<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join("");
+
+  $("nDrone").innerHTML = `<option value="">Selecciona…</option>` + uas.map(u=>`<option value="${u.id}">${escapeHtml(u.nombre)}</option>`).join("");
+  $("nPiloto").innerHTML = `<option value="">Selecciona…</option>` + pilots.map(p=>`<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join("");
+  $("nResponsable").innerHTML = `<option value="">Selecciona…</option>` + people.map(x=>`<option value="${x.id}">${escapeHtml(x.nombre)} (${escapeHtml(x.rol||"")})</option>`).join("");
+
+  const jefes = people.filter(x => (x.rol||"").toLowerCase() === "jefe de pilotos");
+  $("nJefe").innerHTML = `<option value="">Selecciona…</option>` + jefes.map(j=>`<option value="${j.id}">${escapeHtml(j.nombre)}</option>`).join("");
+}
+
+function miniRow(title, subtitle, onDel){
+  const id = uid();
+  setTimeout(()=>{
+    const b = $(id);
+    if(b) b.onclick = onDel;
+  }, 0);
+
+  return `
+    <div class="flex items-center justify-between gap-3 p-3 rounded-2xl border border-slate-200 bg-white">
+      <div class="min-w-0">
+        <div class="font-bold truncate">${escapeHtml(title)}</div>
+        <div class="text-xs muted truncate">${escapeHtml(subtitle || "")}</div>
+      </div>
+      <button id="${id}" class="btn px-3 py-2">Eliminar</button>
+    </div>
+  `;
+}
+
+function delItem(key, id){
+  const ok = confirm("¿Eliminar este registro del catálogo?");
+  if(!ok) return;
+  const arr = load(key, []).filter(x => x.id !== id);
+  save(key, arr);
+  renderDropdowns();
+  renderCatalogLists();
+  refreshAll();
+}
+
+function renderCatalogLists(){
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+  const people = load(K.people, []);
+
+  $("listUAS").innerHTML = uas.map(u=>miniRow(
+    `🛸 ${u.nombre}`,
+    `${u.modelo || ""} ${u.tipo ? "• "+u.tipo : ""}`.trim(),
+    ()=> delItem(K.uas, u.id)
+  )).join("") || `<div class="muted text-sm">Sin UAS aún.</div>`;
+
+  $("listPil").innerHTML = pilots.map(p=>miniRow(
+    `🧑‍✈️ ${p.nombre}`,
+    `${p.doc || ""} ${p.contacto ? "• "+p.contacto : ""}`.trim(),
+    ()=> delItem(K.pilots, p.id)
+  )).join("") || `<div class="muted text-sm">Sin pilotos aún.</div>`;
+
+  $("listRes").innerHTML = people.map(r=>miniRow(
+    `👤 ${r.nombre}`,
+    `${r.rol || ""} ${r.doc ? "• "+r.doc : ""}`.trim(),
+    ()=> delItem(K.people, r.id)
+  )).join("") || `<div class="muted text-sm">Sin responsables aún.</div>`;
+}
+
+/* ------------------ CATALOGS ADD ------------------ */
+$("btnAddUAS").addEventListener("click", ()=>{
+  const nombre = $("cUasNombre").value.trim();
+  const modelo = $("cUasModelo").value.trim();
+  const tipo = $("cUasTipo").value;
+
+  if(!nombre){ alert("Escribe el nombre del UAS."); return; }
+
+  const uas = load(K.uas, []);
+  uas.push({ id: uid(), nombre, modelo, tipo });
+  save(K.uas, uas);
+
+  $("cUasNombre").value = "";
+  $("cUasModelo").value = "";
+  $("cUasTipo").value = "";
+
+  renderDropdowns(); renderCatalogLists(); refreshAll();
+});
+
+$("btnAddPil").addEventListener("click", ()=>{
+  const nombre = $("cPilNombre").value.trim();
+  const doc = $("cPilDoc").value.trim();
+  const contacto = $("cPilCont").value.trim();
+
+  if(!nombre){ alert("Escribe el nombre del piloto."); return; }
+
+  const pilots = load(K.pilots, []);
+  pilots.push({ id: uid(), nombre, doc, contacto });
+  save(K.pilots, pilots);
+
+  $("cPilNombre").value = "";
+  $("cPilDoc").value = "";
+  $("cPilCont").value = "";
+
+  renderDropdowns(); renderCatalogLists(); refreshAll();
+});
+
+$("btnAddRes").addEventListener("click", ()=>{
+  const nombre = $("cResNombre").value.trim();
+  const rol = $("cResRol").value;
+  const doc = $("cResDoc").value.trim();
+  const contacto = $("cResCont").value.trim();
+
+  if(!nombre || !rol){ alert("Nombre y rol son obligatorios."); return; }
+
+  const people = load(K.people, []);
+  people.push({ id: uid(), nombre, rol, doc, contacto });
+  save(K.people, people);
+
+  $("cResNombre").value = "";
+  $("cResRol").value = "";
+  $("cResDoc").value = "";
+  $("cResCont").value = "";
+
+  renderDropdowns(); renderCatalogLists(); refreshAll();
+});
+
+/* ------------------ QUICK ADD ------------------ */
+$("quickAddUAS").addEventListener("click", ()=>{ showView("catalogos"); window.scrollTo({top:0, behavior:"smooth"}); });
+$("quickAddPiloto").addEventListener("click", ()=>{ showView("catalogos"); window.scrollTo({top:0, behavior:"smooth"}); });
+$("quickAddResp").addEventListener("click", ()=>{ showView("catalogos"); window.scrollTo({top:0, behavior:"smooth"}); });
+
+/* ------------------ NUEVO MANTENIMIENTO ------------------ */
+const nFecha = $("nFecha");
+nFecha.value = todayISO();
+
+const nEnvio = $("nEnvio");
+const blockTercero = $("blockTercero");
+nEnvio.addEventListener("change", ()=> blockTercero.classList.toggle("hidden", !nEnvio.checked));
+
+function clearNuevo(){
+  $("nDrone").value = "";
+  $("nSerial").value = "";
+  $("nFecha").value = todayISO();
+  $("nEstado").value = "Abierto";
+  $("nTipo").value = "";
+  $("nResponsable").value = "";
+  $("nHallazgos").value = "";
+  $("nAcciones").value = "";
+
+  nEnvio.checked = false;
+  blockTercero.classList.add("hidden");
+  $("nProveedor").value = "SKYMOTION";
+  $("nEnvioFecha").value = "";
+  $("nOT").value = "";
+  $("nPiloto").value = "";
+  $("nJefe").value = "";
+  $("nRelato").value = "";
+  $("nAvalFecha").value = "";
+  $("nAval").checked = false;
+  $("nObsJefe").value = "";
+  clearSig();
+
+  $("nuevoMsg").textContent = "";
+}
+$("btnNuevoLimpiar").addEventListener("click", clearNuevo);
+
+function validateNuevo(data){
+  const miss = [];
+  if(!data.uasId) miss.push("Drone");
+  if(!data.fecha) miss.push("Fecha");
+  if(!data.tipo) miss.push("Tipo de mantenimiento");
+  if(!data.estado) miss.push("Estado");
+  if(!data.responsableId) miss.push("Responsable");
+
+  if(data.envio){
+    if(!data.pilotoId) miss.push("Piloto");
+    if(!data.relato) miss.push("Relato del piloto");
+    if(!data.jefeId) miss.push("Jefe de pilotos");
+    if(!data.avalFecha) miss.push("Fecha aval");
+    if(!data.aval) miss.push("Checkbox aval");
+    if(!data.firma) miss.push("Firma del jefe");
+  }
+  return miss;
+}
+
+$("btnGuardar").addEventListener("click", ()=>{
+  const data = {
+    id: uid(),
+    fecha: $("nFecha").value,
+    uasId: $("nDrone").value,
+    serial: $("nSerial").value.trim(),
+    tipo: $("nTipo").value,
+    estado: $("nEstado").value,
+    responsableId: $("nResponsable").value,
+    hallazgos: $("nHallazgos").value.trim(),
+    acciones: $("nAcciones").value.trim(),
+
+    envio: nEnvio.checked,
+    proveedor: $("nProveedor").value.trim() || "SKYMOTION",
+    envioFecha: $("nEnvioFecha").value,
+    ot: $("nOT").value.trim(),
+    pilotoId: $("nPiloto").value,
+    relato: $("nRelato").value.trim(),
+    jefeId: $("nJefe").value,
+    avalFecha: $("nAvalFecha").value,
+    aval: $("nAval").checked,
+    obsJefe: $("nObsJefe").value.trim(),
+    firma: signatureDataUrl || ""
+  };
+
+  const miss = validateNuevo(data);
+  if(miss.length){
+    $("nuevoMsg").textContent = "Faltan campos: " + miss.join(", ") + ".";
+    $("nuevoMsg").classList.remove("muted");
+    $("nuevoMsg").classList.add("text-red-600","font-semibold");
+    return;
+  }
+
+  const maint = load(K.maint, []);
+  maint.push(data);
+  save(K.maint, maint);
+
+  $("nuevoMsg").classList.remove("text-red-600","font-semibold");
+  $("nuevoMsg").classList.add("muted");
+  $("nuevoMsg").textContent = "Registro guardado ✅";
+
+  clearNuevo();
+  refreshAll();
+  showView("historial");
+});
+
+/* ------------------ SIGNATURE ------------------ */
+const sigCanvas = $("sigCanvas");
+const sigCtx = sigCanvas.getContext("2d");
+let isDrawing = false;
+let last = {x:0,y:0};
+let signatureDataUrl = "";
+
+function resizeSig(){
+  const ratio = window.devicePixelRatio || 1;
+  const rect = sigCanvas.getBoundingClientRect();
+  sigCanvas.width = Math.floor(rect.width * ratio);
+  sigCanvas.height = Math.floor(150 * ratio);
+  sigCtx.setTransform(ratio,0,0,ratio,0,0);
+  sigCtx.lineWidth = 2;
+  sigCtx.lineCap = "round";
+  sigCtx.strokeStyle = "#111827";
+}
+function getPos(evt){
+  const rect = sigCanvas.getBoundingClientRect();
+  const p = evt.touches ? evt.touches[0] : evt;
+  return { x: p.clientX - rect.left, y: p.clientY - rect.top };
+}
+function startDraw(evt){ isDrawing = true; last = getPos(evt); }
+function draw(evt){
+  if(!isDrawing) return;
+  evt.preventDefault();
+  const pos = getPos(evt);
+  sigCtx.beginPath();
+  sigCtx.moveTo(last.x,last.y);
+  sigCtx.lineTo(pos.x,pos.y);
+  sigCtx.stroke();
+  last = pos;
+  signatureDataUrl = sigCanvas.toDataURL("image/png");
+}
+function endDraw(){ isDrawing = false; signatureDataUrl = sigCanvas.toDataURL("image/png"); }
+function clearSig(){
+  signatureDataUrl = "";
+  sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+}
+$("btnClearSig").addEventListener("click", clearSig);
+
+sigCanvas.addEventListener("mousedown", startDraw);
+sigCanvas.addEventListener("mousemove", draw);
+window.addEventListener("mouseup", endDraw);
+
+sigCanvas.addEventListener("touchstart", startDraw, {passive:false});
+sigCanvas.addEventListener("touchmove", draw, {passive:false});
+sigCanvas.addEventListener("touchend", endDraw);
+
+window.addEventListener("resize", ()=>{
+  const prev = signatureDataUrl;
+  resizeSig();
+  if(prev){
+    const img = new Image();
+    img.onload = ()=> sigCtx.drawImage(img, 0,0, sigCanvas.width/(window.devicePixelRatio||1), 150);
+    img.src = prev;
+  }
+});
+
+/* ------------------ DASHBOARD / HISTORIAL ------------------ */
+function getNameById(list, id, fallback="-"){
+  const x = list.find(i=>i.id===id);
+  return x ? x.nombre : fallback;
+}
+function roleById(list, id){
+  const x = list.find(i=>i.id===id);
+  return x ? (x.rol || "") : "";
+}
+
+function applyFilteredMaint(){
+  const maint = load(K.maint, []);
+  const desde = fDesde.value;
+  const hasta = fHasta.value;
+  const drone = fDrone.value;
+  const piloto = fPiloto.value;
+
+  return maint.filter(m=>{
+    if(!inRange(m.fecha, desde, hasta)) return false;
+    if(drone && drone !== "ALL" && m.uasId !== drone) return false;
+    if(piloto && piloto !== "ALL"){
+      if(m.pilotoId !== piloto) return false;
+    }
+    return true;
+  });
+}
+
+function renderDashboard(){
+  const filtered = applyFilteredMaint();
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+
+  const total = filtered.length;
+  const abiertos = filtered.filter(x=> (x.estado||"").toLowerCase()==="abierto").length;
+  const enviados = filtered.filter(x=> !!x.envio).length;
+  const pctSky = total ? Math.round((enviados/total)*100) : 0;
+
+  $("kpiTotal").textContent = total;
+  $("kpiAbiertos").textContent = abiertos;
+  $("kpiSky").textContent = pctSky + "%";
+  $("kpiCrit").textContent = enviados;
+
+  const cU = {};
+  filtered.forEach(m => cU[m.uasId] = (cU[m.uasId]||0)+1);
+  const uasRows = Object.entries(cU)
+    .map(([id,count])=>({label:getNameById(uas,id,"(UAS)"), count}))
+    .sort((a,b)=>b.count-a.count);
+
+  const cP = {};
+  filtered.forEach(m=>{
+    if(m.pilotoId) cP[m.pilotoId] = (cP[m.pilotoId]||0)+1;
+  });
+  const pilotRows = Object.entries(cP)
+    .map(([id,count])=>({label:getNameById(pilots,id,"(Piloto)"), count}))
+    .sort((a,b)=>b.count-a.count);
+
+  drawBars("chartDron", uasRows);
+  drawBars("chartPiloto", pilotRows);
+}
+
+function drawBars(containerId, rows){
+  const el = $(containerId);
+  if(!rows.length){
+    el.innerHTML = `<div class="muted text-sm">Sin datos para mostrar con estos filtros.</div>`;
+    return;
+  }
+  const max = Math.max(...rows.map(r=>r.count));
+  el.innerHTML = rows.slice(0,6).map(r=>{
+    const w = Math.round((r.count/max)*100);
+    return `
+      <div class="grid grid-cols-12 gap-3 items-center">
+        <div class="col-span-3 truncate">${escapeHtml(r.label)}</div>
+        <div class="col-span-8">
+          <div class="barWrap"><div class="bar" style="width:${w}%;"></div></div>
+        </div>
+        <div class="col-span-1 text-right font-bold">${r.count}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderHistorial(){
+  const filtered = applyFilteredMaint();
+  const uas = load(K.uas, []);
+  const people = load(K.people, []);
+  const rows = $("histRows");
+  const empty = $("histEmpty");
+
+  rows.innerHTML = "";
+  empty.classList.toggle("hidden", filtered.length !== 0);
+
+  filtered
+    .slice()
+    .sort((a,b)=> (b.fecha||"").localeCompare(a.fecha||""))
+    .forEach(m=>{
+      const resp = getNameById(people, m.responsableId, "-");
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="px-3 py-2 whitespace-nowrap">${escapeHtml(m.fecha||"")}</td>
+        <td class="px-3 py-2">${escapeHtml(getNameById(uas, m.uasId, "-"))}</td>
+        <td class="px-3 py-2">${escapeHtml(m.serial||"-")}</td>
+        <td class="px-3 py-2">${escapeHtml(m.tipo||"-")}</td>
+        <td class="px-3 py-2">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold border border-slate-200 bg-slate-50">${escapeHtml(m.estado||"-")}</span>
+        </td>
+        <td class="px-3 py-2">${escapeHtml(resp)}</td>
+        <td class="px-3 py-2">${m.envio ? `<span class="px-3 py-1 rounded-full text-xs font-semibold border border-green-200 bg-green-50">Sí</span>` : `<span class="muted">No</span>`}</td>
+        <td class="px-3 py-2 whitespace-nowrap">
+          <button class="btn px-3 py-2" data-viewrec="${m.id}">Ver</button>
+        </td>
+      `;
+      rows.appendChild(tr);
+    });
+
+  document.querySelectorAll("[data-viewrec]").forEach(b=>{
+    b.addEventListener("click", ()=> openDetail(b.getAttribute("data-viewrec")));
+  });
+}
+
+/* ------------------ DETAIL DIALOG + ACTA PDF ------------------ */
+const dlg = $("dlg");
+$("dlgClose").addEventListener("click", ()=> dlg.close());
+
+function openDetail(id){
+  const maint = load(K.maint, []);
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+  const people = load(K.people, []);
+  const r = maint.find(x=>x.id===id);
+  if(!r) return;
+
+  $("dlgSub").textContent = `${getNameById(uas,r.uasId)} • ${r.fecha} • ${r.tipo}`;
+
+  const responsable = people.find(x=>x.id===r.responsableId);
+  const jefe = people.find(x=>x.id===r.jefeId);
+  const piloto = pilots.find(x=>x.id===r.pilotoId);
+
+  const envioBlock = r.envio ? `
+    <div class="mt-3 p-4 rounded-2xl border border-slate-200 bg-slate-50">
+      <div class="font-extrabold">Envío a tercero: ${escapeHtml(r.proveedor||"SKYMOTION")}</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+        <div><b>Fecha envío:</b> ${escapeHtml(r.envioFecha||"-")}</div>
+        <div><b>OT/Guía:</b> ${escapeHtml(r.ot||"-")}</div>
+        <div><b>Piloto:</b> ${escapeHtml(piloto?.nombre || "-")}</div>
+        <div><b>Jefe (aval):</b> ${escapeHtml(jefe?.nombre || "-")}</div>
+      </div>
+      <div class="mt-3">
+        <div class="font-extrabold">Relato del piloto</div>
+        <div class="mt-1 whitespace-pre-wrap">${escapeHtml(r.relato||"")}</div>
+      </div>
+      <div class="mt-3">
+        <div class="font-extrabold">Aval</div>
+        <div><b>Fecha:</b> ${escapeHtml(r.avalFecha||"-")} • <b>Avalado:</b> ${r.aval ? "Sí" : "No"}</div>
+        ${r.obsJefe ? `<div class="mt-2 whitespace-pre-wrap">${escapeHtml(r.obsJefe)}</div>` : ""}
+        ${r.firma ? `<img alt="Firma" class="mt-3 rounded-xl border border-slate-200 bg-white p-2" style="max-height:140px" src="${r.firma}">` : ""}
+      </div>
+    </div>
+  ` : `<div class="mt-3 muted">Este registro no marca envío a SKYMOTION.</div>`;
+
+  $("dlgBody").innerHTML = `
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+        <div class="font-extrabold">Aeronave</div>
+        <div class="mt-2"><b>Drone:</b> ${escapeHtml(getNameById(uas,r.uasId))}</div>
+        <div><b>Serial:</b> ${escapeHtml(r.serial||"-")}</div>
+        <div><b>Fecha:</b> ${escapeHtml(r.fecha||"-")}</div>
+        <div><b>Estado:</b> ${escapeHtml(r.estado||"-")}</div>
+      </div>
+      <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+        <div class="font-extrabold">Mantenimiento</div>
+        <div class="mt-2"><b>Tipo:</b> ${escapeHtml(r.tipo||"-")}</div>
+        <div><b>Responsable:</b> ${escapeHtml(responsable?.nombre || "-")} ${responsable?.rol ? `(${escapeHtml(responsable.rol)})` : ""}</div>
+      </div>
+    </div>
+
+    <div class="mt-3 p-4 rounded-2xl border border-slate-200 bg-white">
+      <div class="font-extrabold">Hallazgos</div>
+      <div class="mt-1 whitespace-pre-wrap">${escapeHtml(r.hallazgos||"-")}</div>
+      <div class="font-extrabold mt-3">Acciones</div>
+      <div class="mt-1 whitespace-pre-wrap">${escapeHtml(r.acciones||"-")}</div>
+    </div>
+
+    ${envioBlock}
+  `;
+
+  $("dlgPdf").onclick = ()=> downloadActaPdf(r.id);
+  $("dlgDel").onclick = ()=> deleteRec(r.id);
+
+  dlg.showModal();
+}
+
+function buildActa(rec){
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+  const people = load(K.people, []);
+
+  const u = uas.find(x=>x.id===rec.uasId);
+  const p = pilots.find(x=>x.id===rec.pilotoId);
+  const resp = people.find(x=>x.id===rec.responsableId);
+  const jefe = people.find(x=>x.id===rec.jefeId);
+
+  const envio = rec.envio ? `
+    <h2 style="margin-top:18px; font-size:16px;">Acta de envío a tercero (SKYMOTION)</h2>
+    <p><b>Proveedor:</b> ${escapeHtml(rec.proveedor||"SKYMOTION")}</p>
+    <p><b>Fecha envío:</b> ${escapeHtml(rec.envioFecha||"-")}</p>
+    <p><b>OT/Guía/Radicado:</b> ${escapeHtml(rec.ot||"-")}</p>
+
+    <h3 style="margin-top:14px; font-size:14px;">Declaración del piloto</h3>
+    <p><b>Piloto:</b> ${escapeHtml(p?.nombre||"-")}</p>
+    <div style="white-space:pre-wrap; border:1px solid #e5e7eb; padding:10px; border-radius:10px; margin-top:6px;">
+      ${escapeHtml(rec.relato||"")}
+    </div>
+
+    <h3 style="margin-top:14px; font-size:14px;">Aval del jefe de pilotos</h3>
+    <p><b>Jefe:</b> ${escapeHtml(jefe?.nombre||"-")}</p>
+    <p><b>Fecha aval:</b> ${escapeHtml(rec.avalFecha||"-")} • <b>Avalado:</b> ${rec.aval ? "Sí" : "No"}</p>
+    ${rec.obsJefe ? `<div style="white-space:pre-wrap; border:1px solid #e5e7eb; padding:10px; border-radius:10px; margin-top:6px;">${escapeHtml(rec.obsJefe)}</div>` : ""}
+
+    ${rec.firma ? `
+      <div style="margin-top:10px;">
+        <p><b>Firma:</b></p>
+        <img alt="Firma" src="${rec.firma}" style="max-height:120px; border:1px solid #e5e7eb; border-radius:10px; padding:6px; background:#fff;" />
+      </div>
+    ` : ""}
+  ` : `<p style="margin-top:18px;">Este registro no marca envío a tercero.</p>`;
+
+  $("acta").innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+      <div>
+        <h1 style="font-size:20px; margin:0;">DECIMETRIX</h1>
+        <p style="margin:6px 0 0; color:#374151;">Registro de mantenimiento UAS</p>
+      </div>
+      <div style="text-align:right; color:#374151;">
+        <p style="margin:0;"><b>ID:</b> ${escapeHtml(rec.id)}</p>
+        <p style="margin:4px 0 0;"><b>Fecha:</b> ${escapeHtml(rec.fecha||"-")}</p>
+      </div>
+    </div>
+
+    <hr style="margin:14px 0; border:none; border-top:1px solid #e5e7eb;" />
+
+    <h2 style="font-size:16px; margin:0;">Aeronave</h2>
+    <p><b>Drone:</b> ${escapeHtml(u?.nombre||"-")}</p>
+    <p><b>Modelo:</b> ${escapeHtml(u?.modelo||"-")}</p>
+    <p><b>Tipo UAS:</b> ${escapeHtml(u?.tipo||"-")}</p>
+    <p><b>Serial:</b> ${escapeHtml(rec.serial||"-")}</p>
+
+    <h2 style="margin-top:18px; font-size:16px;">Mantenimiento</h2>
+    <p><b>Tipo:</b> ${escapeHtml(rec.tipo||"-")}</p>
+    <p><b>Estado:</b> ${escapeHtml(rec.estado||"-")}</p>
+    <p><b>Responsable:</b> ${escapeHtml(resp?.nombre||"-")} ${resp?.rol ? "(" + escapeHtml(resp.rol) + ")" : ""}</p>
+
+    <h3 style="margin-top:12px; font-size:14px;">Hallazgos</h3>
+    <div style="white-space:pre-wrap; border:1px solid #e5e7eb; padding:10px; border-radius:10px; margin-top:6px;">
+      ${escapeHtml(rec.hallazgos||"")}
+    </div>
+
+    <h3 style="margin-top:12px; font-size:14px;">Acciones</h3>
+    <div style="white-space:pre-wrap; border:1px solid #e5e7eb; padding:10px; border-radius:10px; margin-top:6px;">
+      ${escapeHtml(rec.acciones||"")}
+    </div>
+
+    ${envio}
+
+    <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;" />
+    <p style="font-size:12px; color:#6b7280; margin:0;">
+      Documento generado. Para multiusuario: PHP + MySQL.
+    </p>
+  `;
+}
+
+function downloadActaPdf(id){
+  const rec = load(K.maint, []).find(x=>x.id===id);
+  if(!rec) return;
+  buildActa(rec);
+
+  const opt = {
+    margin: 10,
+    filename: `Decimetrix_Acta_Mantenimiento_${(rec.fecha||"").replaceAll("-","")}.pdf`,
+    image: { type: "jpeg", quality: 0.95 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+  html2pdf().set(opt).from($("acta")).save();
+}
+
+function deleteRec(id){
+  const ok = confirm("¿Eliminar este mantenimiento?");
+  if(!ok) return;
+  const arr = load(K.maint, []).filter(x=>x.id!==id);
+  save(K.maint, arr);
+  dlg.close();
+  refreshAll();
+}
+
+/* ------------------ DESCARGA EXCEL (FILTRADO) ------------------ */
+function buildRowsForExport(filtered){
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+  const people = load(K.people, []);
+
+  // Encabezados organizados
+  const header = [
+    "Fecha","Drone","Serial","Tipo mantenimiento","Estado","Responsable","Rol responsable",
+    "Envío SKYMOTION","Proveedor","Fecha envío","OT/Guía",
+    "Piloto","Jefe de pilotos","Fecha aval","Avalado",
+    "Hallazgos","Acciones","Relato piloto","Observaciones jefe"
+  ];
+
+  const rows = [header];
+
+  filtered.forEach(r=>{
+    rows.push([
+      r.fecha || "",
+      getNameById(uas, r.uasId, ""),
+      r.serial || "",
+      r.tipo || "",
+      r.estado || "",
+      getNameById(people, r.responsableId, ""),
+      roleById(people, r.responsableId),
+      r.envio ? "SI" : "NO",
+      r.proveedor || "",
+      r.envioFecha || "",
+      r.ot || "",
+      getNameById(pilots, r.pilotoId, ""),
+      getNameById(people, r.jefeId, ""),
+      r.avalFecha || "",
+      r.aval ? "SI" : "NO",
+      r.hallazgos || "",
+      r.acciones || "",
+      r.relato || "",
+      r.obsJefe || ""
+    ]);
+  });
+
+  return rows;
+}
+
+$("btnExcelFiltrado").addEventListener("click", ()=>{
+  const filtered = applyFilteredMaint();
+  if(!filtered.length){ alert("No hay registros con esos filtros."); return; }
+
+  const rows = buildRowsForExport(filtered);
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+
+  // Anchos agradables
+  ws["!cols"] = [
+    {wch:12},{wch:18},{wch:16},{wch:20},{wch:12},{wch:18},{wch:16},
+    {wch:14},{wch:12},{wch:12},{wch:14},
+    {wch:18},{wch:18},{wch:12},{wch:10},
+    {wch:38},{wch:34},{wch:38},{wch:30}
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Mantenimientos");
+
+  const nombre = `Decimetrix_Mantenimientos_${(fDesde.value||"")}_a_${(fHasta.value||"")}.xlsx`.replaceAll("/","-");
+  XLSX.writeFile(wb, nombre);
+});
+
+/* ------------------ REPORTE PDF (FILTRADO) ------------------ */
+function truncate(s, n){
+  const t = String(s||"").trim();
+  if(t.length <= n) return t;
+  return t.slice(0, n-1) + "…";
+}
+
+function buildReportePdf(filtered){
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+  const people = load(K.people, []);
+
+  const total = filtered.length;
+  const enviados = filtered.filter(x=>x.envio).length;
+  const abiertos = filtered.filter(x=> (x.estado||"").toLowerCase()==="abierto").length;
+
+  const droneLabel = (fDrone.value==="ALL") ? "Todos" : getNameById(uas, fDrone.value, "—");
+  const pilotoLabel = (fPiloto.value==="ALL") ? "Todos" : getNameById(pilots, fPiloto.value, "—");
+  const gen = new Date();
+
+  const tableRows = filtered
+    .slice()
+    .sort((a,b)=> (a.fecha||"").localeCompare(b.fecha||""))
+    .map(r=>{
+      const resp = getNameById(people, r.responsableId, "");
+      const drone = getNameById(uas, r.uasId, "");
+      return `
+        <tr>
+          <td>${escapeHtml(r.fecha||"")}</td>
+          <td>${escapeHtml(drone)}</td>
+          <td>${escapeHtml(r.serial||"")}</td>
+          <td>${escapeHtml(r.tipo||"")}</td>
+          <td>${escapeHtml(r.estado||"")}</td>
+          <td>${escapeHtml(resp)}</td>
+          <td style="text-align:center">${r.envio ? "Sí" : "No"}</td>
+          <td>${escapeHtml(truncate(r.hallazgos||"", 70))}</td>
+        </tr>
+      `;
+    }).join("");
+
+  $("acta").innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px;">
+      <div>
+        <h1 style="margin:0; font-size:22px;">DECIMETRIX</h1>
+        <p style="margin:6px 0 0; color:#374151;">Reporte de mantenimientos UAS</p>
+      </div>
+      <div style="text-align:right; color:#374151; font-size:12px;">
+        <div><b>Generado:</b> ${gen.toLocaleString()}</div>
+        <div><b>Rango:</b> ${escapeHtml(fDesde.value||"")} a ${escapeHtml(fHasta.value||"")}</div>
+        <div><b>Drone:</b> ${escapeHtml(droneLabel)}</div>
+        <div><b>Piloto:</b> ${escapeHtml(pilotoLabel)}</div>
+      </div>
+    </div>
+
+    <hr style="margin:14px 0; border:none; border-top:1px solid #e5e7eb;" />
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div style="border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px;">
+        <div style="font-size:12px; color:#6b7280;">TOTAL</div>
+        <div style="font-size:18px; font-weight:800;">${total}</div>
+      </div>
+      <div style="border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px;">
+        <div style="font-size:12px; color:#6b7280;">ABIERTOS</div>
+        <div style="font-size:18px; font-weight:800;">${abiertos}</div>
+      </div>
+      <div style="border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px;">
+        <div style="font-size:12px; color:#6b7280;">ENVIADOS (SKYMOTION)</div>
+        <div style="font-size:18px; font-weight:800;">${enviados}</div>
+      </div>
+    </div>
+
+    <h2 style="margin:16px 0 8px; font-size:16px;">Listado</h2>
+
+    <table style="width:100%; border-collapse:collapse; font-size:11px;">
+      <thead>
+        <tr>
+          <th style="text-align:left; border:1px solid #e5e7eb; padding:6px;">Fecha</th>
+          <th style="text-align:left; border:1px solid #e5e7eb; padding:6px;">Drone</th>
+          <th style="text-align:left; border:1px solid #e5e7eb; padding:6px;">Serial</th>
+          <th style="text-align:left; border:1px solid #e5e7eb; padding:6px;">Tipo</th>
+          <th style="text-align:left; border:1px solid #e5e7eb; padding:6px;">Estado</th>
+          <th style="text-align:left; border:1px solid #e5e7eb; padding:6px;">Responsable</th>
+          <th style="text-align:center; border:1px solid #e5e7eb; padding:6px;">SKY</th>
+          <th style="text-align:left; border:1px solid #e5e7eb; padding:6px;">Hallazgos (resumen)</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${tableRows || `<tr><td colspan="8" style="border:1px solid #e5e7eb; padding:10px;">Sin registros</td></tr>`}
+      </tbody>
+    </table>
+
+    <p style="margin-top:14px; font-size:11px; color:#6b7280;">
+      Nota: el reporte PDF resume “Hallazgos” para que la tabla sea legible. El Excel exporta el detalle completo.
+    </p>
+  `;
+}
+
+$("btnPdfFiltrado").addEventListener("click", ()=>{
+  const filtered = applyFilteredMaint();
+  if(!filtered.length){ alert("No hay registros con esos filtros."); return; }
+
+  buildReportePdf(filtered);
+
+  const opt = {
+    margin: 10,
+    filename: `Decimetrix_Reporte_Mantenimientos_${(fDesde.value||"")}_a_${(fHasta.value||"")}.pdf`,
+    image: { type: "jpeg", quality: 0.95 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+  html2pdf().set(opt).from($("acta")).save();
+});
+
+/* ------------------ CSV + CLEAR ------------------ */
+$("btnCSV").addEventListener("click", ()=>{
+  const all = load(K.maint, []);
+  const uas = load(K.uas, []);
+  const pilots = load(K.pilots, []);
+  const people = load(K.people, []);
+
+  const headers = [
+    "id","fecha","drone","serial","tipo","estado","responsable",
+    "envio","proveedor","envioFecha","ot","piloto","relato","jefe","avalFecha","aval","obsJefe"
+  ];
+  const lines = [headers.join(",")];
+
+  all.forEach(r=>{
+    const row = [
+      r.id,
+      r.fecha,
+      getNameById(uas,r.uasId),
+      r.serial||"",
+      r.tipo||"",
+      r.estado||"",
+      getNameById(people,r.responsableId),
+      r.envio ? "SI":"NO",
+      r.proveedor||"",
+      r.envioFecha||"",
+      r.ot||"",
+      getNameById(pilots,r.pilotoId,""),
+      (r.relato||"").replaceAll("\n"," "),
+      getNameById(people,r.jefeId,""),
+      r.avalFecha||"",
+      r.aval ? "SI":"NO",
+      (r.obsJefe||"").replaceAll("\n"," ")
+    ].map(v => `"${String(v).replaceAll('"','""')}"`).join(",");
+    lines.push(row);
+  });
+
+  const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Decimetrix_Mantenimientos_${todayISO().replaceAll("-","")}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+$("btnBorrarTodo").addEventListener("click", ()=>{
+  const ok = confirm("Esto borra TODOS los mantenimientos. ¿Continuar?");
+  if(!ok) return;
+  save(K.maint, []);
+  refreshAll();
+});
+
+/* ------------------ CONFIG ------------------ */
+$("btnSeed").addEventListener("click", ()=>{
+  localStorage.removeItem(K.uas);
+  localStorage.removeItem(K.pilots);
+  localStorage.removeItem(K.people);
+  ensureSeedIfEmpty();
+  renderDropdowns(); renderCatalogLists(); refreshAll();
+});
+
+$("btnResetAll").addEventListener("click", ()=>{
+  const ok = confirm("Esto reinicia TODO (catálogos + mantenimientos). ¿Continuar?");
+  if(!ok) return;
+  Object.values(K).forEach(k=> localStorage.removeItem(k));
+  ensureSeedIfEmpty();
+  renderDropdowns(); renderCatalogLists();
+  loadFilters();
+  refreshAll();
+});
+
+/* ------------------ GLOBAL REFRESH ------------------ */
+function refreshAll(){
+  renderDashboard();
+  renderHistorial();
+}
+
+/* ------------------ INIT ------------------ */
+renderDropdowns();
+renderCatalogLists();
+loadFilters();
+resizeSig();
+refreshAll();
+showView("dashboard");
+</script>
+</body>
+</html>
