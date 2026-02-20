@@ -1,0 +1,1120 @@
+<!doctype html>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OVA 1 - Zona de Seguridad UAS</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a1929 0%, #132f4c 100%);
+            color: #fff;
+        }
+
+        .app-container {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(90deg, #0a1929 0%, #132f4c 100%);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #00bcd4;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-placeholder {
+            width: 40px;
+            height: 40px;
+            background: #00bcd4;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: #0a1929;
+        }
+
+        .company-info h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .company-info p {
+            font-size: 12px;
+            color: #00bcd4;
+        }
+
+        .progress-info {
+            text-align: right;
+        }
+
+        .progress-info .slide-counter {
+            font-size: 14px;
+            color: #b0bec5;
+        }
+
+        .progress-bar {
+            width: 150px;
+            height: 4px;
+            background: #37474f;
+            border-radius: 2px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00bcd4, #26c6da);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== SLIDE TYPES ===== */
+        .slide-title-section {
+            text-align: center;
+        }
+
+        .slide-title-section h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #00bcd4;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-title-section .subtitle {
+            font-size: 24px;
+            color: #eceff1;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .slide-title-section .visual-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 30px;
+            border: 2px dashed rgba(0, 188, 212, 0.3);
+        }
+
+        .slide-content h3 {
+            font-size: 32px;
+            color: #00bcd4;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        .slide-content p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #eceff1;
+            margin-bottom: 16px;
+        }
+
+        .slide-content ul {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .slide-content li {
+            font-size: 15px;
+            color: #eceff1;
+            margin: 12px 0;
+            padding-left: 32px;
+            position: relative;
+        }
+
+        .slide-content li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #00bcd4;
+            font-size: 18px;
+        }
+
+        /* ===== INTERACTIVE ACTIVITIES ===== */
+        .activity-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #00bcd4;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00bcd4;
+            margin-bottom: 16px;
+        }
+
+        /* Drag and Drop */
+        .drag-drop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .dd-column {
+            background: rgba(13, 71, 161, 0.2);
+            border: 2px dashed #00bcd4;
+            border-radius: 6px;
+            padding: 20px;
+            min-height: 200px;
+        }
+
+        .dd-column h4 {
+            color: #00bcd4;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .draggable-item {
+            background: #00bcd4;
+            color: #0a1929;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin: 8px 0;
+            cursor: move;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .draggable-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4);
+        }
+
+        .dropped-item {
+            background: #26c6da;
+            color: #0a1929;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin: 8px 0;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Scenario */
+        .scenario-box {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 16px 0;
+        }
+
+        .scenario-box p {
+            color: #fff9c4;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .scenario-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .choice-btn {
+            background: #00bcd4;
+            color: #0a1929;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            background: #26c6da;
+            transform: translateX(5px);
+        }
+
+        .choice-feedback {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            padding: 12px;
+            border-radius: 4px;
+            color: #c8e6c9;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .choice-feedback.error {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
+            color: #ffcdd2;
+        }
+
+        /* Quiz */
+        .quiz-question {
+            margin: 20px 0;
+        }
+
+        .quiz-question p {
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #37474f;
+            color: #eceff1;
+            padding: 12px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .quiz-option:hover {
+            border-color: #00bcd4;
+            background: rgba(0, 188, 212, 0.1);
+        }
+
+        .quiz-option.selected {
+            border-color: #00bcd4;
+            background: rgba(0, 188, 212, 0.2);
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.2);
+        }
+
+        /* ===== FOOTER / NAVIGATION ===== */
+        .footer {
+            background: #0a1929;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 3px solid #00bcd4;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            background: #00bcd4;
+            color: #0a1929;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #26c6da;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 188, 212, 0.4);
+        }
+
+        .nav-btn:disabled {
+            background: #90caf9;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.secondary {
+            background: #37474f;
+            color: #eceff1;
+        }
+
+        .nav-btn.secondary:hover:not(:disabled) {
+            background: #455a64;
+        }
+
+        .slide-info {
+            font-size: 14px;
+            color: #b0bec5;
+        }
+
+        /* ===== VIDEO PLACEHOLDER ===== */
+        .video-placeholder {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+            border: 2px dashed rgba(0, 188, 212, 0.5);
+        }
+
+        .video-placeholder svg {
+            width: 80px;
+            height: 80px;
+            opacity: 0.6;
+        }
+
+        .video-placeholder p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        /* ===== INFOGRAPHIC ===== */
+        .infographic {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 2px solid rgba(0, 188, 212, 0.3);
+        }
+
+        .zone-element {
+            background: rgba(0, 188, 212, 0.15);
+            border: 2px solid #00bcd4;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .zone-element:hover {
+            background: rgba(0, 188, 212, 0.3);
+            transform: translateX(5px);
+        }
+
+        .zone-element strong {
+            color: #00bcd4;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .zone-element p {
+            font-size: 14px;
+            color: #eceff1;
+        }
+
+        /* ===== RESULTS SCREEN ===== */
+        .results-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .results-container h3 {
+            font-size: 42px;
+            color: #00bcd4;
+            margin-bottom: 20px;
+        }
+
+        .score-display {
+            font-size: 64px;
+            font-weight: 800;
+            color: #00bcd4;
+            margin: 30px 0;
+        }
+
+        .results-message {
+            font-size: 18px;
+            color: #eceff1;
+            margin: 20px 0;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .slide-title-section h2 {
+                font-size: 32px;
+            }
+
+            .drag-drop-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-score {
+                font-size: 48px;
+            }
+
+            .footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                width: 100%;
+            }
+        }
+    </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="app-container"><!-- HEADER -->
+   <header class="header">
+    <div class="logo-section">
+     <div class="logo-placeholder">
+      D
+     </div>
+     <div class="company-info">
+      <h1 id="company-display">DECIMETRIX S.A.S.</h1>
+      <p id="course-display">Zona de Seguridad UAS</p>
+     </div>
+    </div>
+    <div class="progress-info">
+     <div class="slide-counter"><span id="current-slide-num">1</span> / <span id="total-slides-num">15</span>
+     </div>
+     <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+     </div>
+    </div>
+   </header><!-- MAIN CONTENT -->
+   <div class="main-content" id="main-content"><!-- SLIDE 1: PORTADA -->
+    <div class="slide active" data-slide="1">
+     <div class="slide-title-section">
+      <h2>Zona de Seguridad UAS</h2>
+      <p class="subtitle">Del terreno a la operación segura</p>
+      <div class="visual-placeholder">
+       🚁 Drone industrial en operación | Campo seguro | Personal capacitado
+      </div>
+      <p style="margin-top: 40px; font-size: 14px; color: #b0bec5;">Aprende a diseñar, montar y controlar zonas seguras en misiones UAS industriales</p>
+     </div>
+    </div><!-- SLIDE 2: QUÉ ES UNA ZONA DE SEGURIDAD -->
+    <div class="slide" data-slide="2">
+     <h3>¿Qué es una zona de seguridad UAS?</h3>
+     <p>Una zona de seguridad es el <strong>espacio delimitado y controlado</strong> donde opera tu dron. Es tu primera barrera contra incidentes.</p>
+     <ul>
+      <li><strong>Protege</strong> a personas en tierra</li>
+      <li><strong>Aísla</strong> el dron de peligros externos</li>
+      <li><strong>Previene</strong> colisiones con obstáculos o intrusos</li>
+      <li><strong>Permite</strong> operación segura y predecible</li>
+     </ul>
+     <div class="activity-container">
+      <div class="activity-title">
+       📌 Idea Clave
+      </div>
+      <p style="font-size: 14px; color: #eceff1;">Sin zona de seguridad bien definida, <strong>no hay operación autorizada</strong>. Es tanto una exigencia normativa como un acto de responsabilidad profesional.</p>
+     </div>
+    </div><!-- SLIDE 3: COMPONENTES CLAVE -->
+    <div class="slide" data-slide="3">
+     <h3>Componentes clave de una zona segura</h3>
+     <div class="infographic">
+      <div class="zone-element"><strong>1. Perímetro</strong>
+       <p>Línea demarcada (cinta, conos) que señala el límite exterior. Nadie entra sin autorización.</p>
+      </div>
+      <div class="zone-element"><strong>2. Área de despegue/aterrizaje</strong>
+       <p>Zona plana, libre de obstáculos. Mín. 5m × 5m. Marcada claramente.</p>
+      </div>
+      <div class="zone-element"><strong>3. Área estéril</strong>
+       <p>Espacio aéreo directo sobre la zona donde opera el dron. Libre de interferencias.</p>
+      </div>
+      <div class="zone-element"><strong>4. Punto de control</strong>
+       <p>Donde se ubican piloto, observador y equipo de operación. Visibilidad 360°.</p>
+      </div>
+      <div class="zone-element"><strong>5. Ruta de evacuación</strong>
+       <p>Camino seguro para salida de emergencia. Señalizado y practicado.</p>
+      </div>
+     </div>
+    </div><!-- SLIDE 4: ROLES Y RESPONSABILIDADES -->
+    <div class="slide" data-slide="4">
+     <h3>Roles y responsabilidades</h3>
+     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+      <div style="background: rgba(0, 188, 212, 0.1); border-left: 4px solid #00bcd4; padding: 16px; border-radius: 4px;"><strong style="color: #00bcd4;">🛩️ Piloto PIC</strong>
+       <p style="font-size: 14px; margin-top: 10px;">• Controla el dron<br>
+         • Responsable de la operación<br>
+         • Toma decisiones finales<br>
+         • Monitorea desempeño</p>
+      </div>
+      <div style="background: rgba(0, 188, 212, 0.1); border-left: 4px solid #00bcd4; padding: 16px; border-radius: 4px;"><strong style="color: #00bcd4;">👁️ Observador</strong>
+       <p style="font-size: 14px; margin-top: 10px;">• Vigilancia del perímetro<br>
+         • Reporta intrusos o cambios<br>
+         • Mantiene comunicación<br>
+         • Alerta de peligros</p>
+      </div>
+      <div style="background: rgba(0, 188, 212, 0.1); border-left: 4px solid #00bcd4; padding: 16px; border-radius: 4px;"><strong style="color: #00bcd4;">📋 Supervisor</strong>
+       <p style="font-size: 14px; margin-top: 10px;">• Autoriza la operación<br>
+         • Verifica cumplimientos<br>
+         • Maneja emergencias<br>
+         • Reporta a cliente</p>
+      </div>
+      <div style="background: rgba(0, 188, 212, 0.1); border-left: 4px solid #00bcd4; padding: 16px; border-radius: 4px;"><strong style="color: #00bcd4;">🤝 Cliente/Terceros</strong>
+       <p style="font-size: 14px; margin-top: 10px;">• Respeta límites<br>
+         • Sigue instrucciones<br>
+         • Reporta cambios<br>
+         • Coordina con equipo</p>
+      </div>
+     </div>
+    </div><!-- SLIDE 5: SEÑALIZACIÓN Y CONTROL DE ACCESO -->
+    <div class="slide" data-slide="5">
+     <h3>Señalización y control de acceso</h3>
+     <div style="margin-top: 20px;">
+      <p><strong style="color: #ffc107;">⚠️ Señalización física (obligatoria)</strong></p>
+      <ul>
+       <li>Cinta de demarcación (amarillo/negro) a 1.5 m del perímetro</li>
+       <li>Conos reflectivos en esquinas</li>
+       <li>Letreros "ZONA DE OPERACIÓN UAS" visibles a distancia</li>
+       <li>Mínimo 3 puntos de entrada controlada</li>
+      </ul>
+      <p style="margin-top: 20px;"><strong style="color: #4caf50;">✓ Control de acceso</strong></p>
+      <ul>
+       <li><strong>Briefing previo:</strong> Todo personal entiende riesgos</li>
+       <li><strong>Identificación:</strong> Credenciales visibles</li>
+       <li><strong>Autorización:</strong> Solo personal autorizado entra</li>
+       <li><strong>Registro:</strong> Log de quién entra y salida</li>
+      </ul>
+     </div>
+     <div class="activity-container">
+      <div class="activity-title">
+       🎬 Actividad 1: Mira el video
+      </div>
+      <div class="video-placeholder">
+       <svg fill="currentColor" viewbox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9L9 7v10z" />
+       </svg>
+       <p>Cómo se monta la zona segura DECIMETRIX (90 seg)</p>
+      </div>
+     </div>
+    </div><!-- SLIDE 6: BRIEFING DE SEGURIDAD -->
+    <div class="slide" data-slide="6">
+     <h3>Briefing de seguridad en DECIMETRIX</h3>
+     <p style="margin-bottom: 20px; font-size: 15px;">Antes de cada operación, el Supervisor o Piloto debe comunicar:</p>
+     <div style="background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 20px; border-radius: 6px; line-height: 1.8;">
+      <p style="font-size: 14px; color: #fff9c4;"><strong>"Atención equipo. Operación UAS inicia en 10 minutos.</strong><br>
+        ✓ Perímetro: 50m × 40m, cinta amarilla, conos en esquinas.<br>
+        ✓ Ruta de evacuación: puerta norte, señalizado.<br>
+        ✓ Altura máxima: 100 metros AGL.<br>
+        ✓ Clima: viento 8 km/h, visibilidad excelente.<br>
+        ✓ Equipo: Dron OK, baterías cargadas, firmware actualizado.<br>
+        ✓ Comunicación: canal 1 abierto. Palabra de parada: 'STOP'.<br>
+        ✓ Emergencia: cualquiera puede decir STOP. Reportar incidentes.<br>
+        Alguna pregunta? Iniciamos en 5 minutos. Fuera."</p>
+     </div>
+     <p style="margin-top: 20px; font-size: 13px; color: #b0bec5;"><em>Duración: 2–3 minutos. Todos deben confirmación verbal. Queda registrado en bitácora operacional.</em></p>
+    </div><!-- SLIDE 7: FACTORES DE RIESGO -->
+    <div class="slide" data-slide="7">
+     <h3>Factores de riesgo típicos</h3>
+     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
+      <div style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid #f44336; padding: 14px; border-radius: 4px;"><strong style="color: #ffcdd2;">👤 Personas</strong>
+       <p style="font-size: 14px; margin-top: 8px;">Intrusión accidental, falta de atención, no seguir instrucciones.</p>
+      </div>
+      <div style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid #f44336; padding: 14px; border-radius: 4px;"><strong style="color: #ffcdd2;">🔌 Cables/Infraestructura</strong>
+       <p style="font-size: 14px; margin-top: 8px;">Líneas de alta tensión, antenas, estructura oculta.</p>
+      </div>
+      <div style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid #f44336; padding: 14px; border-radius: 4px;"><strong style="color: #ffcdd2;">💨 Viento/Clima</strong>
+       <p style="font-size: 14px; margin-top: 8px;">Ráfagas impredecibles, lluvia, nubosidad extrema.</p>
+      </div>
+      <div style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid #f44336; padding: 14px; border-radius: 4px;"><strong style="color: #ffcdd2;">📡 Interferencias</strong>
+       <p style="font-size: 14px; margin-top: 8px;">GPS débil, interferencia RF, pérdida de enlace.</p>
+      </div>
+      <div style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid #f44336; padding: 14px; border-radius: 4px;"><strong style="color: #ffcdd2;">🛑 Obstáculos</strong>
+       <p style="font-size: 14px; margin-top: 8px;">Árboles, postes, edificios no mapeados.</p>
+      </div>
+      <div style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid #f44336; padding: 14px; border-radius: 4px;"><strong style="color: #ffcdd2;">🦅 Fauna</strong>
+       <p style="font-size: 14px; margin-top: 8px;">Pájaros, insectos, depredadores cercanos.</p>
+      </div>
+     </div>
+     <p style="margin-top: 20px; font-size: 13px; color: #b0bec5;"><strong>Acción:</strong> Evalúa cada riesgo durante la planificación. Ajusta zona, equipo o cancela si es necesario.</p>
+    </div><!-- SLIDE 8: PLAN DE CONTINGENCIA -->
+    <div class="slide" data-slide="8">
+     <h3>Plan de contingencia y emergencias</h3>
+     <div style="margin-top: 20px;">
+      <div style="background: rgba(233, 30, 99, 0.1); border-left: 4px solid #e91e63; padding: 16px; border-radius: 4px; margin-bottom: 16px;"><strong style="color: #f48fb1;">⚡ Pérdida de enlace</strong>
+       <p style="font-size: 14px; margin-top: 8px;">El dron regresa a punto de origen (RTH). Espera sin intervenir. Supervisor revisa causa. Reintentar solo con autorización.</p>
+      </div>
+      <div style="background: rgba(233, 30, 99, 0.1); border-left: 4px solid #e91e63; padding: 16px; border-radius: 4px; margin-bottom: 16px;"><strong style="color: #f48fb1;">🚨 Intrusión al perímetro</strong>
+       <p style="font-size: 14px; margin-top: 8px;">Observador alerta. Piloto aterriza inmediatamente. Supervisor evacúa intruso. Se reinicia briefing si operación continúa.</p>
+      </div>
+      <div style="background: rgba(233, 30, 99, 0.1); border-left: 4px solid #e91e63; padding: 16px; border-radius: 4px; margin-bottom: 16px;"><strong style="color: #f48fb1;">❌ Falla técnica en dron</strong>
+       <p style="font-size: 14px; margin-top: 8px;">Aterrizaje emergencia. Se asegura dron. Diagnóstico por técnico. Reparación o cancelación. Reporte a cliente y oficina.</p>
+      </div>
+      <div style="background: rgba(233, 30, 99, 0.1); border-left: 4px solid #e91e63; padding: 16px; border-radius: 4px;"><strong style="color: #f48fb1;">💢 Cambio climático extremo</strong>
+       <p style="font-size: 14px; margin-top: 8px;">Piloto detiene operación. Aterriza. Espera o cancela según circunstancia. Nunca operes bajo lluvia intensa o viento &gt; 15 km/h.</p>
+      </div>
+     </div>
+    </div><!-- SLIDE 9: CHECKLIST ZONA SEGURA -->
+    <div class="slide" data-slide="9">
+     <h3>Checklist de zona segura (resumido)</h3>
+     <div class="activity-container">
+      <div class="activity-title">
+       📋 Actividad 2: Drag &amp; Drop - Ubica los elementos
+      </div>
+      <p style="font-size: 14px; margin-bottom: 16px;">Arrastra cada elemento a su ubicación correcta en la zona:</p>
+      <div class="drag-drop-grid">
+       <div class="dd-column">
+        <h4>Elementos a ubicar:</h4>
+        <div class="draggable-item" draggable="true" data-item="pilot">
+         🛩️ Piloto
+        </div>
+        <div class="draggable-item" draggable="true" data-item="observer">
+         👁️ Observador
+        </div>
+        <div class="draggable-item" draggable="true" data-item="drone">
+         🚁 Dron
+        </div>
+        <div class="draggable-item" draggable="true" data-item="public">
+         👥 Público
+        </div>
+        <div class="draggable-item" draggable="true" data-item="tape">
+         🟨 Cinta
+        </div>
+       </div>
+       <div class="dd-column" id="drop-zone">
+        <h4>Zona de aterrizaje:</h4>
+        <div id="drop-area" style="min-height: 150px; position: relative;"><!-- Items dropped here -->
+        </div>
+       </div>
+      </div>
+     </div>
+     <div style="margin-top: 20px; background: rgba(76, 175, 80, 0.1); border-left: 4px solid #4caf50; padding: 14px; border-radius: 4px;">
+      <p style="font-size: 14px; color: #c8e6c9;">✓ <strong>Previo a volar:</strong> Perímetro marcado | Zona plana libre | Clima aceptable | Equipo revisado | Briefing hecho | NOTAM consultado</p>
+     </div>
+    </div><!-- SLIDE 10: ESCENARIO INTERACTIVO -->
+    <div class="slide" data-slide="10">
+     <h3>Escenario en tiempo real</h3>
+     <div class="activity-container">
+      <div class="activity-title">
+       🎮 Actividad 3: ¿Qué haces?
+      </div>
+      <div class="scenario-box"><strong style="color: #ffc107;">ESCENARIO:</strong>
+       <p>Estás en operación en una obra de construcción. El dron vuela a 80m. De repente, un obrero cruza el perímetro sin notificación. El observador alerta por radio. ¿Qué haces?</p>
+      </div>
+      <div class="scenario-choices"><button class="choice-btn" onclick="handleScenarioChoice('immediate_land')"> A) Aterrizar inmediatamente </button> <button class="choice-btn" onclick="handleScenarioChoice('continue')"> B) Continuar, el obrero está lejos </button> <button class="choice-btn" onclick="handleScenarioChoice('supervisor')"> C) Alertar al supervisor primero, luego decidir </button>
+      </div>
+      <div id="scenario-feedback" style="display: none;"></div>
+     </div>
+    </div><!-- SLIDE 11: CULTURA DE REPORTE -->
+    <div class="slide" data-slide="11">
+     <h3>Cultura de reporte y mejora continua</h3>
+     <p style="margin: 20px 0;">En DECIMETRIX, <strong>todo incidente o casi-accidente se reporta</strong>. No hay penalización por reportar; hay penalización por ocultar.</p>
+     <div style="background: rgba(0, 188, 212, 0.1); border: 2px solid #00bcd4; border-radius: 8px; padding: 20px; margin: 20px 0;">
+      <p style="font-weight: 600; color: #00bcd4; margin-bottom: 12px;">📝 QUÉ REPORTAR:</p>
+      <ul>
+       <li>Intrusión sin autorización</li>
+       <li>Cambio no planeado en clima o condición de zona</li>
+       <li>Falla técnica del dron</li>
+       <li>Pérdida de señal o GPS débil</li>
+       <li>Comportamiento anómalo de equipo</li>
+       <li>Incumplimiento de procedimientos por cualquier persona</li>
+       <li>Sugerencia de mejora en proceso o seguridad</li>
+      </ul>
+     </div>
+     <div style="background: rgba(76, 175, 80, 0.1); border-left: 4px solid #4caf50; padding: 14px; border-radius: 4px;"><strong style="color: #81c784;">✓ SMS y RAC 100</strong>
+      <p style="font-size: 13px; margin-top: 8px;">Todo reporte se registra en el Sistema de Gestión de Seguridad (SMS) DECIMETRIX, conforme al marco de la regulación RAC 100 y autoridades aeronáuticas.</p>
+     </div>
+    </div><!-- SLIDE 12: APRENDIZAJE CLAVE Y QUIZ INTRO -->
+    <div class="slide" data-slide="12">
+     <h3>Puntos clave a recordar</h3>
+     <ul style="margin: 20px 0; font-size: 15px;">
+      <li><strong>Zona segura = primera defensa</strong> contra incidentes</li>
+      <li><strong>Roles claros</strong> = operación predecible y segura</li>
+      <li><strong>Comunicación fluida</strong> = respuesta rápida a cambios</li>
+      <li><strong>Plan B siempre</strong> = emergencias son esperadas, no sorpresas</li>
+      <li><strong>Reporte sin miedo</strong> = mejora continua en DECIMETRIX</li>
+      <li><strong>Documentación</strong> = requisito legal y profesional</li>
+     </ul>
+     <div style="background: linear-gradient(135deg, rgba(0, 188, 212, 0.2), rgba(38, 198, 218, 0.2)); border: 2px solid #00bcd4; padding: 20px; border-radius: 8px; margin-top: 30px; text-align: center;">
+      <p style="font-size: 16px; font-weight: 600; color: #00bcd4;">¿Listo para el quiz? →</p>
+      <p style="font-size: 13px; color: #b0bec5; margin-top: 8px;">10 preguntas sobre zona de seguridad y procedimientos DECIMETRIX</p>
+     </div>
+    </div><!-- SLIDE 13-14: QUIZ -->
+    <div class="slide" data-slide="13">
+     <h3>Quiz - Zona de Seguridad UAS</h3>
+     <div class="activity-container" style="margin-top: 20px;">
+      <div id="quiz-container"><!-- Questions dynamically inserted -->
+      </div><button class="nav-btn" id="submit-quiz-btn" style="margin-top: 20px; width: 100%;" onclick="submitQuiz()"> Enviar respuestas </button>
+     </div>
+    </div><!-- SLIDE 15: RESULTADOS Y CIERRE -->
+    <div class="slide" data-slide="15">
+     <div class="results-container">
+      <h3>¡Completaste el OVA!</h3>
+      <p style="font-size: 18px; color: #b0bec5; margin-top: 16px;">Resultados del quiz:</p>
+      <div class="score-display" id="final-score">
+       0%
+      </div>
+      <p class="results-message" id="results-msg">Buen trabajo completando la capacitación.</p>
+      <div style="margin-top: 30px; background: rgba(76, 175, 80, 0.1); border-left: 4px solid #4caf50; padding: 16px; border-radius: 4px;">
+       <p style="color: #c8e6c9; font-size: 14px;">📋 <strong>Próximos pasos:</strong><br>
+         1. Revisa tu certificado en tu perfil DECIMETRIX<br>
+         2. Participa en simulacro de zona de seguridad<br>
+         3. Reporta cualquier duda al Supervisor de Seguridad<br>
+         4. Consulta la guía de procedimientos en línea</p>
+      </div>
+      <div class="results-actions"><button class="nav-btn" onclick="location.reload()">Reiniciar</button> <button class="nav-btn secondary" onclick="window.close()">Cerrar</button>
+      </div>
+     </div>
+    </div>
+   </div><!-- FOOTER -->
+   <footer class="footer"><button class="nav-btn secondary" id="prev-btn" onclick="previousSlide()">← Anterior</button> <span class="slide-info" id="slide-info">Diapositiva 1 de 15</span> <button class="nav-btn" id="next-btn" onclick="nextSlide()">Siguiente →</button>
+   </footer>
+  </div>
+  <script>
+        let currentSlide = 1;
+        const totalSlides = 15;
+        let quizAnswers = {};
+        let allData = [];
+
+        const quizQuestions = [
+            {
+                question: "¿Cuál es la dimensión mínima recomendada para un área de despegue/aterrizaje?",
+                options: ["3m × 3m", "5m × 5m", "10m × 10m", "2m × 2m"],
+                correct: 1
+            },
+            {
+                question: "¿Quién tiene la responsabilidad final sobre la operación del dron?",
+                options: ["El observador", "El piloto PIC", "El cliente", "El supervisor"],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es la palabra de parada en DECIMETRIX?",
+                options: ["ALTO", "STOP", "ABORTO", "EMERGENCIA"],
+                correct: 1
+            },
+            {
+                question: "¿Qué debe verificar el piloto antes de despegar?",
+                options: [
+                    "Solo que el dron tenga batería",
+                    "Clima, NOTAM, batería, firmware, briefing completado",
+                    "Que el cliente lo autorice",
+                    "Nada, la revisión es opcional"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Qué haces si un obrero cruza el perímetro sin notificación?",
+                options: [
+                    "Continuar operación, está lejos",
+                    "Aterrizar inmediatamente y alertar al supervisor",
+                    "Ignorar, es responsabilidad del observador",
+                    "Llamar a la policía"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es el primer paso ante pérdida de enlace?",
+                options: [
+                    "Reintentar conexión",
+                    "Dejar que el dron vuele solo",
+                    "El dron regresa automáticamente (RTH), esperar sin intervenir",
+                    "Apagar todo y comenzar de nuevo"
+                ],
+                correct: 2
+            },
+            {
+                question: "¿Debería reportarse un casi-accidente (incidente sin daño)?",
+                options: ["No, solo si hay daño", "Sí, siempre", "Opcional", "Solo al cliente"],
+                correct: 1
+            },
+            {
+                question: "¿Qué componente no es esencial en una zona de seguridad?",
+                options: [
+                    "Perímetro delimitado",
+                    "Área de despegue/aterrizaje",
+                    "Pista de aterrizaje con luces (siempre)",
+                    "Ruta de evacuación"
+                ],
+                correct: 2
+            },
+            {
+                question: "¿A qué altura máxima puedes volar según el escenario típico?",
+                options: ["200 metros", "120 metros", "100 metros AGL (según briefing)", "Ilimitado en zona segura"],
+                correct: 2
+            },
+            {
+                question: "¿En qué documento se registran todos los reportes de incidentes?",
+                options: [
+                    "Cuaderno personal del piloto",
+                    "Sistema de Gestión de Seguridad (SMS) DECIMETRIX - RAC 100",
+                    "No se registran",
+                    "Solo en correo del cliente"
+                ],
+                correct: 1
+            }
+        ];
+
+        // Initialize SDK
+        async function initializeApp() {
+            if (window.elementSdk) {
+                await window.elementSdk.init({
+                    defaultConfig: {
+                        company_name: "DECIMETRIX S.A.S.",
+                        user_full_name: "Participante",
+                        course_title: "Zona de Seguridad UAS"
+                    },
+                    onConfigChange: async (config) => {
+                        document.getElementById('company-display').textContent = config.company_name || "DECIMETRIX S.A.S.";
+                        document.getElementById('course-display').textContent = config.course_title || "Zona de Seguridad UAS";
+                    },
+                    mapToCapabilities: (config) => ({
+                        recolorables: [],
+                        borderables: [],
+                        fontEditable: undefined,
+                        fontSizeable: undefined
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["company_name", config.company_name],
+                        ["user_full_name", config.user_full_name],
+                        ["course_title", config.course_title]
+                    ])
+                });
+            }
+
+            // Initialize Data SDK
+            if (window.dataSdk) {
+                const dataHandler = {
+                    onDataChanged(data) {
+                        allData = data;
+                    }
+                };
+                await window.dataSdk.init(dataHandler);
+            }
+
+            loadQuiz();
+            updateSlide();
+        }
+
+        function loadQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+
+            quizQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'quiz-question';
+                questionDiv.innerHTML = `
+                    <p><strong>${index + 1}. ${q.question}</strong></p>
+                    <div class="quiz-options">
+                        ${q.options.map((opt, i) => `
+                            <label style="display: flex; align-items: center; cursor: pointer; margin: 6px 0;">
+                                <input type="radio" name="q${index}" value="${i}" style="margin-right: 10px;" onchange="quizAnswers['q${index}'] = ${i}">
+                                <span style="flex: 1;">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            let answeredCount = 0;
+
+            quizQuestions.forEach((q, index) => {
+                const answered = quizAnswers[`q${index}`];
+                if (answered !== undefined) {
+                    answeredCount++;
+                    if (answered === q.correct) {
+                        score++;
+                    }
+                }
+            });
+
+            if (answeredCount < quizQuestions.length) {
+                alert(`Por favor responde todas las preguntas. Has respondido ${answeredCount} de ${quizQuestions.length}.`);
+                return;
+            }
+
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            
+            // Save to Data SDK
+            if (window.dataSdk) {
+                window.dataSdk.create({
+                    id: `ova1_${Date.now()}`,
+                    user_name: "Participante",
+                    current_slide: 15,
+                    quiz_score: percentage,
+                    quiz_responses: JSON.stringify(quizAnswers),
+                    drag_drop_completed: true,
+                    scenario_completed: true,
+                    completion_date: new Date().toISOString()
+                });
+            }
+
+            // Show results
+            document.getElementById('final-score').textContent = percentage + '%';
+            const msg = percentage >= 80 ? 
+                "¡Excelente! Demuestras dominio de zona de seguridad UAS." :
+                percentage >= 60 ?
+                "Buen trabajo. Revisa los puntos débiles y repasa." :
+                "Necesitas reforzar. Revisa el material y reintenta.";
+            
+            document.getElementById('results-msg').textContent = msg;
+            currentSlide = 15;
+            updateSlide();
+        }
+
+        function handleScenarioChoice(choice) {
+            const feedback = document.getElementById('scenario-feedback');
+            feedback.style.display = 'block';
+
+            if (choice === 'immediate_land') {
+                feedback.innerHTML = `
+                    <div class="choice-feedback">
+                        ✓ <strong>Correcto.</strong> Aterrizar inmediatamente es el procedimiento seguro. Supervisor maneja intrusión. Se reinicia briefing si operación continúa.
+                    </div>
+                `;
+            } else if (choice === 'continue') {
+                feedback.innerHTML = `
+                    <div class="choice-feedback error">
+                        ✗ <strong>Incorrecto.</strong> Nunca continúes si hay intrusión. El riesgo crece cada segundo. Aterriza de inmediato.
+                    </div>
+                `;
+            } else if (choice === 'supervisor') {
+                feedback.innerHTML = `
+                    <div class="choice-feedback error">
+                        ✗ <strong>Incorrecto.</strong> En emergencia, el piloto aterriza primero. No hay tiempo para consulta. Después habla con supervisor.
+                    </div>
+                `;
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function updateSlide() {
+            // Update visibility
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.querySelector(`[data-slide="${currentSlide}"]`).classList.add('active');
+
+            // Update buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+
+            // Update progress
+            document.getElementById('current-slide-num').textContent = currentSlide;
+            const progressPercent = (currentSlide / totalSlides) * 100;
+            document.getElementById('progress-fill').style.width = progressPercent + '%';
+
+            // Update info
+            document.getElementById('slide-info').textContent = `Diapositiva ${currentSlide} de ${totalSlides}`;
+
+            // Scroll to top
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        // Drag and Drop
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('draggable-item')) {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', e.target.dataset.item);
+            }
+        });
+
+        document.addEventListener('dragover', (e) => {
+            const dropZone = document.getElementById('drop-zone');
+            if (e.target === dropZone || dropZone.contains(e.target)) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            }
+        });
+
+        document.addEventListener('drop', (e) => {
+            const dropZone = document.getElementById('drop-zone');
+            if (e.target === dropZone || (dropZone && dropZone.contains(e.target))) {
+                e.preventDefault();
+                const item = e.dataTransfer.getData('text/plain');
+                const originalElement = document.querySelector(`[data-item="${item}"]`);
+                
+                if (originalElement) {
+                    const dropArea = document.getElementById('drop-area');
+                    const newElement = document.createElement('div');
+                    newElement.className = 'dropped-item';
+                    newElement.textContent = originalElement.textContent;
+                    dropArea.appendChild(newElement);
+                    originalElement.style.opacity = '0.5';
+                }
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('load', initializeApp);
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d0abbd8132b3efa',t:'MTc3MTU1NjIxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
