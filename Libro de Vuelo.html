@@ -1,0 +1,1338 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DECIMETRIX | Libro de Vuelo UAS</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0efff',
+              200: '#b9dfff',
+              300: '#7cc4ff',
+              400: '#36a5ff',
+              500: '#0c87f5',
+              600: '#0068d1',
+              700: '#0053aa',
+              800: '#00478c',
+              900: '#063c74',
+              950: '#04264d'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    .app-wrapper { min-height: 100%; }
+    .fade-in { animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .slide-up { animation: slideUp 0.4s ease-out; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 5px rgba(12, 135, 245, 0.3); } 50% { box-shadow: 0 0 20px rgba(12, 135, 245, 0.6); } }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+    input:focus, select:focus, textarea:focus { outline: none; ring: 2px; ring-color: #0c87f5; }
+    .kp-slider::-webkit-slider-thumb { appearance: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .kp-slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .toast { animation: toastIn 0.3s ease-out; }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+    .signature-text { font-family: 'Brush Script MT', 'Segoe Script', cursive; }
+    .modal-backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .lock-overlay { background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 font-sans text-slate-800">
+  <div class="app-wrapper w-full flex flex-col overflow-auto"><!-- Header -->
+   <header id="app-header" class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 text-white shadow-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+     <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+       <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur">
+        <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+       </div>
+       <div>
+        <h1 id="header-title" class="text-lg font-bold tracking-tight">DECIMETRIX</h1>
+        <p id="header-subtitle" class="text-xs text-blue-200 font-medium">Libro de Vuelo UAS (Online)</p>
+       </div>
+      </div>
+      <div class="flex items-center gap-2"><span id="connection-status" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-white/10 rounded-full text-xs font-medium"> <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Demo Local </span>
+      </div>
+     </div><!-- Navigation Tabs -->
+     <nav class="flex gap-1 mt-3 -mb-px overflow-x-auto pb-px"><button onclick="showTab('dashboard')" data-tab="dashboard" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all whitespace-nowrap bg-white/10 text-white/80 hover:bg-white/20"> 📊 Dashboard </button> <button onclick="showTab('nuevo')" data-tab="nuevo" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all whitespace-nowrap bg-white/10 text-white/80 hover:bg-white/20"> ✈️ Nuevo Vuelo </button> <button onclick="requestAccessTab('historial')" data-tab="historial" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all whitespace-nowrap bg-white/10 text-white/80 hover:bg-white/20 relative"> 📋 Historial <span class="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full"></span> </button> <button onclick="requestAccessTab('catalogos')" data-tab="catalogos" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all whitespace-nowrap bg-white/10 text-white/80 hover:bg-white/20 relative"> 📁 Catálogos <span class="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full"></span> </button> <button onclick="requestAccessTab('config')" data-tab="config" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all whitespace-nowrap bg-white/10 text-white/80 hover:bg-white/20 relative"> ⚙️ Configuración <span class="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full"></span> </button>
+     </nav>
+    </div>
+   </header><!-- Main Content -->
+   <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-6"><!-- Dashboard Tab -->
+    <section id="tab-dashboard" class="tab-content hidden fade-in"><!-- Filters -->
+     <div class="bg-white rounded-2xl shadow-lg p-4 mb-6 card-hover">
+      <div class="flex flex-wrap gap-3 items-end">
+       <div class="flex-1 min-w-[140px]"><label class="text-xs font-semibold text-slate-500 mb-1 block">Desde</label> <input type="date" id="filter-from" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+       </div>
+       <div class="flex-1 min-w-[140px]"><label class="text-xs font-semibold text-slate-500 mb-1 block">Hasta</label> <input type="date" id="filter-to" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+       </div>
+       <div class="flex-1 min-w-[140px]"><label class="text-xs font-semibold text-slate-500 mb-1 block">Dron</label> <select id="filter-dron" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:border-brand-500"> <option value="">Todos</option> </select>
+       </div>
+       <div class="flex-1 min-w-[140px]"><label class="text-xs font-semibold text-slate-500 mb-1 block">Piloto</label> <select id="filter-piloto" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:border-brand-500"> <option value="">Todos</option> </select>
+       </div><button onclick="applyFilters()" class="px-5 py-2 bg-brand-600 text-white rounded-lg font-semibold text-sm hover:bg-brand-700 transition-colors shadow-lg shadow-brand-600/30"> Aplicar </button>
+      </div>
+     </div><!-- KPI Cards -->
+     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-2xl shadow-lg p-5 card-hover">
+       <div class="flex items-center gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white text-xl">
+         ✈️
+        </div>
+        <div>
+         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Total Vuelos</p>
+         <p id="kpi-total" class="text-2xl font-bold text-slate-800">0</p>
+        </div>
+       </div>
+       <div class="h-1 bg-slate-100 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-brand-400 to-brand-600 rounded-full" style="width: 0%"></div>
+       </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-5 card-hover">
+       <div class="flex items-center gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white text-xl">
+         ⏱️
+        </div>
+        <div>
+         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Horas Voladas</p>
+         <p id="kpi-hours" class="text-2xl font-bold text-slate-800">0h</p>
+        </div>
+       </div>
+       <div class="h-1 bg-slate-100 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full" style="width: 0%"></div>
+       </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-5 card-hover">
+       <div class="flex items-center gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white text-xl">
+         🏙️
+        </div>
+        <div>
+         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">% Urbano</p>
+         <p id="kpi-urbano" class="text-2xl font-bold text-slate-800">0%</p>
+        </div>
+       </div>
+       <div class="h-1 bg-slate-100 rounded-full overflow-hidden">
+        <div id="kpi-urbano-bar" class="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full" style="width: 0%"></div>
+       </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-5 card-hover">
+       <div class="flex items-center gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white text-xl">
+         ⚠️
+        </div>
+        <div>
+         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">KP Alto (≥7)</p>
+         <p id="kpi-kp" class="text-2xl font-bold text-slate-800">0</p>
+        </div>
+       </div>
+       <div class="h-1 bg-slate-100 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-red-400 to-rose-600 rounded-full" style="width: 0%"></div>
+       </div>
+      </div>
+     </div><!-- Charts -->
+     <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl shadow-lg p-5 card-hover">
+       <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600">📊</span> Vuelos por Dron</h3>
+       <div id="chart-drones" class="space-y-3">
+        <p class="text-sm text-slate-400 text-center py-8">No hay datos disponibles</p>
+       </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-5 card-hover">
+       <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">👨‍✈️</span> Vuelos por Piloto</h3>
+       <div id="chart-pilotos" class="space-y-3">
+        <p class="text-sm text-slate-400 text-center py-8">No hay datos disponibles</p>
+       </div>
+      </div>
+     </div>
+    </section><!-- Nuevo Vuelo Tab -->
+    <section id="tab-nuevo" class="tab-content hidden fade-in"><!-- Progress Bar -->
+     <div class="bg-white rounded-2xl shadow-lg p-4 mb-6">
+      <div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-slate-600">Progreso del Formulario</span> <span id="form-progress-text" class="text-sm font-bold text-brand-600">0%</span>
+      </div>
+      <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+       <div id="form-progress-bar" class="h-full bg-gradient-to-r from-brand-400 to-brand-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+      <div class="flex justify-between mt-2 text-xs text-slate-400"><span>Básicos</span> <span>Equipo</span> <span>Tiempo</span> <span>KP</span> <span>Firmas</span>
+      </div>
+     </div>
+     <form id="flight-form" class="space-y-6"><!-- Section A: Datos Básicos -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden slide-up">
+       <div class="bg-gradient-to-r from-brand-600 to-brand-500 px-5 py-3">
+        <h3 class="font-bold text-white flex items-center gap-2"><span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center text-sm">A</span> Datos Básicos</h3>
+       </div>
+       <div class="p-5 grid md:grid-cols-2 gap-4">
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">Fecha de Operación *</label> <input type="date" id="field-fecha" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all">
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">Piloto *</label> <select id="field-piloto" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all"> <option value="">Seleccionar piloto...</option> </select>
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">Misión *</label> <select id="field-mision" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all"> <option value="">Seleccionar misión...</option> </select>
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">Entorno *</label>
+         <div class="flex gap-3"><label class="flex-1 cursor-pointer"> <input type="radio" name="entorno" value="Urbano" class="peer hidden">
+           <div class="px-4 py-3 border-2 border-slate-200 rounded-xl text-center font-semibold text-sm peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-600 transition-all hover:border-brand-300">
+            🏙️ Urbano
+           </div></label> <label class="flex-1 cursor-pointer"> <input type="radio" name="entorno" value="Rural" class="peer hidden">
+           <div class="px-4 py-3 border-2 border-slate-200 rounded-xl text-center font-semibold text-sm peer-checked:border-emerald-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-600 transition-all hover:border-emerald-300">
+            🌾 Rural
+           </div></label>
+         </div>
+        </div>
+       </div>
+      </div><!-- Section B: Equipo -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden slide-up" style="animation-delay: 0.1s">
+       <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 px-5 py-3">
+        <h3 class="font-bold text-white flex items-center gap-2"><span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center text-sm">B</span> Equipo UAS</h3>
+       </div>
+       <div class="p-5 grid md:grid-cols-3 gap-4">
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">Dron *</label> <select id="field-dron" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"> <option value="">Seleccionar dron...</option> </select>
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">CIPU</label> <input type="text" id="field-cipu" placeholder="Ej: CIPU-001" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">RUAS</label> <input type="text" id="field-ruas" placeholder="Ej: RUAS-001" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+        </div>
+       </div>
+      </div><!-- Section C: Tiempo -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden slide-up" style="animation-delay: 0.2s">
+       <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 py-3">
+        <h3 class="font-bold text-white flex items-center gap-2"><span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center text-sm">C</span> Tiempo de Vuelo</h3>
+       </div>
+       <div class="p-5 grid md:grid-cols-3 gap-4">
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">Hora Inicio *</label> <input type="time" id="field-inicio" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all">
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">Hora Fin *</label> <input type="time" id="field-fin" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all">
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">Duración</label>
+         <div id="duration-display" class="px-4 py-3 bg-gradient-to-r from-emerald-50 to-emerald-100 border-2 border-emerald-200 rounded-xl text-center"><span class="text-2xl font-bold text-emerald-600">--</span> <span class="text-sm text-emerald-500 ml-1">min</span>
+         </div>
+        </div>
+       </div>
+      </div><!-- Section D: Índice KP -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden slide-up" style="animation-delay: 0.3s">
+       <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3">
+        <h3 class="font-bold text-white flex items-center gap-2"><span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center text-sm">D</span> Índice KP (Actividad Geomagnética)</h3>
+       </div>
+       <div class="p-5">
+        <div class="flex items-center gap-4 mb-4">
+         <div id="kp-indicator" class="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center shadow-lg transition-all duration-300"><span id="kp-value" class="text-3xl font-bold text-white">0</span>
+         </div>
+         <div class="flex-1"><input type="range" id="field-kp" min="0" max="10" value="0" class="kp-slider w-full h-3 rounded-full appearance-none cursor-pointer" style="background: linear-gradient(to right, #22c55e 0%, #22c55e 30%, #eab308 30%, #eab308 60%, #ef4444 60%, #ef4444 100%)">
+          <div class="flex justify-between mt-2 text-xs font-semibold"><span class="text-emerald-500">0</span> <span class="text-emerald-500">Bajo</span> <span class="text-amber-500">Moderado</span> <span class="text-red-500">Alto</span> <span class="text-red-500">10</span>
+          </div>
+         </div>
+        </div>
+        <div id="kp-message" class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm text-emerald-700 font-medium text-center transition-all">
+         ✅ Condiciones óptimas para vuelo
+        </div>
+       </div>
+      </div><!-- Section E: Observaciones -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden slide-up" style="animation-delay: 0.4s">
+       <div class="bg-gradient-to-r from-slate-600 to-slate-500 px-5 py-3">
+        <h3 class="font-bold text-white flex items-center gap-2"><span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center text-sm">E</span> Observaciones</h3>
+       </div>
+       <div class="p-5"><textarea id="field-obs" rows="3" placeholder="Notas adicionales sobre la operación..." class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-slate-500 focus:ring-4 focus:ring-slate-500/10 transition-all resize-none"></textarea>
+       </div>
+      </div><!-- Section F: Firmas -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden slide-up" style="animation-delay: 0.5s">
+       <div class="bg-gradient-to-r from-violet-600 to-purple-500 px-5 py-3">
+        <h3 class="font-bold text-white flex items-center gap-2"><span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center text-sm">F</span> Firmas de Autorización</h3>
+       </div>
+       <div class="p-5 grid md:grid-cols-2 gap-6"><!-- Firma Piloto -->
+        <div class="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center">
+         <p class="text-sm font-semibold text-slate-500 mb-3">Firma del Piloto</p>
+         <div id="firma-piloto-preview" class="h-24 bg-slate-50 rounded-lg flex items-center justify-center mb-3 border border-slate-200">
+          <p class="text-slate-400 text-sm">Selecciona un piloto para generar</p>
+         </div>
+         <p class="text-xs text-slate-400">Generada automáticamente</p>
+        </div><!-- Firma Jefe de Pilotos -->
+        <div class="border-2 border-dashed border-violet-200 rounded-xl p-4 text-center bg-violet-50/50">
+         <p class="text-sm font-semibold text-violet-600 mb-3">Firma Jefe de Pilotos</p>
+         <div class="h-24 bg-white rounded-lg flex items-center justify-center mb-3 border border-violet-200"><span class="signature-text text-3xl text-violet-600">Oscar Eduardo Cruz</span>
+         </div>
+         <p class="text-xs text-violet-500 font-medium">Oscar Eduardo Cruz</p>
+        </div>
+       </div>
+      </div><!-- Buttons -->
+      <div class="flex flex-wrap gap-3 justify-end"><button type="button" onclick="resetForm()" class="px-6 py-3 bg-slate-100 text-slate-600 rounded-xl font-semibold text-sm hover:bg-slate-200 transition-all"> Limpiar </button> <button type="button" onclick="saveFlight('Borrador')" class="px-6 py-3 bg-slate-600 text-white rounded-xl font-semibold text-sm hover:bg-slate-700 transition-all shadow-lg shadow-slate-600/30"> 💾 Guardar Borrador </button> <button type="button" onclick="saveFlight('Enviado')" class="px-6 py-3 bg-amber-500 text-white rounded-xl font-semibold text-sm hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/30"> 📤 Enviar a Aprobación </button> <button type="button" onclick="saveAndNew()" class="px-6 py-3 bg-gradient-to-r from-brand-600 to-brand-500 text-white rounded-xl font-semibold text-sm hover:from-brand-700 hover:to-brand-600 transition-all shadow-lg shadow-brand-600/30"> ✨ Guardar y Nuevo </button>
+      </div>
+     </form>
+    </section><!-- Historial Tab -->
+    <section id="tab-historial" class="tab-content hidden fade-in">
+     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div class="p-5 border-b border-slate-100">
+       <div class="flex flex-wrap gap-3 items-center justify-between">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600">📋</span> Historial de Vuelos</h3>
+        <div class="flex gap-2"><input type="text" id="search-history" placeholder="Buscar..." class="px-4 py-2 border border-slate-200 rounded-lg text-sm w-48 focus:border-brand-500"> <button onclick="exportAllCSV()" class="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-semibold hover:bg-emerald-600 transition-colors"> 📥 Exportar CSV </button>
+        </div>
+       </div>
+      </div>
+      <div class="overflow-x-auto">
+       <table class="w-full">
+        <thead class="bg-slate-50">
+         <tr>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">ID</th>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Fecha</th>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Piloto</th>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Dron</th>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Misión</th>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Duración</th>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">KP</th>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Estado</th>
+          <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Acciones</th>
+         </tr>
+        </thead>
+        <tbody id="history-table" class="divide-y divide-slate-100">
+         <tr>
+          <td colspan="9" class="px-4 py-12 text-center text-slate-400">
+           <div class="flex flex-col items-center gap-2"><span class="text-4xl">📭</span>
+            <p>No hay vuelos registrados</p>
+           </div></td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </section><!-- Catálogos Tab -->
+    <section id="tab-catalogos" class="tab-content hidden fade-in">
+     <div class="grid lg:grid-cols-3 gap-6"><!-- Pilotos -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+       <div class="bg-gradient-to-r from-brand-600 to-brand-500 px-5 py-4">
+        <h3 class="font-bold text-white flex items-center gap-2">👨‍✈️ Pilotos</h3>
+       </div>
+       <div class="p-4">
+        <div class="flex gap-2 mb-4"><input type="text" id="new-piloto" placeholder="Nombre del piloto" class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm"> <button onclick="addPiloto()" class="px-4 py-2 bg-brand-500 text-white rounded-lg text-sm font-semibold hover:bg-brand-600">+</button>
+        </div>
+        <ul id="list-pilotos" class="space-y-2 max-h-64 overflow-y-auto">
+         <li class="text-center text-slate-400 text-sm py-4">Sin pilotos registrados</li>
+        </ul>
+       </div>
+      </div><!-- Drones -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+       <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 px-5 py-4">
+        <h3 class="font-bold text-white flex items-center gap-2">🚁 Drones</h3>
+       </div>
+       <div class="p-4">
+        <div class="space-y-2 mb-4"><input type="text" id="new-dron-nombre" placeholder="Nombre (ej: Mavic 3)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"> <input type="text" id="new-dron-serial" placeholder="Serial" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"> <button onclick="addDron()" class="w-full px-4 py-2 bg-indigo-500 text-white rounded-lg text-sm font-semibold hover:bg-indigo-600">+ Agregar Dron</button>
+        </div>
+        <ul id="list-drones" class="space-y-2 max-h-64 overflow-y-auto">
+         <li class="text-center text-slate-400 text-sm py-4">Sin drones registrados</li>
+        </ul>
+       </div>
+      </div><!-- Misiones -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+       <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 py-4">
+        <h3 class="font-bold text-white flex items-center gap-2">🎯 Misiones</h3>
+       </div>
+       <div class="p-4">
+        <div class="space-y-2 mb-4"><input type="text" id="new-mision-nombre" placeholder="Nombre de misión" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"> <input type="text" id="new-mision-cliente" placeholder="Cliente (opcional)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"> <button onclick="addMision()" class="w-full px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-semibold hover:bg-emerald-600">+ Agregar Misión</button>
+        </div>
+        <ul id="list-misiones" class="space-y-2 max-h-64 overflow-y-auto">
+         <li class="text-center text-slate-400 text-sm py-4">Sin misiones registradas</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Configuración Tab -->
+    <section id="tab-config" class="tab-content hidden fade-in">
+     <div class="max-w-2xl mx-auto">
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+       <div class="bg-gradient-to-r from-slate-700 to-slate-600 px-5 py-4">
+        <h3 class="font-bold text-white flex items-center gap-2">⚙️ Asistente de Conexión - OneDrive/Excel</h3>
+       </div>
+       <div class="p-6 space-y-6">
+        <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+         <p class="text-sm text-blue-700"><strong>💡 Modo Demo:</strong> Mientras no configures las URLs, los datos se guardarán localmente en tu navegador. Para conectar con Excel en OneDrive, configura los endpoints de Power Automate.</p>
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">URL para Guardar (POST)</label> <input type="url" id="config-url-guardar" placeholder="https://prod-xx.westus.logic.azure.com/..." class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-brand-500">
+         <p class="text-xs text-slate-400 mt-1">Endpoint de Power Automate para agregar filas a Excel</p>
+        </div>
+        <div><label class="text-sm font-semibold text-slate-600 mb-1.5 block">URL para Listar (GET)</label> <input type="url" id="config-url-listar" placeholder="https://prod-xx.westus.logic.azure.com/..." class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm focus:border-brand-500">
+         <p class="text-xs text-slate-400 mt-1">Endpoint de Power Automate para leer registros de Excel</p>
+        </div>
+        <div id="connection-result" class="hidden p-4 rounded-xl"></div>
+        <div class="flex gap-3"><button onclick="testConnection()" class="flex-1 px-6 py-3 bg-slate-600 text-white rounded-xl font-semibold text-sm hover:bg-slate-700 transition-all"> 🔌 Probar Conexión </button> <button onclick="saveConfig()" class="flex-1 px-6 py-3 bg-brand-600 text-white rounded-xl font-semibold text-sm hover:bg-brand-700 transition-all shadow-lg shadow-brand-600/30"> 💾 Guardar Configuración </button>
+        </div>
+        <hr class="border-slate-200">
+        <div>
+         <h4 class="font-semibold text-slate-700 mb-3">Estado Actual</h4>
+         <div id="config-status" class="p-4 bg-slate-50 rounded-xl">
+          <p class="text-sm text-slate-600">Cargando...</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </main><!-- Access Code Modal -->
+   <div id="access-modal" class="fixed inset-0 z-50 hidden">
+    <div class="lock-overlay absolute inset-0" onclick="closeAccessModal()"></div>
+    <div class="absolute inset-4 md:inset-32 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col items-center justify-center p-8 max-w-md mx-auto">
+     <div class="text-6xl mb-4">
+      🔐
+     </div>
+     <h3 class="font-bold text-xl text-slate-800 mb-2">Acceso Restringido</h3>
+     <p class="text-center text-slate-600 text-sm mb-6">Esta pestaña requiere un código de acceso</p><input type="password" id="access-code-input" placeholder="Ingresa el código" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm mb-4 focus:border-brand-500" onkeypress="if(event.key==='Enter') verifyAccessCode()">
+     <div class="flex gap-3 w-full"><button onclick="closeAccessModal()" class="flex-1 px-4 py-2 bg-slate-100 text-slate-600 rounded-lg font-semibold text-sm hover:bg-slate-200"> Cancelar </button> <button onclick="verifyAccessCode()" class="flex-1 px-4 py-2 bg-brand-600 text-white rounded-lg font-semibold text-sm hover:bg-brand-700"> Verificar </button>
+     </div>
+     <p id="access-error" class="text-red-600 text-xs mt-4 hidden">Código incorrecto</p>
+    </div>
+   </div><!-- Toast Container -->
+   <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div><!-- Detail Modal -->
+   <div id="detail-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-backdrop absolute inset-0" onclick="closeDetailModal()"></div>
+    <div class="absolute inset-4 md:inset-8 lg:inset-16 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+     <div class="bg-gradient-to-r from-brand-600 to-brand-500 px-6 py-4 flex items-center justify-between">
+      <h3 class="font-bold text-white text-lg">Detalle de Operación</h3><button onclick="closeDetailModal()" class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center text-white hover:bg-white/30 transition-colors">✕</button>
+     </div>
+     <div id="detail-content" class="flex-1 p-6 overflow-y-auto"><!-- Content loaded dynamically -->
+     </div>
+     <div class="p-4 border-t border-slate-100 flex justify-end gap-3"><button onclick="printDetail()" class="px-5 py-2 bg-slate-600 text-white rounded-lg font-semibold text-sm hover:bg-slate-700">🖨️ Imprimir</button> <button onclick="closeDetailModal()" class="px-5 py-2 bg-brand-600 text-white rounded-lg font-semibold text-sm hover:bg-brand-700">Cerrar</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // ==================== CONFIG & STATE ====================
+    const defaultConfig = {
+      app_title: 'DECIMETRIX',
+      subtitle: 'Libro de Vuelo UAS (Online)',
+      access_code: '1234',
+      primary_color: '#0c87f5',
+      secondary_color: '#063c74',
+      accent_color: '#22c55e',
+      text_color: '#1e293b',
+      surface_color: '#ffffff'
+    };
+
+    let config = { ...defaultConfig };
+    let allFlights = [];
+    let catalogPilotos = [];
+    let catalogDrones = [];
+    let catalogMisiones = [];
+    let externalConfig = { url_guardar: '', url_listar: '' };
+    let currentRecordCount = 0;
+    let accessGranted = { historial: false, catalogos: false, config: false };
+    let pendingTab = null;
+
+    // ==================== ELEMENT SDK INIT ====================
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (newConfig) => {
+        config = { ...defaultConfig, ...newConfig };
+        applyConfig();
+      },
+      mapToCapabilities: (cfg) => ({
+        recolorables: [
+          { get: () => cfg.primary_color || defaultConfig.primary_color, set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); } },
+          { get: () => cfg.secondary_color || defaultConfig.secondary_color, set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); } },
+          { get: () => cfg.accent_color || defaultConfig.accent_color, set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); } },
+          { get: () => cfg.text_color || defaultConfig.text_color, set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+          { get: () => cfg.surface_color || defaultConfig.surface_color, set: (v) => { cfg.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      }),
+      mapToEditPanelValues: (cfg) => new Map([
+        ['app_title', cfg.app_title || defaultConfig.app_title],
+        ['subtitle', cfg.subtitle || defaultConfig.subtitle],
+        ['access_code', cfg.access_code || defaultConfig.access_code]
+      ])
+    });
+
+    // ==================== DATA SDK INIT ====================
+    const dataHandler = {
+      onDataChanged(data) {
+        currentRecordCount = data.length;
+        
+        allFlights = data.filter(d => d.type === 'flight');
+        catalogPilotos = data.filter(d => d.type === 'piloto' && d.activo !== 'false');
+        catalogDrones = data.filter(d => d.type === 'dron' && d.activo !== 'false');
+        catalogMisiones = data.filter(d => d.type === 'mision' && d.activo !== 'false');
+        
+        updateDashboard();
+        updateHistoryTable();
+        updateCatalogLists();
+        updateFormSelects();
+      }
+    };
+
+    (async () => {
+      const result = await window.dataSdk.init(dataHandler);
+      if (!result.isOk) {
+        showToast('Error al inicializar almacenamiento', 'error');
+      }
+      
+      const savedConfig = localStorage.getItem('decimetrix_external_config');
+      if (savedConfig) {
+        try {
+          externalConfig = JSON.parse(savedConfig);
+          document.getElementById('config-url-guardar').value = externalConfig.url_guardar || '';
+          document.getElementById('config-url-listar').value = externalConfig.url_listar || '';
+        } catch (e) {}
+      }
+      
+      updateConfigStatus();
+      initForm();
+      showTab('dashboard');
+    })();
+
+    // ==================== CONFIG APPLY ====================
+    function applyConfig() {
+      const title = config.app_title || defaultConfig.app_title;
+      const subtitle = config.subtitle || defaultConfig.subtitle;
+      
+      document.getElementById('header-title').textContent = title;
+      document.getElementById('header-subtitle').textContent = subtitle;
+      document.title = `${title} | ${subtitle}`;
+    }
+
+    // ==================== ACCESS CONTROL ====================
+    function requestAccessTab(tabName) {
+      if (accessGranted[tabName]) {
+        showTab(tabName);
+      } else {
+        pendingTab = tabName;
+        document.getElementById('access-code-input').value = '';
+        document.getElementById('access-error').classList.add('hidden');
+        document.getElementById('access-modal').classList.remove('hidden');
+        setTimeout(() => document.getElementById('access-code-input').focus(), 100);
+      }
+    }
+
+    function verifyAccessCode() {
+      const code = document.getElementById('access-code-input').value;
+      const correctCode = config.access_code || defaultConfig.access_code;
+      
+      if (code === correctCode) {
+        accessGranted[pendingTab] = true;
+        closeAccessModal();
+        showTab(pendingTab);
+        showToast('Acceso concedido', 'success');
+      } else {
+        document.getElementById('access-error').classList.remove('hidden');
+      }
+    }
+
+    function closeAccessModal() {
+      document.getElementById('access-modal').classList.add('hidden');
+      pendingTab = null;
+    }
+
+    // ==================== TAB NAVIGATION ====================
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'text-brand-700');
+        btn.classList.add('bg-white/10', 'text-white/80');
+      });
+      
+      const tab = document.getElementById(`tab-${tabName}`);
+      const btn = document.querySelector(`[data-tab="${tabName}"]`);
+      
+      if (tab) {
+        tab.classList.remove('hidden');
+        tab.classList.add('fade-in');
+      }
+      if (btn) {
+        btn.classList.remove('bg-white/10', 'text-white/80');
+        btn.classList.add('bg-white', 'text-brand-700');
+      }
+    }
+
+    // ==================== FORM INITIALIZATION ====================
+    function initForm() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('field-fecha').value = today;
+      
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      document.getElementById('filter-from').value = thirtyDaysAgo.toISOString().split('T')[0];
+      document.getElementById('filter-to').value = today;
+      
+      document.getElementById('field-inicio').addEventListener('change', calculateDuration);
+      document.getElementById('field-fin').addEventListener('change', calculateDuration);
+      document.getElementById('field-kp').addEventListener('input', updateKPDisplay);
+      
+      const formFields = ['field-fecha', 'field-piloto', 'field-mision', 'field-dron', 'field-inicio', 'field-fin'];
+      formFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', updateFormProgress);
+      });
+      document.querySelectorAll('input[name="entorno"]').forEach(el => {
+        el.addEventListener('change', updateFormProgress);
+      });
+      
+      document.getElementById('field-piloto').addEventListener('change', updatePilotSignature);
+      document.getElementById('search-history').addEventListener('input', filterHistory);
+    }
+
+    // ==================== FORM FUNCTIONS ====================
+    function calculateDuration() {
+      const inicio = document.getElementById('field-inicio').value;
+      const fin = document.getElementById('field-fin').value;
+      
+      if (inicio && fin) {
+        const [h1, m1] = inicio.split(':').map(Number);
+        const [h2, m2] = fin.split(':').map(Number);
+        let mins = (h2 * 60 + m2) - (h1 * 60 + m1);
+        if (mins < 0) mins += 24 * 60;
+        
+        const display = document.getElementById('duration-display');
+        display.innerHTML = `<span class="text-2xl font-bold text-emerald-600">${mins}</span><span class="text-sm text-emerald-500 ml-1">min (${(mins/60).toFixed(1)}h)</span>`;
+      }
+      updateFormProgress();
+    }
+
+    function updateKPDisplay() {
+      const kp = parseInt(document.getElementById('field-kp').value);
+      const indicator = document.getElementById('kp-indicator');
+      const valueEl = document.getElementById('kp-value');
+      const message = document.getElementById('kp-message');
+      
+      valueEl.textContent = kp;
+      
+      if (kp <= 3) {
+        indicator.className = 'w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center shadow-lg transition-all duration-300';
+        message.className = 'p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm text-emerald-700 font-medium text-center transition-all';
+        message.innerHTML = '✅ Condiciones óptimas para vuelo';
+      } else if (kp <= 6) {
+        indicator.className = 'w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-lg transition-all duration-300';
+        message.className = 'p-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700 font-medium text-center transition-all';
+        message.innerHTML = '⚠️ Condiciones moderadas - Precaución recomendada';
+      } else {
+        indicator.className = 'w-20 h-20 rounded-2xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center shadow-lg transition-all duration-300';
+        message.className = 'p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 font-medium text-center transition-all';
+        message.innerHTML = '🚨 Índice KP alto - Evaluar necesidad de vuelo';
+      }
+      updateFormProgress();
+    }
+
+    function updateFormProgress() {
+      let filled = 0;
+      const total = 6;
+      
+      if (document.getElementById('field-fecha').value) filled++;
+      if (document.getElementById('field-piloto').value) filled++;
+      if (document.getElementById('field-mision').value) filled++;
+      if (document.getElementById('field-dron').value) filled++;
+      if (document.getElementById('field-inicio').value) filled++;
+      if (document.getElementById('field-fin').value) filled++;
+      
+      const percent = Math.round((filled / total) * 100);
+      document.getElementById('form-progress-bar').style.width = `${percent}%`;
+      document.getElementById('form-progress-text').textContent = `${percent}%`;
+    }
+
+    function updatePilotSignature() {
+      const pilotoId = document.getElementById('field-piloto').value;
+      const preview = document.getElementById('firma-piloto-preview');
+      
+      if (pilotoId) {
+        const piloto = catalogPilotos.find(p => p.__backendId === pilotoId);
+        if (piloto) {
+          preview.innerHTML = `<span class="signature-text text-3xl text-slate-600">${piloto.nombre}</span>`;
+        }
+      } else {
+        preview.innerHTML = '<p class="text-slate-400 text-sm">Selecciona un piloto para generar</p>';
+      }
+    }
+
+    function updateFormSelects() {
+      const pilotoSelect = document.getElementById('field-piloto');
+      const dronSelect = document.getElementById('field-dron');
+      const misionSelect = document.getElementById('field-mision');
+      const filterPiloto = document.getElementById('filter-piloto');
+      const filterDron = document.getElementById('filter-dron');
+      
+      const currentPiloto = pilotoSelect.value;
+      const currentDron = dronSelect.value;
+      const currentMision = misionSelect.value;
+      
+      pilotoSelect.innerHTML = '<option value="">Seleccionar piloto...</option>';
+      filterPiloto.innerHTML = '<option value="">Todos</option>';
+      catalogPilotos.forEach(p => {
+        pilotoSelect.innerHTML += `<option value="${p.__backendId}">${p.nombre}</option>`;
+        filterPiloto.innerHTML += `<option value="${p.nombre}">${p.nombre}</option>`;
+      });
+      pilotoSelect.value = currentPiloto;
+      
+      dronSelect.innerHTML = '<option value="">Seleccionar dron...</option>';
+      filterDron.innerHTML = '<option value="">Todos</option>';
+      catalogDrones.forEach(d => {
+        dronSelect.innerHTML += `<option value="${d.__backendId}">${d.nombre}${d.serial ? ` (${d.serial})` : ''}</option>`;
+        filterDron.innerHTML += `<option value="${d.nombre}">${d.nombre}</option>`;
+      });
+      dronSelect.value = currentDron;
+      
+      misionSelect.innerHTML = '<option value="">Seleccionar misión...</option>';
+      catalogMisiones.forEach(m => {
+        misionSelect.innerHTML += `<option value="${m.__backendId}">${m.nombre}${m.cliente ? ` - ${m.cliente}` : ''}</option>`;
+      });
+      misionSelect.value = currentMision;
+    }
+
+    function generateOperationId(fecha, dron) {
+      const dateStr = fecha.replace(/-/g, '');
+      const dronSlug = dron.toUpperCase().replace(/\s+/g, '').substring(0, 10);
+      const existingToday = allFlights.filter(f => f.fecha === fecha).length;
+      const seq = String(existingToday + 1).padStart(4, '0');
+      return `${dateStr}-${dronSlug}-${seq}`;
+    }
+
+    function generateSignatureSVG(name) {
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60"><text x="10" y="40" font-family="Brush Script MT, cursive" font-size="28" fill="#475569">${name}</text></svg>`;
+    }
+
+    async function saveFlight(estado) {
+      if (currentRecordCount >= 999) {
+        showToast('Límite de 999 registros alcanzado', 'error');
+        return;
+      }
+      
+      const pilotoId = document.getElementById('field-piloto').value;
+      const dronId = document.getElementById('field-dron').value;
+      const misionId = document.getElementById('field-mision').value;
+      const entornoEl = document.querySelector('input[name="entorno"]:checked');
+      
+      if (!pilotoId || !dronId || !misionId || !entornoEl) {
+        showToast('Por favor completa todos los campos requeridos', 'error');
+        return;
+      }
+      
+      const piloto = catalogPilotos.find(p => p.__backendId === pilotoId);
+      const dron = catalogDrones.find(d => d.__backendId === dronId);
+      const mision = catalogMisiones.find(m => m.__backendId === misionId);
+      
+      const fecha = document.getElementById('field-fecha').value;
+      const horaInicio = document.getElementById('field-inicio').value;
+      const horaFin = document.getElementById('field-fin').value;
+      
+      const [h1, m1] = horaInicio.split(':').map(Number);
+      const [h2, m2] = horaFin.split(':').map(Number);
+      let duracionMin = (h2 * 60 + m2) - (h1 * 60 + m1);
+      if (duracionMin < 0) duracionMin += 24 * 60;
+      
+      const flightData = {
+        type: 'flight',
+        operacion_id: generateOperationId(fecha, dron.nombre),
+        fecha: fecha,
+        piloto_nombre: piloto.nombre,
+        jefe_pilotos_nombre: 'Oscar Eduardo Cruz',
+        dron: dron.nombre,
+        mision: mision.nombre,
+        cipu: document.getElementById('field-cipu').value || '',
+        ruas: document.getElementById('field-ruas').value || '',
+        entorno: entornoEl.value,
+        hora_inicio: horaInicio,
+        hora_fin: horaFin,
+        duracion_min: duracionMin,
+        indice_kp: parseInt(document.getElementById('field-kp').value),
+        observaciones: document.getElementById('field-obs').value || '',
+        estado: estado,
+        firma_piloto_svg: generateSignatureSVG(piloto.nombre),
+        firma_jefe_svg: generateSignatureSVG('Oscar Eduardo Cruz'),
+        created_at: new Date().toISOString()
+      };
+      
+      if (externalConfig.url_guardar) {
+        try {
+          const response = await fetch(externalConfig.url_guardar, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(flightData)
+          });
+          if (!response.ok) throw new Error('External save failed');
+        } catch (e) {
+          console.error('External save error:', e);
+        }
+      }
+      
+      const result = await window.dataSdk.create(flightData);
+      if (result.isOk) {
+        showToast(`Vuelo guardado como ${estado}`, 'success');
+      } else {
+        showToast('Error al guardar el vuelo', 'error');
+      }
+    }
+
+    function saveAndNew() {
+      saveFlight('Borrador').then(() => {
+        resetForm();
+      });
+    }
+
+    function resetForm() {
+      document.getElementById('flight-form').reset();
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('field-fecha').value = today;
+      document.getElementById('field-kp').value = 0;
+      updateKPDisplay();
+      updateFormProgress();
+      document.getElementById('firma-piloto-preview').innerHTML = '<p class="text-slate-400 text-sm">Selecciona un piloto para generar</p>';
+      document.getElementById('duration-display').innerHTML = '<span class="text-2xl font-bold text-emerald-600">--</span><span class="text-sm text-emerald-500 ml-1">min</span>';
+    }
+
+    // ==================== DASHBOARD ====================
+    function updateDashboard() {
+      const flights = getFilteredFlights();
+      
+      document.getElementById('kpi-total').textContent = flights.length;
+      
+      const totalMins = flights.reduce((sum, f) => sum + (f.duracion_min || 0), 0);
+      document.getElementById('kpi-hours').textContent = `${(totalMins / 60).toFixed(1)}h`;
+      
+      const urbano = flights.filter(f => f.entorno === 'Urbano').length;
+      const urbanoPercent = flights.length > 0 ? Math.round((urbano / flights.length) * 100) : 0;
+      document.getElementById('kpi-urbano').textContent = `${urbanoPercent}%`;
+      document.getElementById('kpi-urbano-bar').style.width = `${urbanoPercent}%`;
+      
+      const kpAlto = flights.filter(f => f.indice_kp >= 7).length;
+      document.getElementById('kpi-kp').textContent = kpAlto;
+      
+      updateCharts(flights);
+    }
+
+    function updateCharts(flights) {
+      const droneChart = document.getElementById('chart-drones');
+      const droneCounts = {};
+      flights.forEach(f => {
+        droneCounts[f.dron] = (droneCounts[f.dron] || 0) + 1;
+      });
+      
+      if (Object.keys(droneCounts).length > 0) {
+        const maxDrone = Math.max(...Object.values(droneCounts));
+        droneChart.innerHTML = Object.entries(droneCounts).map(([name, count]) => `
+          <div class="flex items-center gap-3">
+            <span class="w-24 text-sm font-medium text-slate-600 truncate">${name}</span>
+            <div class="flex-1 h-6 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-brand-400 to-brand-600 rounded-full transition-all" style="width: ${(count/maxDrone)*100}%"></div>
+            </div>
+            <span class="text-sm font-bold text-slate-700 w-8 text-right">${count}</span>
+          </div>
+        `).join('');
+      } else {
+        droneChart.innerHTML = '<p class="text-sm text-slate-400 text-center py-8">No hay datos disponibles</p>';
+      }
+      
+      const pilotoChart = document.getElementById('chart-pilotos');
+      const pilotoCounts = {};
+      flights.forEach(f => {
+        pilotoCounts[f.piloto_nombre] = (pilotoCounts[f.piloto_nombre] || 0) + 1;
+      });
+      
+      if (Object.keys(pilotoCounts).length > 0) {
+        const maxPiloto = Math.max(...Object.values(pilotoCounts));
+        pilotoChart.innerHTML = Object.entries(pilotoCounts).map(([name, count]) => `
+          <div class="flex items-center gap-3">
+            <span class="w-24 text-sm font-medium text-slate-600 truncate">${name}</span>
+            <div class="flex-1 h-6 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all" style="width: ${(count/maxPiloto)*100}%"></div>
+            </div>
+            <span class="text-sm font-bold text-slate-700 w-8 text-right">${count}</span>
+          </div>
+        `).join('');
+      } else {
+        pilotoChart.innerHTML = '<p class="text-sm text-slate-400 text-center py-8">No hay datos disponibles</p>';
+      }
+    }
+
+    function getFilteredFlights() {
+      const from = document.getElementById('filter-from').value;
+      const to = document.getElementById('filter-to').value;
+      const dron = document.getElementById('filter-dron').value;
+      const piloto = document.getElementById('filter-piloto').value;
+      
+      return allFlights.filter(f => {
+        if (from && f.fecha < from) return false;
+        if (to && f.fecha > to) return false;
+        if (dron && f.dron !== dron) return false;
+        if (piloto && f.piloto_nombre !== piloto) return false;
+        return true;
+      });
+    }
+
+    function applyFilters() {
+      updateDashboard();
+      showToast('Filtros aplicados', 'success');
+    }
+
+    // ==================== HISTORY ====================
+    function updateHistoryTable() {
+      const tbody = document.getElementById('history-table');
+      
+      if (allFlights.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="px-4 py-12 text-center text-slate-400">
+              <div class="flex flex-col items-center gap-2">
+                <span class="text-4xl">📭</span>
+                <p>No hay vuelos registrados</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      const sorted = [...allFlights].sort((a, b) => b.fecha.localeCompare(a.fecha));
+      
+      tbody.innerHTML = sorted.map(f => `
+        <tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-4 py-3 text-xs font-mono text-slate-500">${f.operacion_id || '-'}</td>
+          <td class="px-4 py-3 text-sm font-medium text-slate-700">${f.fecha}</td>
+          <td class="px-4 py-3 text-sm text-slate-600">${f.piloto_nombre}</td>
+          <td class="px-4 py-3 text-sm text-slate-600">${f.dron}</td>
+          <td class="px-4 py-3 text-sm text-slate-600">${f.mision}</td>
+          <td class="px-4 py-3 text-sm text-slate-600">${f.duracion_min}min</td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-1 rounded-full text-xs font-bold ${getKPClass(f.indice_kp)}">${f.indice_kp}</span>
+          </td>
+          <td class="px-4 py-3">
+            <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusClass(f.estado)}">${f.estado}</span>
+          </td>
+          <td class="px-4 py-3">
+            <div class="flex gap-1">
+              <button onclick="viewDetail('${f.__backendId}')" class="p-1.5 text-brand-600 hover:bg-brand-50 rounded-lg transition-colors" title="Ver detalle">👁️</button>
+              <button onclick="duplicateFlight('${f.__backendId}')" class="p-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors" title="Duplicar">📋</button>
+              ${f.estado === 'Enviado' ? `<button onclick="approveFlight('${f.__backendId}')" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Aprobar">✅</button>` : ''}
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function getKPClass(kp) {
+      if (kp <= 3) return 'bg-emerald-100 text-emerald-700';
+      if (kp <= 6) return 'bg-amber-100 text-amber-700';
+      return 'bg-red-100 text-red-700';
+    }
+
+    function getStatusClass(estado) {
+      if (estado === 'Aprobado') return 'bg-emerald-100 text-emerald-700';
+      if (estado === 'Enviado') return 'bg-amber-100 text-amber-700';
+      return 'bg-slate-100 text-slate-600';
+    }
+
+    function filterHistory() {
+      const search = document.getElementById('search-history').value.toLowerCase();
+      const rows = document.querySelectorAll('#history-table tr');
+      
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(search) ? '' : 'none';
+      });
+    }
+
+    function viewDetail(id) {
+      const flight = allFlights.find(f => f.__backendId === id);
+      if (!flight) return;
+      
+      const content = document.getElementById('detail-content');
+      content.innerHTML = `
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div class="p-4 bg-slate-50 rounded-xl">
+              <h4 class="font-semibold text-slate-700 mb-3">📋 Datos de Operación</h4>
+              <div class="space-y-2 text-sm">
+                <p><span class="text-slate-500">ID:</span> <span class="font-mono font-semibold">${flight.operacion_id}</span></p>
+                <p><span class="text-slate-500">Fecha:</span> <span class="font-semibold">${flight.fecha}</span></p>
+                <p><span class="text-slate-500">Piloto:</span> <span class="font-semibold">${flight.piloto_nombre}</span></p>
+                <p><span class="text-slate-500">Misión:</span> <span class="font-semibold">${flight.mision}</span></p>
+                <p><span class="text-slate-500">Entorno:</span> <span class="font-semibold">${flight.entorno}</span></p>
+              </div>
+            </div>
+            
+            <div class="p-4 bg-indigo-50 rounded-xl">
+              <h4 class="font-semibold text-indigo-700 mb-3">🚁 Equipo</h4>
+              <div class="space-y-2 text-sm">
+                <p><span class="text-indigo-500">Dron:</span> <span class="font-semibold">${flight.dron}</span></p>
+                <p><span class="text-indigo-500">CIPU:</span> <span class="font-semibold">${flight.cipu || '-'}</span></p>
+                <p><span class="text-indigo-500">RUAS:</span> <span class="font-semibold">${flight.ruas || '-'}</span></p>
+              </div>
+            </div>
+            
+            <div class="p-4 bg-emerald-50 rounded-xl">
+              <h4 class="font-semibold text-emerald-700 mb-3">⏱️ Tiempo</h4>
+              <div class="space-y-2 text-sm">
+                <p><span class="text-emerald-500">Inicio:</span> <span class="font-semibold">${flight.hora_inicio}</span></p>
+                <p><span class="text-emerald-500">Fin:</span> <span class="font-semibold">${flight.hora_fin}</span></p>
+                <p><span class="text-emerald-500">Duración:</span> <span class="font-semibold">${flight.duracion_min} min (${(flight.duracion_min/60).toFixed(1)}h)</span></p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <div class="p-4 rounded-xl ${getKPClass(flight.indice_kp).replace('100', '50')}">
+              <h4 class="font-semibold mb-3">📊 Índice KP</h4>
+              <div class="text-center">
+                <span class="text-5xl font-bold">${flight.indice_kp}</span>
+                <p class="text-sm mt-2">${flight.indice_kp <= 3 ? 'Condiciones óptimas' : flight.indice_kp <= 6 ? 'Condiciones moderadas' : 'Índice alto'}</p>
+              </div>
+            </div>
+            
+            <div class="p-4 bg-slate-50 rounded-xl">
+              <h4 class="font-semibold text-slate-700 mb-3">📝 Observaciones</h4>
+              <p class="text-sm text-slate-600">${flight.observaciones || 'Sin observaciones'}</p>
+            </div>
+            
+            <div class="p-4 bg-violet-50 rounded-xl">
+              <h4 class="font-semibold text-violet-700 mb-3">✍️ Firmas</h4>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="text-center p-3 bg-white rounded-lg">
+                  <p class="text-xs text-slate-500 mb-2">Piloto</p>
+                  <p class="signature-text text-xl text-slate-600">${flight.piloto_nombre}</p>
+                </div>
+                <div class="text-center p-3 bg-white rounded-lg">
+                  <p class="text-xs text-slate-500 mb-2">Jefe de Pilotos</p>
+                  <p class="signature-text text-xl text-violet-600">${flight.jefe_pilotos_nombre}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex justify-center">
+              <span class="px-4 py-2 rounded-full text-sm font-bold ${getStatusClass(flight.estado)}">${flight.estado}</span>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+    }
+
+    function printDetail() {
+      window.print();
+    }
+
+    async function duplicateFlight(id) {
+      if (currentRecordCount >= 999) {
+        showToast('Límite de 999 registros alcanzado', 'error');
+        return;
+      }
+      
+      const flight = allFlights.find(f => f.__backendId === id);
+      if (!flight) return;
+      
+      const today = new Date().toISOString().split('T')[0];
+      const newFlight = {
+        ...flight,
+        operacion_id: generateOperationId(today, flight.dron),
+        fecha: today,
+        estado: 'Borrador',
+        created_at: new Date().toISOString()
+      };
+      delete newFlight.__backendId;
+      
+      const result = await window.dataSdk.create(newFlight);
+      if (result.isOk) {
+        showToast('Vuelo duplicado exitosamente', 'success');
+      }
+    }
+
+    async function approveFlight(id) {
+      const flight = allFlights.find(f => f.__backendId === id);
+      if (!flight) return;
+      
+      const result = await window.dataSdk.update({
+        ...flight,
+        estado: 'Aprobado'
+      });
+      
+      if (result.isOk) {
+        showToast('Vuelo aprobado', 'success');
+      }
+    }
+
+    function exportAllCSV() {
+      if (allFlights.length === 0) {
+        showToast('No hay datos para exportar', 'error');
+        return;
+      }
+      
+      const headers = ['ID', 'Fecha', 'Piloto', 'Jefe', 'Dron', 'Misión', 'CIPU', 'RUAS', 'Entorno', 'Inicio', 'Fin', 'Duración', 'KP', 'Estado', 'Observaciones'];
+      const rows = allFlights.map(f => [
+        f.operacion_id, f.fecha, f.piloto_nombre, f.jefe_pilotos_nombre, f.dron, f.mision,
+        f.cipu, f.ruas, f.entorno, f.hora_inicio, f.hora_fin, f.duracion_min, f.indice_kp, f.estado, f.observaciones
+      ]);
+      
+      let csv = headers.join(',') + '\n';
+      rows.forEach(row => {
+        csv += row.map(v => `"${(v || '').toString().replace(/"/g, '""')}"`).join(',') + '\n';
+      });
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `vuelos_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showToast('CSV exportado exitosamente', 'success');
+    }
+
+    // ==================== CATALOGS ====================
+    function updateCatalogLists() {
+      const listPilotos = document.getElementById('list-pilotos');
+      if (catalogPilotos.length === 0) {
+        listPilotos.innerHTML = '<li class="text-center text-slate-400 text-sm py-4">Sin pilotos registrados</li>';
+      } else {
+        listPilotos.innerHTML = catalogPilotos.map(p => `
+          <li class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
+            <span class="font-medium text-sm">${p.nombre}</span>
+            <button onclick="deactivateItem('${p.__backendId}')" class="text-red-500 hover:text-red-700 text-xs">Desactivar</button>
+          </li>
+        `).join('');
+      }
+      
+      const listDrones = document.getElementById('list-drones');
+      if (catalogDrones.length === 0) {
+        listDrones.innerHTML = '<li class="text-center text-slate-400 text-sm py-4">Sin drones registrados</li>';
+      } else {
+        listDrones.innerHTML = catalogDrones.map(d => `
+          <li class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
+            <div>
+              <span class="font-medium text-sm">${d.nombre}</span>
+              ${d.serial ? `<span class="text-xs text-slate-400 ml-2">${d.serial}</span>` : ''}
+            </div>
+            <button onclick="deactivateItem('${d.__backendId}')" class="text-red-500 hover:text-red-700 text-xs">Desactivar</button>
+          </li>
+        `).join('');
+      }
+      
+      const listMisiones = document.getElementById('list-misiones');
+      if (catalogMisiones.length === 0) {
+        listMisiones.innerHTML = '<li class="text-center text-slate-400 text-sm py-4">Sin misiones registradas</li>';
+      } else {
+        listMisiones.innerHTML = catalogMisiones.map(m => `
+          <li class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
+            <div>
+              <span class="font-medium text-sm">${m.nombre}</span>
+              ${m.cliente ? `<span class="text-xs text-slate-400 ml-2">- ${m.cliente}</span>` : ''}
+            </div>
+            <button onclick="deactivateItem('${m.__backendId}')" class="text-red-500 hover:text-red-700 text-xs">Desactivar</button>
+          </li>
+        `).join('');
+      }
+    }
+
+    async function addPiloto() {
+      if (currentRecordCount >= 999) {
+        showToast('Límite de 999 registros alcanzado', 'error');
+        return;
+      }
+      
+      const nombre = document.getElementById('new-piloto').value.trim();
+      if (!nombre) {
+        showToast('Ingresa el nombre del piloto', 'error');
+        return;
+      }
+      
+      const result = await window.dataSdk.create({
+        type: 'piloto',
+        nombre: nombre,
+        activo: 'true',
+        created_at: new Date().toISOString()
+      });
+      
+      if (result.isOk) {
+        document.getElementById('new-piloto').value = '';
+        showToast('Piloto agregado', 'success');
+      }
+    }
+
+    async function addDron() {
+      if (currentRecordCount >= 999) {
+        showToast('Límite de 999 registros alcanzado', 'error');
+        return;
+      }
+      
+      const nombre = document.getElementById('new-dron-nombre').value.trim();
+      const serial = document.getElementById('new-dron-serial').value.trim();
+      
+      if (!nombre) {
+        showToast('Ingresa el nombre del dron', 'error');
+        return;
+      }
+      
+      const result = await window.dataSdk.create({
+        type: 'dron',
+        nombre: nombre,
+        serial: serial,
+        activo: 'true',
+        created_at: new Date().toISOString()
+      });
+      
+      if (result.isOk) {
+        document.getElementById('new-dron-nombre').value = '';
+        document.getElementById('new-dron-serial').value = '';
+        showToast('Dron agregado', 'success');
+      }
+    }
+
+    async function addMision() {
+      if (currentRecordCount >= 999) {
+        showToast('Límite de 999 registros alcanzado', 'error');
+        return;
+      }
+      
+      const nombre = document.getElementById('new-mision-nombre').value.trim();
+      const cliente = document.getElementById('new-mision-cliente').value.trim();
+      
+      if (!nombre) {
+        showToast('Ingresa el nombre de la misión', 'error');
+        return;
+      }
+      
+      const result = await window.dataSdk.create({
+        type: 'mision',
+        nombre: nombre,
+        cliente: cliente,
+        activo: 'true',
+        created_at: new Date().toISOString()
+      });
+      
+      if (result.isOk) {
+        document.getElementById('new-mision-nombre').value = '';
+        document.getElementById('new-mision-cliente').value = '';
+        showToast('Misión agregada', 'success');
+      }
+    }
+
+    async function deactivateItem(id) {
+      const allData = [...catalogPilotos, ...catalogDrones, ...catalogMisiones, ...allFlights];
+      const item = allData.find(d => d.__backendId === id);
+      
+      if (item) {
+        const result = await window.dataSdk.update({
+          ...item,
+          activo: 'false'
+        });
+        
+        if (result.isOk) {
+          showToast('Elemento desactivado', 'success');
+        }
+      }
+    }
+
+    // ==================== CONFIGURATION ====================
+    function updateConfigStatus() {
+      const status = document.getElementById('config-status');
+      const connectionStatus = document.getElementById('connection-status');
+      
+      if (externalConfig.url_guardar || externalConfig.url_listar) {
+        status.innerHTML = `
+          <div class="space-y-2">
+            <p class="text-sm"><span class="text-emerald-600 font-semibold">✓ URL Guardar:</span> ${externalConfig.url_guardar ? 'Configurada' : 'No configurada'}</p>
+            <p class="text-sm"><span class="text-emerald-600 font-semibold">✓ URL Listar:</span> ${externalConfig.url_listar ? 'Configurada' : 'No configurada'}</p>
+          </div>
+        `;
+        connectionStatus.innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Conectado
+        `;
+      } else {
+        status.innerHTML = `
+          <p class="text-sm text-amber-600">⚠️ Modo Demo Local - Los datos se guardan solo en este navegador</p>
+        `;
+        connectionStatus.innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          Demo Local
+        `;
+      }
+      connectionStatus.classList.remove('hidden');
+    }
+
+    async function testConnection() {
+      const urlListar = document.getElementById('config-url-listar').value.trim();
+      const resultDiv = document.getElementById('connection-result');
+      
+      if (!urlListar) {
+        resultDiv.className = 'p-4 rounded-xl bg-amber-50 border border-amber-200';
+        resultDiv.innerHTML = '<p class="text-sm text-amber-700">⚠️ Ingresa la URL de listar para probar la conexión</p>';
+        resultDiv.classList.remove('hidden');
+        return;
+      }
+      
+      resultDiv.className = 'p-4 rounded-xl bg-blue-50 border border-blue-200';
+      resultDiv.innerHTML = '<p class="text-sm text-blue-700">🔄 Probando conexión...</p>';
+      resultDiv.classList.remove('hidden');
+      
+      try {
+        const response = await fetch(urlListar);
+        if (response.ok) {
+          resultDiv.className = 'p-4 rounded-xl bg-emerald-50 border border-emerald-200';
+          resultDiv.innerHTML = '<p class="text-sm text-emerald-700">✅ Conexión exitosa - El endpoint responde correctamente</p>';
+        } else {
+          throw new Error(`HTTP ${response.status}`);
+        }
+      } catch (e) {
+        resultDiv.className = 'p-4 rounded-xl bg-red-50 border border-red-200';
+        resultDiv.innerHTML = `<p class="text-sm text-red-700">❌ Error de conexión: ${e.message}</p>`;
+      }
+    }
+
+    function saveConfig() {
+      externalConfig.url_guardar = document.getElementById('config-url-guardar').value.trim();
+      externalConfig.url_listar = document.getElementById('config-url-listar').value.trim();
+      
+      localStorage.setItem('decimetrix_external_config', JSON.stringify(externalConfig));
+      updateConfigStatus();
+      showToast('Configuración guardada', 'success');
+    }
+
+    // ==================== TOAST ====================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: 'bg-emerald-500',
+        error: 'bg-red-500',
+        info: 'bg-brand-500'
+      };
+      
+      toast.className = `toast px-5 py-3 ${colors[type]} text-white rounded-xl shadow-lg font-medium text-sm flex items-center gap-2`;
+      toast.innerHTML = `
+        ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+        <span>${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    applyConfig();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d0ae9bd47ded7f5',t:'MTc3MTU1ODA5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
