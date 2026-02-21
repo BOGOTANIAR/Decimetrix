@@ -287,16 +287,22 @@ function updateChips() {
   const n = (state.profile?.name || "").trim();
   const r = (state.profile?.role || "").trim();
 
-  // Progreso
-  const total = (typeof lessons !== "undefined" && lessons.length) ? lessons.length : 1;
+  // Calcular progreso SIN romperse si "lessons" aún no está listo
+  let total = 1;
+  try {
+    total = (Array.isArray(lessons) && lessons.length) ? lessons.length : 1;
+  } catch (e) {
+    total = 1;
+  }
+
   const done = Object.keys(state.progress || {}).filter(k => state.progress[k]).length;
   const pct = Math.round((done / total) * 100);
 
-  // Chips (si existen en tu HTML)
+  // Chips (arriba)
   const chipUser = document.getElementById("chipUser");
   if (chipUser) {
-    chipUser.textContent = (n || r)
-      ? `👤 ${n || "Usuario"} | ${r || "Cargo"}`
+    chipUser.innerHTML = (n || r)
+      ? `👤 ${escapeHtml(n || "Usuario")} | ${escapeHtml(r || "Cargo")}`
       : "👤 Invitado(a) | Sin perfil";
   }
 
@@ -306,7 +312,7 @@ function updateChips() {
   const chipProgress = document.getElementById("chipProgress");
   if (chipProgress) chipProgress.textContent = `✅ Progreso: ${pct}%`;
 
-  // Certificado (printArea)
+  // Certificado
   const certName = document.getElementById("certName");
   if (certName) certName.textContent = n || "—";
 
