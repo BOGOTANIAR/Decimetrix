@@ -283,20 +283,51 @@
     if (n) return `Hola, <b>${escapeHtml(n)}</b>.`;
     return "Hola.";
   }
+function updateChips() {
+  const n = (state.profile?.name || "").trim();
+  const r = (state.profile?.role || "").trim();
 
-  function updateChips() {
-    const n = state.profile.name?.trim();
-    const r = state.profile.role?.trim();
-    $("#chipUser").innerHTML = n || r
-      ? `👤 ${escapeHtml(n || "Usuario")} | ${escapeHtml(r || "Cargo")}`
+  // Progreso
+  const total = (typeof lessons !== "undefined" && lessons.length) ? lessons.length : 1;
+  const done = Object.keys(state.progress || {}).filter(k => state.progress[k]).length;
+  const pct = Math.round((done / total) * 100);
+
+  // Chips (si existen en tu HTML)
+  const chipUser = document.getElementById("chipUser");
+  if (chipUser) {
+    chipUser.textContent = (n || r)
+      ? `👤 ${n || "Usuario"} | ${r || "Cargo"}`
       : "👤 Invitado(a) | Sin perfil";
+  }
 
-    $("#chipScore").textContent = `🧠 Puntaje: ${state.score}`;
+  const chipScore = document.getElementById("chipScore");
+  if (chipScore) chipScore.textContent = `🧠 Puntaje: ${state.score || 0}`;
 
-    const total = lessons.length;
-    const done = Object.keys(state.progress).filter(k => state.progress[k]).length;
-    const pct = Math.round((done / total) * 100);
-    $("#chipProgress").textContent = `✅ Progreso: ${pct}%`;
+  const chipProgress = document.getElementById("chipProgress");
+  if (chipProgress) chipProgress.textContent = `✅ Progreso: ${pct}%`;
+
+  // Certificado (printArea)
+  const certName = document.getElementById("certName");
+  if (certName) certName.textContent = n || "—";
+
+  const certRole = document.getElementById("certRole");
+  if (certRole) certRole.textContent = r || "—";
+
+  const certScore = document.getElementById("certScore");
+  if (certScore) certScore.textContent = String(state.score || 0);
+
+  const certProg = document.getElementById("certProg");
+  if (certProg) certProg.textContent = `${pct}%`;
+
+  // ✅ APROBADO si logra MÁS de 60%
+  const passed = pct > 60;
+  const certResult = document.getElementById("certResult");
+  if (certResult) certResult.textContent = passed ? "APROBADO ✅" : "REPROBADO ❌";
+
+  const certDate = document.getElementById("certDate");
+  if (certDate) certDate.textContent = new Date().toLocaleString("es-CO");
+}
+
 
     // cert
     $("#certName").textContent = n || "—";
@@ -1549,5 +1580,6 @@
 </body>
 
 </html>
+
 
 
