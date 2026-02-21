@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OVA Decimetrix | Normativa UAS y Seguridad Operacional</title>
 
-  <!-- Tailwind CDN (si la usas offline, reemplaza por CSS propio) -->
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: { outfit: ["Outfit", "ui-sans-serif", "system-ui"] },
-          boxShadow: {
-            glow: "0 0 0 1px rgba(34,211,238,.25), 0 10px 40px rgba(0,0,0,.35)",
-          }
+          boxShadow: { glow: "0 0 0 1px rgba(34,211,238,.25), 0 10px 40px rgba(0,0,0,.35)" }
         }
       }
     }
@@ -27,8 +25,7 @@
   <style>
     * { font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
     .bg-grid {
-      background-image:
-        radial-gradient(circle at 1px 1px, rgba(148,163,184,.18) 1px, transparent 0);
+      background-image: radial-gradient(circle at 1px 1px, rgba(148,163,184,.18) 1px, transparent 0);
       background-size: 18px 18px;
     }
     .glass {
@@ -36,19 +33,13 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(148, 163, 184, .18);
     }
-    .chip {
-      border: 1px solid rgba(148,163,184,.22);
-      background: rgba(15, 23, 42, .65);
-    }
-    .btn {
-      border: 1px solid rgba(34,211,238,.35);
-      background: linear-gradient(135deg, rgba(34,211,238,.18), rgba(59,130,246,.14));
-    }
+    .chip { border: 1px solid rgba(148,163,184,.22); background: rgba(15, 23, 42, .65); }
+    .btn { border: 1px solid rgba(34,211,238,.35); background: linear-gradient(135deg, rgba(34,211,238,.18), rgba(59,130,246,.14)); }
     .btn:hover { filter: brightness(1.08); }
     .danger { border-color: rgba(248,113,113,.40) !important; }
     .ok { border-color: rgba(34,197,94,.40) !important; }
     .warn { border-color: rgba(251,191,36,.45) !important; }
-    .no-print { }
+
     @media print {
       .no-print { display: none !important; }
       #printArea { display: block !important; }
@@ -63,7 +54,6 @@
     <!-- Top bar -->
     <div class="glass shadow-glow rounded-3xl p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
       <div class="flex items-center gap-3">
-        <!-- Logo simple (SVG) -->
         <div class="w-11 h-11 rounded-2xl grid place-items-center"
              style="background: radial-gradient(circle at 30% 30%, rgba(34,211,238,.25), rgba(59,130,246,.10)); border:1px solid rgba(148,163,184,.22);">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" class="opacity-90">
@@ -95,7 +85,7 @@
           </span>
         </div>
         <div class="text-xs text-slate-400 max-w-xl md:text-right">
-          Esta OVA es para <b>repaso</b>. Operación real: siempre con el <b>Manual Decimetrix</b>, permisos vigentes y evaluación de riesgos.
+          Esta OVA es para repaso. Operación real: siempre con el Manual Decimetrix, permisos vigentes y evaluación de riesgos.
         </div>
       </div>
     </div>
@@ -130,7 +120,6 @@
       </main>
     </div>
 
-    <!-- Footer -->
     <div class="mt-5 text-center text-xs text-slate-500">
       Hecho para entrenamiento interno. Version: <span id="ver"></span>
     </div>
@@ -143,14 +132,30 @@
         <div class="text-xs uppercase tracking-widest text-slate-600">Constancia de repaso</div>
         <div class="text-3xl font-extrabold mt-2 text-slate-900">OVA Decimetrix</div>
         <div class="text-slate-700 mt-2">Normativa UAS y Seguridad Operacional</div>
+
         <hr class="my-6" />
+
         <div class="text-slate-800">
           <div><b>Participante:</b> <span id="certName">—</span></div>
           <div><b>Cargo:</b> <span id="certRole">—</span></div>
           <div class="mt-3"><b>Puntaje:</b> <span id="certScore">0</span></div>
           <div><b>Progreso:</b> <span id="certProg">0%</span></div>
+          <div><b>Resultado:</b> <span id="certResult">—</span></div>
           <div><b>Fecha:</b> <span id="certDate">—</span></div>
         </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-300">
+          <div class="text-slate-800">
+            <div class="text-sm"><b>Certifica:</b> OSCAR EDUARDO CRUZ</div>
+            <div class="text-sm">Jefe de Pilotos UAS | Decimetrix</div>
+          </div>
+
+          <div class="mt-6">
+            <div class="w-72 border-b border-slate-400"></div>
+            <div class="text-xs text-slate-600 mt-1">Firma y sello</div>
+          </div>
+        </div>
+
         <div class="mt-8 text-xs text-slate-600">
           Nota: Este documento certifica un repaso formativo, no reemplaza certificaciones aeronáuticas ni autorizaciones operacionales.
         </div>
@@ -186,23 +191,22 @@
 
   const defaultConfig = {
     instructorEnabled: false,
-    instructorKey: "", // no se guarda visible en UI, solo valida acceso
+    instructorKey: "",
     companyName: "Decimetrix",
     manualAnswers: {
-      // Puedes ajustar en Modo Instructor: respuestas correctas del Manual Decimetrix
       canalReporteEvento: "",
       bateriaRTL: "",
       perdidaC2: "",
       geocercas: ""
     },
-    observerSpacingM: "" // separación estándar entre observadores según Manual Decimetrix
+    observerSpacingM: ""
   };
 
   const state = {
     profile: { name: "", role: "" },
-    progress: {}, // {lessonId: true}
+    progress: {},
     score: 0,
-    answers: {},  // respuestas del usuario
+    answers: {},
     config: { ...defaultConfig },
     currentLesson: "inicio",
   };
@@ -218,6 +222,35 @@
     { id: "manual", icon: "🧾", title: "Manual Decimetrix (checkpoints)" },
     { id: "cierre", icon: "✅", title: "Cierre y certificado" },
   ];
+
+  // ---------- Utils ----------
+  const $ = (q) => document.querySelector(q);
+
+  function escapeHtml(s) {
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function toast(msg) {
+    const el = document.createElement("div");
+    el.className = "fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-2xl glass shadow-glow text-sm";
+    el.innerHTML = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2400);
+  }
+
+  function greet() {
+    const n = state.profile.name?.trim();
+    const r = state.profile.role?.trim();
+    if (!n && !r) return "Hola. Arranquemos con calma 🙂";
+    if (n && r) return `Hola, <b>${escapeHtml(n)}</b> (<b>${escapeHtml(r)}</b>).`;
+    if (n) return `Hola, <b>${escapeHtml(n)}</b>.`;
+    return "Hola.";
+  }
 
   // ---------- Storage ----------
   function load() {
@@ -258,41 +291,75 @@
     renderLesson("inicio");
   }
 
-  // ---------- UI ----------
-  const $ = (q) => document.querySelector(q);
+  // ---------- Chips + Certificado (a prueba de fallos) ----------
+  function updateChips() {
+    const n = (state.profile?.name || "").trim();
+    const r = (state.profile?.role || "").trim();
+
+    let total = 1;
+    try {
+      total = (Array.isArray(lessons) && lessons.length) ? lessons.length : 1;
+    } catch (e) {
+      total = 1;
+    }
+
+    const done = Object.keys(state.progress || {}).filter(k => state.progress[k]).length;
+    const pct = Math.round((done / total) * 100);
+
+    const chipUser = document.getElementById("chipUser");
+    if (chipUser) {
+      chipUser.innerHTML = (n || r)
+        ? `👤 ${escapeHtml(n || "Usuario")} | ${escapeHtml(r || "Cargo")}`
+        : "👤 Invitado(a) | Sin perfil";
+    }
+
+    const chipScore = document.getElementById("chipScore");
+    if (chipScore) chipScore.textContent = `🧠 Puntaje: ${state.score || 0}`;
+
+    const chipProgress = document.getElementById("chipProgress");
+    if (chipProgress) chipProgress.textContent = `✅ Progreso: ${pct}%`;
+
+    // Certificado
+    const certName = document.getElementById("certName");
+    if (certName) certName.textContent = n || "—";
+
+    const certRole = document.getElementById("certRole");
+    if (certRole) certRole.textContent = r || "—";
+
+    const certScore = document.getElementById("certScore");
+    if (certScore) certScore.textContent = String(state.score || 0);
+
+    const certProg = document.getElementById("certProg");
+    if (certProg) certProg.textContent = `${pct}%`;
+
+    // APROBADO si > 60%
+    const passed = pct > 60;
+    const certResult = document.getElementById("certResult");
+    if (certResult) certResult.textContent = passed ? "APROBADO ✅" : "REPROBADO ❌";
+
+    const certDate = document.getElementById("certDate");
+    if (certDate) certDate.textContent = new Date().toLocaleString("es-CO");
+  }
+
+  // ---------- Modal ----------
+  function openModal(title, sub, bodyHtml) {
+    $("#modalTitle").textContent = title;
+    $("#modalSub").textContent = sub || "";
+    $("#modalBody").innerHTML = bodyHtml;
+    $("#modal").classList.remove("hidden");
+    $("#modal").classList.add("flex");
+  }
+  function closeModal() {
+    $("#modal").classList.add("hidden");
+    $("#modal").classList.remove("flex");
+  }
+
+  $("#modalClose").addEventListener("click", closeModal);
+  $("#modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeModal(); });
+
+  // ---------- Navigation ----------
   const navEl = $("#nav");
   const contentEl = $("#content");
-
-  function greet() {
-    const n = state.profile.name?.trim();
-    const r = state.profile.role?.trim();
-    if (!n && !r) return "Hola. Arranquemos con calma 🙂";
-    if (n && r) return `Hola, <b>${escapeHtml(n)}</b> (<b>${escapeHtml(r)}</b>).`;
-    if (n) return `Hola, <b>${escapeHtml(n)}</b>.`;
-    return "Hola.";
-  }
-
-  function updateChips() {
-    const n = state.profile.name?.trim();
-    const r = state.profile.role?.trim();
-    $("#chipUser").innerHTML = n || r
-      ? `👤 ${escapeHtml(n || "Usuario")} | ${escapeHtml(r || "Cargo")}`
-      : "👤 Invitado(a) | Sin perfil";
-
-    $("#chipScore").textContent = `🧠 Puntaje: ${state.score}`;
-
-    const total = lessons.length;
-    const done = Object.keys(state.progress).filter(k => state.progress[k]).length;
-    const pct = Math.round((done / total) * 100);
-    $("#chipProgress").textContent = `✅ Progreso: ${pct}%`;
-
-    // cert
-    $("#certName").textContent = n || "—";
-    $("#certRole").textContent = r || "—";
-    $("#certScore").textContent = String(state.score);
-    $("#certProg").textContent = `${pct}%`;
-    $("#certDate").textContent = new Date().toLocaleString("es-CO");
-  }
 
   function renderNav() {
     const total = lessons.length;
@@ -338,12 +405,9 @@
     `;
   }
 
-  window.__DMX_NAV = (id) => renderLesson(id);
-
   function markDone(lessonId) {
     if (!state.progress[lessonId]) {
       state.progress[lessonId] = true;
-      // bonus pequeño por completar
       state.score += 2;
       save();
       toast("✅ Marcado como completado (+2).");
@@ -352,47 +416,13 @@
     }
   }
 
-  function toast(msg) {
-    const el = document.createElement("div");
-    el.className = "fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-2xl glass shadow-glow text-sm";
-    el.innerHTML = msg;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 2400);
-  }
+  window.__DMX_NAV = (id) => renderLesson(id);
+  window.__DMX_DONE = (lessonId) => markDone(lessonId);
 
-  function escapeHtml(s) {
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  // ---------- Modal ----------
-  function openModal(title, sub, bodyHtml) {
-    $("#modalTitle").textContent = title;
-    $("#modalSub").textContent = sub || "";
-    $("#modalBody").innerHTML = bodyHtml;
-    $("#modal").classList.remove("hidden");
-    $("#modal").classList.add("flex");
-  }
-  function closeModal() {
-    $("#modal").classList.add("hidden");
-    $("#modal").classList.remove("flex");
-  }
-
-  $("#modalClose").addEventListener("click", closeModal);
-  $("#modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeModal(); });
-
-  // ---------- Lesson Renderers ----------
+  // ---------- Lesson Render ----------
   function renderLesson(id) {
     state.currentLesson = id;
     save();
-
-    const n = state.profile.name?.trim();
-    const r = state.profile.role?.trim();
-    const who = n ? `${n}${r ? " ("+r+")" : ""}` : "tu perfil";
 
     if (id === "inicio") return renderInicio();
     if (id === "rac100") return renderRAC();
@@ -407,7 +437,23 @@
     contentEl.innerHTML = `<div class="text-slate-300">Módulo no encontrado.</div>`;
   }
 
-  // ---- Inicio
+  // ---------- UI blocks ----------
+  function pill(a,b){
+    return `<div class="rounded-2xl px-3 py-2 chip"><div class="font-semibold">${a}</div><div class="text-xs text-slate-300">${escapeHtml(b)}</div></div>`;
+  }
+
+  function card(title,icon,html){
+    return `
+      <div class="rounded-3xl p-4 chip">
+        <div class="flex items-center justify-between">
+          <div class="font-extrabold text-lg">${escapeHtml(title)}</div>
+          <div class="text-xl">${icon}</div>
+        </div>
+        <div class="text-sm text-slate-300 mt-2">${html}</div>
+      </div>`;
+  }
+
+  // ---------- Inicio ----------
   function renderInicio() {
     const n = state.profile.name || "";
     const r = state.profile.role || "";
@@ -464,7 +510,7 @@
           </div>
 
           <div class="mt-4 p-3 rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-sm text-slate-200">
-            Regla de oro: si algo “técnicamente se puede” (por alcance del dron), eso <b>no significa</b> que sea permitido en operación.
+            Regla de oro: si algo “técnicamente se puede”, eso <b>no significa</b> que sea permitido en operación.
           </div>
 
           <button class="mt-4 w-full chip hover:brightness-110 rounded-2xl px-4 py-3 font-semibold"
@@ -494,11 +540,7 @@
     });
   }
 
-  function pill(a,b){
-    return `<div class="rounded-2xl px-3 py-2 chip"><div class="font-semibold">${a}</div><div class="text-xs text-slate-300">${escapeHtml(b)}</div></div>`;
-  }
-
-  // ---- RAC 100
+  // ---------- RAC ----------
   function renderRAC() {
     contentEl.innerHTML = `
       <div>
@@ -511,7 +553,8 @@
       <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
         ${card("VLOS","👁️","Operación en línea de vista. Distancia máxima operativa (referencia): <b>750 m</b> desde posición fija del piloto.")}
         ${card("EVLOS","👀👀","Línea de vista extendida con <b>observador(es)</b>. Puede extenderse hasta <b>3 km</b> si algún observador mantiene la UA a <b>&lt; 750 m</b> y hay comunicación constante.")}
-        ${card("BVLOS","🛰️","Más allá de la línea de vista. Requiere gestión de vuelo UAS, autorizaciones y controles específicos (categoría/permiso).")}
+        ${card("BVLOS","🛰️",
+          "Más allá de la línea de vista (sin contacto visual directo). Requiere <b>autorización</b>, un <b>área definida</b>, operar en <b>VMC</b>, y un sistema de gestión/monitoreo (geocercas + telemetría). La pérdida/degradación del enlace C2 se trata como <b>emergencia</b>.")}
       </div>
 
       <div class="mt-4 p-4 rounded-3xl chip">
@@ -542,22 +585,11 @@
         </button>
       </div>
     `;
-    wireQuiz("q_rac1", 1);
-    wireQuiz("q_rac2", 1);
+    wireQuiz("q_rac1");
+    wireQuiz("q_rac2");
   }
 
-  function card(title,icon,html){
-    return `
-      <div class="rounded-3xl p-4 chip">
-        <div class="flex items-center justify-between">
-          <div class="font-extrabold text-lg">${escapeHtml(title)}</div>
-          <div class="text-xl">${icon}</div>
-        </div>
-        <div class="text-sm text-slate-300 mt-2">${html}</div>
-      </div>`;
-  }
-
-  // ---- Zona
+  // ---------- Zona ----------
   function renderZona() {
     contentEl.innerHTML = `
       <div>
@@ -571,11 +603,11 @@
         <div class="chip rounded-3xl p-4">
           <div class="font-bold">Idea operativa</div>
           <div class="text-sm text-slate-300 mt-1">
-            En operación urbana, una referencia frecuente es mantener separación: <b>no volar a menos de 30 m</b> de personas ajenas,
-            ni a menos de <b>30 m</b> de edificaciones (horizontal o vertical), y mantener VLOS cuando aplique.
+            En operación urbana, mantén separación adecuada de personas ajenas y obstáculos.
+            Si hay duda, reduces riesgo o paras la operación.
           </div>
           <div class="mt-3 p-3 rounded-2xl border border-amber-400/35 bg-amber-400/10 text-sm text-slate-200">
-            Tip bogotano: si hay duda, <b>reduces riesgo</b> o <b>paras la operación</b>. La operación “valiente” no paga cuentas.
+            Tip Decimetrix: si el perímetro no está controlado, <b>se pausa</b>. La seguridad operacional manda.
           </div>
         </div>
 
@@ -602,7 +634,7 @@
       <div class="mt-4 chip rounded-3xl p-4">
         <div class="font-bold">Visual: “zona crítica” (concepto)</div>
         <div class="text-sm text-slate-300 mt-1">
-          Usa este diagrama como mapa mental para explicar al equipo dónde <b>sí</b> y dónde <b>no</b> se ubica gente.
+          Usa este diagrama como mapa mental para explicar al equipo dónde sí y dónde no se ubica gente.
         </div>
 
         <div class="mt-3 w-full overflow-hidden rounded-3xl border border-slate-700/60 bg-slate-900/40 p-3">
@@ -619,8 +651,8 @@
         </button>
       </div>
     `;
-    wireQuiz("q_z1", 1);
-    wireQuiz("q_z2", 1);
+    wireQuiz("q_z1");
+    wireQuiz("q_z2");
   }
 
   function svgZones(){
@@ -635,23 +667,18 @@
 
       <rect x="12" y="12" width="736" height="236" rx="20" fill="rgba(2,6,23,.40)" stroke="rgba(148,163,184,.25)"/>
 
-      <!-- Outer -->
       <rect x="70" y="40" width="620" height="180" rx="18" fill="rgba(59,130,246,.10)" stroke="rgba(59,130,246,.35)" stroke-dasharray="6 6"/>
       <text x="82" y="60" fill="rgba(191,219,254,.9)" font-size="14" font-weight="700">ÁREA OPERACIÓN (equipo autorizado)</text>
 
-      <!-- Safety area -->
       <rect x="170" y="70" width="420" height="120" rx="16" fill="rgba(248,113,113,.10)" stroke="rgba(248,113,113,.55)"/>
       <text x="182" y="92" fill="rgba(254,202,202,.95)" font-size="14" font-weight="700">ÁREA SEGURIDAD (SIN PERSONAS)</text>
 
-      <!-- Pad -->
       <rect x="320" y="105" width="120" height="60" rx="14" fill="url(#g1)" stroke="rgba(34,211,238,.6)"/>
       <text x="335" y="140" fill="rgba(224,242,254,.95)" font-size="14" font-weight="800">DRONPAD</text>
 
-      <!-- pilot -->
       <circle cx="110" cy="200" r="18" fill="rgba(34,211,238,.22)" stroke="rgba(34,211,238,.7)"/>
       <text x="92" y="233" fill="rgba(226,232,240,.9)" font-size="12">Piloto UAS</text>
 
-      <!-- cones -->
       <circle cx="170" cy="70" r="6" fill="rgba(251,146,60,.95)"/>
       <circle cx="590" cy="70" r="6" fill="rgba(251,146,60,.95)"/>
       <circle cx="170" cy="190" r="6" fill="rgba(251,146,60,.95)"/>
@@ -661,14 +688,14 @@
     `;
   }
 
-  // ---- Dronpuerto
+  // ---------- Dronpuerto ----------
   function renderDronpuerto() {
     const prevDim = state.answers.dimDrone || 1;
     contentEl.innerHTML = `
       <div>
         <div class="text-2xl md:text-3xl font-extrabold">Dronpuerto operativo</div>
         <div class="text-slate-300 mt-2">
-          ${greet()} Un “dronpuerto” es tu <b>ecosistema</b> de despegue/aterrizaje: orden, perímetro y disciplina.
+          ${greet()} Un “dronpuerto” es tu ecosistema de despegue/aterrizaje: orden, perímetro y disciplina.
         </div>
       </div>
 
@@ -676,14 +703,14 @@
         <div class="chip rounded-3xl p-4">
           <div class="font-bold">Componentes típicos</div>
           <ul class="mt-2 text-sm text-slate-300 space-y-2 list-disc pl-5">
-            <li><b>TLOF</b>: punto de toma y elevación (donde “toca” el dron).</li>
-            <li><b>FATO</b>: aproximación final y despegue (zona despejada, marcada).</li>
-            <li><b>SA</b>: área de seguridad (sin personas, demarcada).</li>
-            <li><b>Área de operación</b>: puesto del piloto y equipo (por fuera de SA).</li>
+            <li><b>TLOF</b>: punto de toma y elevación.</li>
+            <li><b>FATO</b>: aproximación final y despegue.</li>
+            <li><b>SA</b>: área de seguridad (sin personas).</li>
+            <li><b>Área de operación</b>: puesto del piloto y equipo.</li>
           </ul>
 
           <div class="mt-3 p-3 rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-sm text-slate-200">
-            En manuales operacionales colombianos se usa como regla: <b>SA mínimo 3 veces</b> la dimensión de la aeronave a cada lado (desde FATO).
+            Regla práctica (entrenamiento): SA mínimo 3x la dimensión del dron por lado. Ajusta según SOP/Manual Decimetrix y riesgos del sitio.
           </div>
         </div>
 
@@ -726,7 +753,6 @@
         <br><span class="text-slate-400 text-xs">Ajusta según tu Manual Decimetrix, terreno, obstáculos y evaluación de riesgos.</span>
       `;
       $("#svgPort").innerHTML = svgDroneport(dim);
-      // sumar puntito si interactuó
       bumpScoreOnce("calcSA", 3);
     };
 
@@ -736,7 +762,7 @@
 
   function svgDroneport(dim){
     const SA = Math.max(1, dim * 3);
-    const scale = 18; // px per meter (aprox)
+    const scale = 18;
     const w = 720, h = 210;
     const saW = Math.min(560, SA * scale * 2);
     const saH = Math.min(140, SA * scale * 1.2);
@@ -759,14 +785,14 @@
     </svg>`;
   }
 
-  // ---- KP
+  // ---------- KP ----------
   function renderKP() {
     const prev = state.answers.kp ?? "";
     contentEl.innerHTML = `
       <div>
         <div class="text-2xl md:text-3xl font-extrabold">Índice Kp (decisión rápida)</div>
         <div class="text-slate-300 mt-2">
-          ${greet()} Saca el cel y revisa <b>en este momento</b> tu Kp (apps de space weather o el panel que uses). Luego escríbelo aquí.
+          ${greet()} Saca el cel y revisa tu Kp (app/panel). Luego escríbelo aquí.
         </div>
       </div>
 
@@ -774,12 +800,11 @@
         <div class="chip rounded-3xl p-4">
           <div class="font-bold">¿Por qué importa?</div>
           <div class="text-sm text-slate-300 mt-1">
-            Kp describe actividad geomagnética. En actividad alta puede haber degradación de navegación satelital (GNSS) y problemas intermitentes.
-            Esta sección NO reemplaza tu evaluación meteorológica, NOTAM, permisos, ni checklist.
+            Kp describe actividad geomagnética. En actividad alta puede haber degradación GNSS. Esto NO reemplaza meteo, permisos ni checklist.
           </div>
 
           <div class="mt-3 p-3 rounded-2xl border border-amber-400/35 bg-amber-400/10 text-sm text-slate-200">
-            Regla práctica (entrenamiento): <b>0-4 OK</b> (espacial), <b>5-6 precaución</b>, <b>7+ no recomendado</b> si tu misión depende fuerte de GNSS.
+            Regla práctica (entrenamiento): <b>0-4 OK</b>, <b>5-6 precaución</b>, <b>7+ no recomendado</b> si la misión depende fuerte de GNSS.
           </div>
         </div>
 
@@ -796,7 +821,7 @@
           <div id="kpOut" class="mt-3"></div>
 
           <div class="mt-4 text-xs text-slate-400">
-            Consejo: si estás en <b>5-6</b>, documenta mitigaciones (RTK si aplica, altitudes seguras, contingencias, RTH verificado, briefing).
+            Consejo: si estás en <b>5-6</b>, documenta mitigaciones (briefing, contingencias, RTH verificado, monitoreo).
           </div>
         </div>
       </div>
@@ -825,33 +850,32 @@
         return;
       }
 
-      // Entrenamiento conservador para UAS
       if (kp <= 4) {
         out.classList.add("ok");
         out.innerHTML = `
           <b>KP ${kp}: Condición espacial favorable ✅</b>
-          <div class="text-slate-300 mt-1">En lo geomagnético, es buen momento. Igual: viento, visibilidad, zona autorizada, checklist.</div>
+          <div class="text-slate-300 mt-1">En lo geomagnético, bien. Igual: viento, visibilidad, zona autorizada, checklist.</div>
         `;
         bumpScoreOnce("kp_ok", 5);
       } else if (kp <= 6) {
         out.classList.add("warn");
         out.innerHTML = `
           <b>KP ${kp}: Precaución ⚠️</b>
-          <div class="text-slate-300 mt-1">Revisa dependencias GNSS, mitiga riesgos (briefing, contingencias, monitoreo) y consulta SOP si la misión es crítica.</div>
+          <div class="text-slate-300 mt-1">Mitiga riesgos y consulta SOP si la misión es crítica.</div>
         `;
         bumpScoreOnce("kp_warn", 4);
       } else {
         out.classList.add("danger");
         out.innerHTML = `
           <b>KP ${kp}: No recomendado para misiones sensibles a GNSS ⛔</b>
-          <div class="text-slate-300 mt-1">Alta actividad geomagnética. Si tu operación depende fuerte de GNSS/estabilidad, posponer o rediseñar con mitigaciones y autorización.</div>
+          <div class="text-slate-300 mt-1">Alta actividad geomagnética. Posponer o rediseñar con mitigaciones y autorización.</div>
         `;
         bumpScoreOnce("kp_bad", 4);
       }
     });
   }
 
-  // ---- Caso 1000m
+  // ---------- Caso 1000 ----------
   function renderCaso1000() {
     contentEl.innerHTML = `
       <div>
@@ -873,9 +897,8 @@
       <div class="mt-5 chip rounded-3xl p-4">
         <div class="font-bold">Dato clave</div>
         <div class="text-sm text-slate-300 mt-1">
-          El límite VLOS de referencia es <b>750 m</b>. Para excederlo, se entra en lógica EVLOS con observadores,
-          hasta <b>3 km</b>, con la condición de que un observador mantenga la UA a <b>&lt; 750 m</b> y con comunicación constante.
-          Si se pierde esa línea de vista, se cancela la operación.
+          1.000 m excede VLOS de referencia (750 m). Para eso se planifica EVLOS con observadores, comunicación y procedimientos del Manual Decimetrix.
+          Si se pierde la línea de vista del observador, se cancela la operación.
         </div>
       </div>
 
@@ -891,13 +914,13 @@
 
     const options = [
       { t: "Claro que sí: la norma permite hasta 20 km sin problema.", ok: false,
-        why: "El alcance técnico (km del dron) NO equivale a lo permitido por tipo de contacto visual. Para 1.000 m ya superas VLOS de referencia." },
+        why: "El alcance técnico no equivale a lo permitido. Para 1.000 m ya superas VLOS; debes estructurar EVLOS/BVLOS según aplique." },
       { t: "Simplemente no se puede, en ningún caso.", ok: false,
-        why: "Podría ser posible bajo EVLOS si cumples requisitos (observador(es), línea de vista, comunicación constante) y procedimientos/autorizaciones." },
+        why: "Puede ser posible bajo EVLOS si cumples requisitos (observadores, LOS, comunicación) y procedimientos/autorizaciones." },
       { t: "Se puede SOLO si se planifica como EVLOS con observador(es), y además se consulta con el Jefe de Pilotos y el Manual Decimetrix.", ok: true,
-        why: "Correcto: 1.000 m excede VLOS (750 m). Se requiere estructura EVLOS con observadores, comunicación, procedimientos y aprobación interna." },
+        why: "Correcto: 1.000 m excede VLOS. Se requiere EVLOS con observadores, comunicación, procedimientos y aprobación interna." },
       { t: "Se puede si subes altura y el dron se ve más lejos.", ok: false,
-        why: "La altura no “legaliza” exceder VLOS, y además suma otros riesgos (espacio aéreo, obstáculos, permisos)." },
+        why: "La altura no “legaliza” exceder VLOS y puede aumentar riesgos (espacio aéreo, obstáculos, permisos)." },
     ];
 
     const q = $("#q_case");
@@ -921,7 +944,7 @@
         <b>${o.ok ? "✅ Bien" : "❌ Ojo"}</b>
         <div class="text-slate-300 mt-1">${escapeHtml(o.why)}</div>
         <div class="text-xs text-slate-400 mt-2">
-          Tip: “Consulto con Jefe de Pilotos + Manual Decimetrix” casi siempre es la respuesta que evita errores caros.
+          Tip Decimetrix: “Consulto con Jefe de Pilotos + Manual” casi siempre evita errores caros.
         </div>
       `;
       if (o.ok) bumpScoreOnce("case1000_ok", 8);
@@ -929,14 +952,14 @@
     });
   }
 
-  // ---- Observadores con dibujos
+  // ---------- Observadores ----------
   function renderObservadores() {
     const prevStd = state.config.observerSpacingM || state.answers.observerSpacingM || "";
     contentEl.innerHTML = `
       <div>
         <div class="text-2xl md:text-3xl font-extrabold">Observadores UAS (con dibujos)</div>
         <div class="text-slate-300 mt-2">
-          ${greet()} Actividad: vas a decidir <b>cada cuántos metros</b> ubicar observadores para sostener la línea de vista.
+          ${greet()} Actividad: decidir cada cuántos metros ubicar observadores para sostener la línea de vista.
         </div>
       </div>
 
@@ -944,8 +967,8 @@
         <div class="chip rounded-3xl p-4">
           <div class="font-bold">Paso 1: confirma tu estándar</div>
           <div class="text-sm text-slate-300 mt-1">
-            Abre el <b>Manual de Operaciones Decimetrix</b> y busca el estándar de separación/relevo de observadores (si existe como número).
-            Escríbelo aquí (metros). Si tu manual no da un número fijo, escribe “DEPENDE”.
+            Abre el Manual de Operaciones Decimetrix y busca el estándar de separación/relevo de observadores.
+            Escríbelo aquí (metros). Si tu manual no da número fijo, escribe “DEPENDE”.
           </div>
 
           <div class="mt-3 flex items-center gap-3">
@@ -975,14 +998,14 @@
       </div>
 
       <div class="mt-4 chip rounded-3xl p-4">
-        <div class="font-bold">Pregunta 6: Elige la mejor lógica (si tu manual dice “DEPENDE”)</div>
+        <div class="font-bold">Pregunta 6: Lógica (si tu manual dice “DEPENDE”)</div>
         <div class="mt-3">
           ${quizMC("q_obs_logic",
-            "Si el terreno tiene obstáculos (árboles/edificios) y la visibilidad cambia, la separación entre observadores debería…",
+            "Si el terreno tiene obstáculos y la visibilidad cambia, la separación entre observadores debería…",
             ["Mantenerse fija sin importar nada","Ajustarse para garantizar línea de vista continua","Aumentar siempre al máximo para ahorrar personal"],
             1,
             "Correcto: se ajusta para sostener línea de vista continua.",
-            "Piensa como SMS: cambias controles según peligros."
+            "Piensa en SMS: cambias controles según peligros."
           )}
         </div>
       </div>
@@ -990,13 +1013,13 @@
       <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="chip rounded-3xl p-4">
           <div class="font-bold">Dibujo 1: Corredor lineal</div>
-          <div class="text-sm text-slate-300 mt-1">El dron avanza en línea recta. Tú decides cada cuántos metros ubicar observadores.</div>
+          <div class="text-sm text-slate-300 mt-1">El dron avanza en línea recta. Tú decides separación.</div>
           <div class="mt-3 rounded-3xl border border-slate-700/60 bg-slate-900/40 p-3" id="draw1"></div>
         </div>
 
         <div class="chip rounded-3xl p-4">
           <div class="font-bold">Dibujo 2: Zona urbana con “sombra”</div>
-          <div class="text-sm text-slate-300 mt-1">Hay obstáculos. Debes garantizar línea de vista por relevos.</div>
+          <div class="text-sm text-slate-300 mt-1">Obstáculos. Debes garantizar LOS por relevos.</div>
           <div class="mt-3 rounded-3xl border border-slate-700/60 bg-slate-900/40 p-3" id="draw2"></div>
         </div>
       </div>
@@ -1011,11 +1034,9 @@
       </div>
     `;
 
-    // Save observer spacing standard
     const updateStd = () => {
       const v = ($("#inpObsStd").value || "").trim().toUpperCase();
       state.answers.observerSpacingM = v;
-      // si instructor configuró un número, preferimos ese para evaluación
       if (!state.config.observerSpacingM) state.config.observerSpacingM = v;
       save();
 
@@ -1025,7 +1046,7 @@
         return;
       }
       if (v === "DEPENDE") {
-        out.innerHTML = `<b>Guardado:</b> DEPENDE ✅ <div class="text-slate-400 text-xs mt-1">Entonces tu decisión se basa en mantener línea de vista continua y comunicación.</div>`;
+        out.innerHTML = `<b>Guardado:</b> DEPENDE ✅ <div class="text-slate-400 text-xs mt-1">Decides según LOS y riesgo del terreno.</div>`;
         bumpScoreOnce("obs_depende", 4);
       } else {
         const num = parseFloat(v);
@@ -1039,15 +1060,14 @@
       renderDraws();
     };
 
-    $("#btnSaveObsStd").addEventListener("click", updateStd);
-
     const renderDraws = () => {
       const v = (state.answers.observerSpacingM || "").trim().toUpperCase();
       const spacing = (v && v !== "DEPENDE") ? Math.max(50, Math.min(500, parseFloat(v))) : 200;
-
       $("#draw1").innerHTML = svgObserversLine(spacing);
       $("#draw2").innerHTML = svgObserversUrban(spacing);
     };
+
+    $("#btnSaveObsStd").addEventListener("click", updateStd);
 
     $("#btnCheckGuess").addEventListener("click", () => {
       const v = (state.answers.observerSpacingM || "").trim().toUpperCase();
@@ -1063,8 +1083,8 @@
       if (v === "DEPENDE") {
         out.classList.add("ok");
         out.innerHTML = `
-          <b>Si es “DEPENDE”, tu respuesta debe justificarse.</b>
-          <div class="text-slate-300 mt-1">Ej: “ubico observadores donde el dron pueda perder línea de vista por obstáculos; mantengo comunicación constante; si se pierde LOS, cancelo”.</div>
+          <b>Si es “DEPENDE”, justifica con SOP.</b>
+          <div class="text-slate-300 mt-1">Ubicas observadores según puntos ciegos, mantienes comunicación y cancelas si se pierde LOS.</div>
         `;
         bumpScoreOnce("guess_depende", 5);
         return;
@@ -1077,8 +1097,6 @@
         return;
       }
 
-      // Para cubrir 1200 m: observadores en cadena, cada "spacing".
-      // Observadores adicionales ≈ ceil(1200 / spacing) - 1 (porque el piloto ya es un punto)
       const needed = Math.max(0, Math.ceil(1200 / spacing) - 1);
 
       if (isNaN(g) || g < 0) {
@@ -1095,20 +1113,19 @@
         out.classList.add("warn");
         out.innerHTML = `
           <b>Te quedó diferente.</b>
-          <div class="text-slate-300 mt-1">Con ${spacing} m, una estimación simple da <b>${needed}</b> observador(es) adicional(es).</div>
-          <div class="text-slate-400 text-xs mt-2">Ojo: en urbano/obstáculos suele subir el número por “sombras” y puntos ciegos.</div>
+          <div class="text-slate-300 mt-1">Con ${spacing} m, estimación simple: <b>${needed}</b> observador(es) adicional(es).</div>
+          <div class="text-slate-400 text-xs mt-2">En urbano/obstáculos suele subir el número.</div>
         `;
         bumpScoreOnce("guess_try", 2);
       }
     });
 
-    wireQuiz("q_obs_logic", 1);
+    wireQuiz("q_obs_logic");
     updateStd();
     renderDraws();
   }
 
   function svgObserversLine(spacing){
-    // Draw 0..1200 m with markers each spacing
     const dist = 1200;
     const w = 720, h = 220;
     const x0 = 40, x1 = w - 40;
@@ -1117,16 +1134,15 @@
 
     const marks = [];
     for (let m = 0; m <= dist; m += spacing) marks.push(m);
-    // ensure end
     if (marks[marks.length-1] !== dist) marks.push(dist);
 
-    const obs = marks.slice(1, -1); // exclude pilot at 0 and end point
+    const obs = marks.slice(1, -1);
 
     return `
     <svg viewBox="0 0 ${w} ${h}" class="w-full h-auto">
       <rect x="10" y="10" width="${w-20}" height="${h-20}" rx="18" fill="rgba(2,6,23,.25)" stroke="rgba(148,163,184,.22)"/>
       <text x="24" y="40" fill="rgba(226,232,240,.9)" font-weight="800">Ruta lineal (0 - 1.200 m)</text>
-      <text x="24" y="58" fill="rgba(148,163,184,.9)" font-size="12">Espaciado visual: ${Math.round(spacing)} m (ajústalo según Manual Decimetrix)</text>
+      <text x="24" y="58" fill="rgba(148,163,184,.9)" font-size="12">Espaciado visual: ${Math.round(spacing)} m</text>
 
       <line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="rgba(34,211,238,.55)" stroke-width="3" stroke-linecap="round" />
       <circle cx="${toX(0)}" cy="${y}" r="9" fill="rgba(34,211,238,.22)" stroke="rgba(34,211,238,.85)"/>
@@ -1149,30 +1165,24 @@
 
   function svgObserversUrban(spacing){
     const w = 720, h = 220;
-    // We simulate obstacles and suggest extra observers near shadows
-    const pts = [0, spacing, spacing*2, spacing*3, spacing*4, spacing*5].filter(x => x <= 1200);
     return `
     <svg viewBox="0 0 ${w} ${h}" class="w-full h-auto">
       <rect x="10" y="10" width="${w-20}" height="${h-20}" rx="18" fill="rgba(2,6,23,.25)" stroke="rgba(148,163,184,.22)"/>
       <text x="24" y="40" fill="rgba(226,232,240,.9)" font-weight="800">Urbano (obstáculos y sombra)</text>
-      <text x="24" y="58" fill="rgba(148,163,184,.9)" font-size="12">Si hay sombra visual, reduces distancia real o sumas observadores.</text>
+      <text x="24" y="58" fill="rgba(148,163,184,.9)" font-size="12">En sombra: reduces distancia real o sumas observadores.</text>
 
-      <!-- buildings -->
       <rect x="250" y="92" width="80" height="70" rx="10" fill="rgba(148,163,184,.14)" stroke="rgba(148,163,184,.25)"/>
       <rect x="340" y="78" width="90" height="84" rx="10" fill="rgba(148,163,184,.10)" stroke="rgba(148,163,184,.25)"/>
       <rect x="460" y="102" width="70" height="60" rx="10" fill="rgba(148,163,184,.12)" stroke="rgba(148,163,184,.25)"/>
 
-      <!-- shadow cone -->
       <path d="M 330 85 L 620 40 L 620 185 Z" fill="rgba(248,113,113,.12)" />
       <text x="530" y="60" fill="rgba(254,202,202,.95)" font-size="12" font-weight="800">Zona sombra</text>
 
-      <!-- route -->
       <path d="M 70 160 C 160 120, 260 190, 360 145 S 560 110, 650 150"
             fill="none" stroke="rgba(34,211,238,.6)" stroke-width="3" stroke-linecap="round"/>
       <circle cx="70" cy="160" r="9" fill="rgba(34,211,238,.22)" stroke="rgba(34,211,238,.85)"/>
       <text x="50" y="190" fill="rgba(226,232,240,.9)" font-size="12">Piloto</text>
 
-      <!-- observers suggested -->
       <circle cx="180" cy="135" r="7" fill="rgba(251,191,36,.18)" stroke="rgba(251,191,36,.9)"/>
       <text x="166" y="118" fill="rgba(251,191,36,.95)" font-size="11">Obs</text>
 
@@ -1186,26 +1196,37 @@
       <text x="576" y="133" fill="rgba(251,191,36,.95)" font-size="11">Obs</text>
 
       <rect x="24" y="72" width="210" height="78" rx="14" fill="rgba(15,23,42,.55)" stroke="rgba(148,163,184,.22)"/>
-      <text x="38" y="96" fill="rgba(226,232,240,.92)" font-size="12" font-weight="800">Tu estándar guardado:</text>
+      <text x="38" y="96" fill="rgba(226,232,240,.92)" font-size="12" font-weight="800">Estándar guardado:</text>
       <text x="38" y="118" fill="rgba(148,163,184,.95)" font-size="12">Separación base ≈ ${Math.round(spacing)} m</text>
       <text x="38" y="138" fill="rgba(148,163,184,.95)" font-size="12">En sombra: probablemente menos.</text>
     </svg>`;
   }
 
-  // ---- Manual Decimetrix (checkpoints)
+  // ---------- Manual ----------
+  function manualField(key, label, ph){
+    return `
+      <div class="rounded-3xl p-4 border border-slate-700/60 bg-slate-900/35">
+        <div class="font-semibold">${escapeHtml(label)}</div>
+        <textarea id="mf_${escapeHtml(key)}" rows="3"
+          class="mt-2 w-full rounded-2xl px-4 py-3 bg-slate-950/40 border border-slate-700/60 outline-none focus:ring-2 focus:ring-cyan-400/30"
+          placeholder="${escapeHtml(ph)}"></textarea>
+        <div class="text-xs text-slate-400 mt-2">Tip: pega la sección/página del manual para trazabilidad.</div>
+      </div>`;
+  }
+
   function renderManual() {
     contentEl.innerHTML = `
       <div>
         <div class="text-2xl md:text-3xl font-extrabold">Manual de Operaciones Decimetrix</div>
         <div class="text-slate-300 mt-2">
-          ${greet()} Aquí no voy a inventar tu manual. Esta sección es una <b>búsqueda guiada</b>: tú confirmas en el documento y registras.
+          ${greet()} Esta sección es una búsqueda guiada: tú confirmas en el manual y registras.
         </div>
       </div>
 
       <div class="mt-5 chip rounded-3xl p-4">
         <div class="font-bold">Checkpoints del Manual (actividad 7)</div>
         <div class="text-sm text-slate-300 mt-1">
-          Abre el Manual Decimetrix y responde. Si estás en modo Instructor, se puede calificar automáticamente.
+          Abre el Manual Decimetrix y responde. Si estás en modo Instructor, se puede calificar.
         </div>
 
         <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1249,39 +1270,37 @@
       const cfg = state.config.manualAnswers || {};
       const keys = Object.keys(cfg);
 
-      // Solo califica si instructor cargó respuestas correctas
       const hasKey = keys.some(k => (cfg[k] || "").trim().length > 0);
       const out = $("#manualOut");
       out.className = "mt-3 p-3 rounded-2xl border text-sm";
 
       if (!hasKey) {
         out.classList.add("warn");
-        out.innerHTML = `<b>Modo instructor no configurado.</b> Puedes usar ⚙️ Configurar OVA para cargar respuestas del Manual Decimetrix.`;
+        out.innerHTML = `<b>Modo instructor no configurado.</b> Usa “Configurar OVA” para cargar respuestas del Manual Decimetrix.`;
         return;
       }
 
-      let ok = 0, total = keys.length;
+      let okc = 0, total = keys.length;
       const diffs = [];
       keys.forEach(k => {
         const expected = (cfg[k] || "").trim().toLowerCase();
         const got = ((state.answers["manual_"+k] || "")).trim().toLowerCase();
-        if (expected && got && (got.includes(expected) || expected.includes(got))) ok++;
+        if (expected && got && (got.includes(expected) || expected.includes(got))) okc++;
         else diffs.push(k);
       });
 
-      const pts = ok * 4;
+      const pts = okc * 4;
       state.score += pts;
       save();
 
-      out.classList.add(ok === total ? "ok" : "warn");
+      out.classList.add(okc === total ? "ok" : "warn");
       out.innerHTML = `
-        <b>Resultado:</b> ${ok}/${total}
+        <b>Resultado:</b> ${okc}/${total}
         <div class="text-slate-300 mt-1">Sumaste <b>+${pts}</b> puntos.</div>
-        ${diffs.length ? `<div class="text-slate-400 text-xs mt-2">Revisa estos ítems: ${diffs.map(d => `<b>${escapeHtml(d)}</b>`).join(", ")}</div>` : ""}
+        ${diffs.length ? `<div class="text-slate-400 text-xs mt-2">Revisa: ${diffs.map(d => `<b>${escapeHtml(d)}</b>`).join(", ")}</div>` : ""}
       `;
     });
 
-    // prefill fields
     Object.keys(state.config.manualAnswers).forEach(k => {
       const val = state.answers["manual_"+k] || "";
       const el = $("#mf_"+k);
@@ -1289,18 +1308,7 @@
     });
   }
 
-  function manualField(key, label, ph){
-    return `
-      <div class="rounded-3xl p-4 border border-slate-700/60 bg-slate-900/35">
-        <div class="font-semibold">${escapeHtml(label)}</div>
-        <textarea id="mf_${escapeHtml(key)}" rows="3"
-          class="mt-2 w-full rounded-2xl px-4 py-3 bg-slate-950/40 border border-slate-700/60 outline-none focus:ring-2 focus:ring-cyan-400/30"
-          placeholder="${escapeHtml(ph)}"></textarea>
-        <div class="text-xs text-slate-400 mt-2">Tip: pega la <b>sección/página</b> del manual para trazabilidad.</div>
-      </div>`;
-  }
-
-  // ---- Cierre
+  // ---------- Cierre ----------
   function renderCierre() {
     const total = lessons.length;
     const done = Object.keys(state.progress).filter(k => state.progress[k]).length;
@@ -1310,7 +1318,7 @@
       <div>
         <div class="text-2xl md:text-3xl font-extrabold">Cierre</div>
         <div class="text-slate-300 mt-2">
-          ${greet()} Buen repaso. Ahora deja esto listo para evidencia interna.
+          ${greet()} Buen repaso. Ahora deja evidencia interna.
         </div>
       </div>
 
@@ -1324,14 +1332,14 @@
           </div>
 
           <div class="mt-3 p-3 rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-sm text-slate-200">
-            Cierre operativo: si vas a volar, el orden es: <b>permiso/zona autorizada</b> → <b>briefing</b> → <b>dronpuerto</b> → <b>checklist</b> → <b>mitigaciones</b>.
+            Cierre operativo: permiso/zona autorizada → briefing → dronpuerto → checklist → mitigaciones.
           </div>
         </div>
 
         <div class="chip rounded-3xl p-4">
           <div class="font-bold">Certificado imprimible</div>
           <div class="text-sm text-slate-300 mt-2">
-            Puedes “Imprimir” y elegir <b>Guardar como PDF</b> para dejar evidencia del repaso.
+            “Imprimir” y elige <b>Guardar como PDF</b>.
           </div>
           <button id="btnPrint" class="mt-3 w-full btn rounded-2xl px-4 py-3 font-semibold">
             🖨️ Imprimir / Guardar PDF
@@ -1354,16 +1362,14 @@
     `;
 
     $("#btnPrint").addEventListener("click", () => {
-      // Actualiza datos
       updateChips();
       window.print();
     });
     $("#btnGoStart").addEventListener("click", () => renderLesson("inicio"));
   }
 
-  // ---------- Quiz helpers ----------
+  // ---------- Quiz ----------
   function quizMC(id, question, options, correctIdx, okText, badText){
-    // id used for wiring
     return `
       <div class="rounded-3xl p-3 border border-slate-700/60 bg-slate-900/35" id="${escapeHtml(id)}">
         <div class="font-semibold">${escapeHtml(question)}</div>
@@ -1383,9 +1389,10 @@
     `;
   }
 
-  function wireQuiz(id, correctIdx){
+  function wireQuiz(id){
     const root = document.getElementById(id);
     if (!root) return;
+
     const fb = root.querySelector("[data-fb]");
     const correct = parseInt(root.querySelector("[data-correct]").textContent, 10);
     const okText = root.querySelector("[data-ok]").textContent;
@@ -1405,7 +1412,7 @@
     });
   }
 
-  // ---------- Score helper (avoid farming) ----------
+  // ---------- Score helper ----------
   function bumpScoreOnce(key, points){
     if (state.answers["_sc_"+key]) return;
     state.answers["_sc_"+key] = true;
@@ -1413,7 +1420,18 @@
     save();
   }
 
-  // ---------- Instructor config ----------
+  // ---------- Instructor Config ----------
+  function cfgField(key, label, val){
+    return `
+      <div class="rounded-3xl p-3 border border-slate-700/60 bg-slate-900/35">
+        <label class="text-xs text-slate-400">${escapeHtml(label)}</label>
+        <input id="cfg_${escapeHtml(key)}" value="${escapeHtml(val || "")}"
+          class="mt-1 w-full rounded-2xl px-4 py-3 bg-slate-950/35 border border-slate-700/60 outline-none focus:ring-2 focus:ring-cyan-400/30"
+          placeholder="Ej: palabra clave..." />
+      </div>
+    `;
+  }
+
   function openInstructor() {
     openModal(
       "Configurar OVA (Modo Instructor)",
@@ -1452,7 +1470,7 @@
         </div>
 
         <div class="text-xs text-slate-400">
-          Sugerencia: pega fragmentos cortos o palabras clave, no textos largos, para que el match sea flexible.
+          Sugerencia: pega palabras clave cortas (no textos largos) para que el match sea flexible.
         </div>
       </div>
       `
@@ -1480,31 +1498,16 @@
     });
   }
 
-  function cfgField(key, label, val){
-    return `
-      <div class="rounded-3xl p-3 border border-slate-700/60 bg-slate-900/35">
-        <label class="text-xs text-slate-400">${escapeHtml(label)}</label>
-        <input id="cfg_${escapeHtml(key)}" value="${escapeHtml(val || "")}"
-          class="mt-1 w-full rounded-2xl px-4 py-3 bg-slate-950/35 border border-slate-700/60 outline-none focus:ring-2 focus:ring-cyan-400/30"
-          placeholder="Ej: correo, porcentaje, frase clave..." />
-      </div>
-    `;
-  }
-
-  // expose done function
-  window.__DMX_DONE = (lessonId) => markDone(lessonId);
-
   // ---------- Bindings ----------
   $("#btnReset").addEventListener("click", () => {
     openModal(
       "Reiniciar OVA",
       "Esto borra tu perfil, respuestas, progreso y puntaje en este navegador.",
       `
-        <div class="text-slate-300 text-sm">
-          ¿Seguro que quieres reiniciar?
-        </div>
+        <div class="text-slate-300 text-sm">¿Seguro que quieres reiniciar?</div>
         <div class="mt-4 flex gap-3">
-          <button class="chip hover:brightness-110 rounded-2xl px-4 py-3 font-semibold w-full" onclick="document.getElementById('modal').classList.add('hidden');document.getElementById('modal').classList.remove('flex');">
+          <button class="chip hover:brightness-110 rounded-2xl px-4 py-3 font-semibold w-full"
+                  onclick="document.getElementById('modal').classList.add('hidden');document.getElementById('modal').classList.remove('flex');">
             Cancelar
           </button>
           <button class="btn rounded-2xl px-4 py-3 font-semibold w-full" onclick="window.__DMX_RESET_NOW()">
@@ -1516,7 +1519,6 @@
   });
 
   window.__DMX_RESET_NOW = () => { closeModal(); resetAll(); };
-
   $("#btnInstructor").addEventListener("click", openInstructor);
 
   $("#ver").textContent = APP_VERSION;
@@ -1525,7 +1527,7 @@
   load();
   updateChips();
   renderNav();
-  // Decide default lesson
+
   if (state.profile.name || state.profile.role) {
     renderLesson(state.currentLesson || "rac100");
   } else {
