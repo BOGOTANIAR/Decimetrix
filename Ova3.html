@@ -1,0 +1,1593 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Decimetrix | OVA: Factores Humanos en Operaciones UAS</title>
+  <meta name="description" content="OVA interactiva Decimetrix sobre Factores Humanos en Operaciones UAS: lecciones, actividades, evaluación y certificado listo para imprimir." />
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#101a2e;
+      --card:#14213d;
+      --text:#e9eefc;
+      --muted:#a8b3d6;
+      --line:rgba(255,255,255,.10);
+
+      /* Paleta tipo Decimetrix */
+      --d-green:#5ef0c3;
+      --d-blue:#7aa7ff;
+      --warn:#ffd36b;
+      --bad:#ff6b8a;
+      --ok:#5ef0c3;
+
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(122,167,255,.18), transparent 60%),
+        radial-gradient(1000px 500px at 80% 0%, rgba(94,240,195,.16), transparent 58%),
+        radial-gradient(900px 650px at 60% 90%, rgba(255,211,107,.08), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      min-height:100vh;
+    }
+
+    .app{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      padding: 18px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+    @media (max-width: 980px){
+      .app{ grid-template-columns: 1fr; }
+      .sidebar{ position: sticky; top: 0; z-index: 10; }
+    }
+
+    .sidebar{
+      background: linear-gradient(180deg, rgba(16,26,46,.92), rgba(16,26,46,.72));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .brand{
+      padding: 18px 18px 12px 18px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .mark{
+      width:46px;height:46px;border-radius:14px;
+      background:
+        radial-gradient(18px 18px at 30% 30%, rgba(94,240,195,.90), transparent 60%),
+        radial-gradient(22px 22px at 70% 70%, rgba(122,167,255,.90), transparent 60%),
+        linear-gradient(135deg, rgba(94,240,195,.18), rgba(122,167,255,.16));
+      border: 1px solid rgba(255,255,255,.14);
+      flex: 0 0 auto;
+    }
+    .brand h1{
+      font-size: 15px;
+      margin:0;
+      letter-spacing:.2px;
+      line-height: 1.2;
+    }
+    .brand small{
+      color: var(--muted);
+      display:block;
+      margin-top:4px;
+      font-size:12px;
+    }
+
+    .chips{
+      display:flex; flex-wrap:wrap; gap:8px;
+      padding: 12px 18px 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .chip{
+      font-size:12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .dot{ width:8px;height:8px;border-radius:50%; background: rgba(255,255,255,.25); }
+    .dot.ok{ background: var(--ok); }
+    .dot.warn{ background: var(--warn); }
+    .dot.bad{ background: var(--bad); }
+
+    .nav{
+      padding: 10px 10px 14px 10px;
+      max-height: 58vh;
+      overflow:auto;
+    }
+    .nav h3{
+      margin: 10px 10px 8px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing:.3px;
+      text-transform: uppercase;
+    }
+    .navbtn{
+      width:100%;
+      text-align:left;
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items:center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text);
+      cursor:pointer;
+    }
+    .navbtn:hover{
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.08);
+    }
+    .navbtn.active{
+      background: rgba(94,240,195,.10);
+      border-color: rgba(94,240,195,.30);
+    }
+    .navbtn .left{
+      display:flex; gap:10px; align-items:center;
+      min-width:0;
+    }
+    .navbtn .title{
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+    .pill{
+      font-size: 11px;
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      flex: 0 0 auto;
+    }
+
+    .footer{
+      padding: 14px 18px 18px 18px;
+      border-top: 1px solid var(--line);
+      display:grid;
+      gap:10px;
+    }
+    .btnrow{ display:flex; gap:10px; flex-wrap:wrap; }
+    .btn{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-size: 13px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn:hover{ background: rgba(255,255,255,.08); }
+    .btn.primary{
+      border-color: rgba(94,240,195,.42);
+      background: rgba(94,240,195,.12);
+    }
+    .btn.danger{
+      border-color: rgba(255,107,138,.35);
+      background: rgba(255,107,138,.10);
+    }
+    .btn .k{
+      font-family: var(--mono);
+      font-size: 11px;
+      opacity:.9;
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+    }
+
+    .main{
+      background: linear-gradient(180deg, rgba(20,33,61,.78), rgba(16,26,46,.62));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .topbar{
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .topbar .meta{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .badge{
+      font-size:12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+    }
+    .progressWrap{
+      width: 260px;
+      min-width: 220px;
+      max-width: 100%;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+    }
+    .bar{
+      flex: 1 1 auto;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(94,240,195,.95), rgba(122,167,255,.95));
+    }
+    .content{
+      padding: 18px;
+      display:grid;
+      gap: 14px;
+    }
+
+    .hero{
+      background: linear-gradient(135deg, rgba(94,240,195,.12), rgba(122,167,255,.10));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+    }
+    .hero:after{
+      content:"";
+      position:absolute; inset:-120px -120px auto auto;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle at 30% 30%, rgba(94,240,195,.18), transparent 55%),
+                  radial-gradient(circle at 70% 70%, rgba(122,167,255,.18), transparent 55%);
+      transform: rotate(25deg);
+      opacity: .9;
+      pointer-events:none;
+    }
+    .hero h2{ margin:0 0 8px 0; font-size: 20px; letter-spacing:.2px; }
+    .hero p{ margin:0; color: var(--muted); max-width: 72ch; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    .card{
+      background: rgba(0,0,0,.12);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .card h3{ margin: 0 0 8px 0; font-size: 16px; }
+    .card p{ margin: 0; color: var(--muted); }
+
+    .callout{
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+    }
+    .callout b{ color: var(--text); }
+
+    .formRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 720px){
+      .formRow{ grid-template-columns: 1fr; }
+    }
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, select, textarea{
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline: none;
+      font-family: var(--sans);
+    }
+    textarea{ min-height: 96px; resize: vertical; }
+    input::placeholder, textarea::placeholder{ color: rgba(168,179,214,.7); }
+    .mini{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .hr{
+      height:1px;background: var(--line); margin: 10px 0;
+    }
+    .activity{
+      display:grid;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .tagline{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(168,179,214,.9);
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,.18);
+      background: rgba(0,0,0,.10);
+    }
+
+    /* Matching */
+    .matchWrap{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){
+      .matchWrap{ grid-template-columns: 1fr; }
+    }
+    .bucket{
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      padding: 12px;
+      min-height: 180px;
+    }
+    .bucket h4{
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      color: var(--muted);
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+    }
+    .bucket .zone{
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,.16);
+      padding: 10px;
+      min-height: 120px;
+    }
+    .draggable{
+      user-select:none;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      margin-bottom: 10px;
+      cursor: grab;
+      font-size: 13px;
+    }
+    .draggable:active{ cursor: grabbing; }
+    .hint{ color: var(--muted); font-size: 12px; margin: 0; }
+
+    /* Scenario */
+    .choices{ display:grid; gap:10px; margin-top: 10px; }
+    .choice{
+      text-align:left;
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      cursor:pointer;
+    }
+    .choice:hover{ background: rgba(255,255,255,.07); }
+
+    .result{
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    .result.ok{ border-color: rgba(94,240,195,.35); background: rgba(94,240,195,.10); }
+    .result.bad{ border-color: rgba(255,107,138,.35); background: rgba(255,107,138,.09); }
+
+    /* Quiz */
+    .q{
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+    }
+    .q h4{ margin:0 0 10px 0; font-size: 14px; }
+    .opt{ display:flex; gap:10px; align-items:flex-start; margin: 8px 0; color: var(--muted); }
+    .opt input{ width: 18px; height: 18px; margin-top: 1px; }
+
+    /* Certificado (tipo Decimetrix) */
+    .certWrap{
+      border-radius: var(--radius);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+    }
+    .certTop{
+      background:
+        linear-gradient(135deg, rgba(94,240,195,.22), rgba(122,167,255,.18)),
+        linear-gradient(0deg, rgba(6,26,42,.85), rgba(6,26,42,.85));
+      padding: 18px 18px 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.16);
+    }
+    .certTop .row{
+      display:flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .certBrand{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+    }
+    .certBadge{
+      width:46px;height:46px;border-radius:14px;
+      background:
+        radial-gradient(18px 18px at 30% 30%, rgba(94,240,195,.95), transparent 60%),
+        radial-gradient(22px 22px at 70% 70%, rgba(122,167,255,.95), transparent 60%),
+        linear-gradient(135deg, rgba(94,240,195,.25), rgba(122,167,255,.22));
+      border: 1px solid rgba(255,255,255,.18);
+      flex: 0 0 auto;
+    }
+    .certTop h3{
+      margin:0;
+      font-size: 18px;
+      letter-spacing:.2px;
+      color: #fff;
+    }
+    .certTop p{
+      margin: 6px 0 0 0;
+      color: rgba(233,238,252,.85);
+      font-size: 12px;
+      max-width: 80ch;
+    }
+    .certBody{
+      background:
+        radial-gradient(900px 420px at 20% 10%, rgba(94,240,195,.08), transparent 60%),
+        radial-gradient(800px 360px at 80% 0%, rgba(122,167,255,.08), transparent 58%),
+        #0b1627;
+      padding: 18px;
+    }
+    .certDoc{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+    .certTitle{
+      margin: 0 0 10px 0;
+      font-size: 22px;
+      letter-spacing:.2px;
+      color: var(--text);
+    }
+    .certText{
+      margin: 0;
+      color: rgba(233,238,252,.86);
+      line-height: 1.6;
+    }
+    .certMeta{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .certMeta{ grid-template-columns: 1fr; }
+    }
+    .metaCard{
+      background: rgba(0,0,0,.16);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 12px;
+      color: rgba(233,238,252,.82);
+      font-size: 12px;
+    }
+    .metaCard b{ color: var(--text); }
+    .sigRow{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){
+      .sigRow{ grid-template-columns: 1fr; }
+    }
+    .sigBlock{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .sigLabel{
+      margin: 0;
+      font-size: 12px;
+      color: rgba(233,238,252,.78);
+    }
+    .sigLine{
+      height: 1px;
+      background: rgba(255,255,255,.22);
+      margin: 10px 0 10px 0;
+    }
+    .sigSignature{
+      font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
+      font-size: 26px;
+      color: rgba(233,238,252,.92);
+      letter-spacing: .2px;
+      line-height: 1.1;
+      margin: 0;
+      padding-top: 4px;
+      user-select:none;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .sigName{
+      margin: 6px 0 0 0;
+      color: rgba(233,238,252,.86);
+      font-size: 12px;
+    }
+    .sigRole{
+      margin: 2px 0 0 0;
+      color: rgba(168,179,214,.95);
+      font-size: 12px;
+    }
+    .certFooter{
+      margin-top: 14px;
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: rgba(168,179,214,.9);
+      font-size: 12px;
+    }
+    .certCode{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: rgba(233,238,252,.88);
+    }
+
+    .toast{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: min(420px, calc(100vw - 36px));
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(10,16,30,.78);
+      box-shadow: var(--shadow);
+      padding: 12px 14px;
+      color: var(--muted);
+      transform: translateY(12px);
+      opacity: 0;
+      pointer-events:none;
+      transition: .25s ease;
+      backdrop-filter: blur(10px);
+      z-index: 50;
+    }
+    .toast.show{ transform: translateY(0px); opacity: 1; }
+
+    @media print{
+      :root{
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      body{ background: #fff; color:#111; }
+      .app{ display:block; padding:0; }
+      .sidebar, .topbar, .nav, .chips, .footer, .printHide{ display:none !important; }
+      .main{ border: none; box-shadow:none; background: transparent; }
+      .content{ padding:0; }
+      .hero{ display:none !important; }
+      .certWrap{ border: none; box-shadow:none; }
+      .certTop{ border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="OVA Interactiva Decimetrix">
+    <aside class="sidebar" aria-label="Navegación">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div>
+          <h1>Decimetrix <span style="color:var(--d-green)">Academy</span></h1>
+          <small>OVA: Factores Humanos en Operaciones UAS</small>
+        </div>
+      </div>
+
+      <div class="chips" aria-label="Indicadores">
+        <div class="chip" title="Avance general">
+          <span class="dot warn" id="chipDot"></span>
+          <span>Progreso: <b id="chipProgress">0%</b></span>
+        </div>
+        <div class="chip" title="Resultado de la evaluación">
+          <span class="dot" id="chipDotScore"></span>
+          <span>Evaluación: <b id="chipScore">0/10</b></span>
+        </div>
+        <div class="chip" title="Enfoque del módulo">
+          <span class="dot ok"></span>
+          <span>Enfoque: <b>Seguridad operacional</b></span>
+        </div>
+      </div>
+
+      <div class="nav" id="nav" aria-label="Lecciones"></div>
+
+      <div class="footer">
+        <div class="btnrow">
+          <button class="btn primary" id="btnNext" type="button" title="Siguiente lección (N)">
+            Siguiente <span class="k">N</span>
+          </button>
+          <button class="btn" id="btnSave" type="button" title="Guardar progreso">
+            Guardar
+          </button>
+          <button class="btn" id="btnExport" type="button" title="Exportar progreso en JSON">
+            Exportar
+          </button>
+          <button class="btn danger" id="btnReset" type="button" title="Reiniciar todo">
+            Reiniciar
+          </button>
+        </div>
+        <p class="mini">
+          Material académico. No sustituye regulaciones, manuales del fabricante ni entrenamiento certificado.
+          En operaciones reales, priorice cumplimiento normativo, seguridad y protección de terceros.
+        </p>
+      </div>
+    </aside>
+
+    <main class="main" aria-label="Contenido">
+      <div class="topbar">
+        <div class="meta">
+          <span class="badge" id="badgeLesson">Lección</span>
+          <span class="badge">Marca: <b style="color:var(--d-green)">Decimetrix</b></span>
+          <span class="badge">Modalidad: <b>Autoguiada</b></span>
+        </div>
+        <div class="progressWrap" aria-label="Progreso">
+          <span class="badge" id="badgePct">0%</span>
+          <div class="bar" aria-hidden="true"><i id="barFill"></i></div>
+        </div>
+      </div>
+
+      <section class="content" id="content" tabindex="-1"></section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const LS = {
+      profile: "decimetrix_hf_profile_v3",
+      progress: "decimetrix_hf_progress_v3",
+      score: "decimetrix_hf_score_v3",
+      answers: "decimetrix_hf_answers_v3",
+      flags: "decimetrix_hf_flags_v3",
+      certIssuedAt: "decimetrix_hf_certIssuedAt_v3"
+    };
+
+    const state = {
+      profile: { name: "", role: "Piloto UAS", ops: "Operación rutinaria" },
+      current: "inicio",
+      progress: {},
+      score: 0,
+      answers: {},
+      flags: { matchDone:false, scenarioDone:false, briefingDone:false },
+      certIssuedAt: ""
+    };
+
+    const lessons = [
+      { id:"inicio", title:"Bienvenida", pill:"Inicio", render: renderInicio },
+      { id:"fundamentos", title:"Factores Humanos", pill:"Teoría", render: renderFundamentos },
+      { id:"sa", title:"Conciencia situacional", pill:"Clave", render: renderSA },
+      { id:"carga", title:"Carga mental y fatiga", pill:"Riesgo", render: renderCarga },
+      { id:"comms", title:"Comunicación y briefings", pill:"CRM", render: renderComms },
+      { id:"tem", title:"TEM", pill:"Modelo", render: renderTEM },
+      { id:"sesgos", title:"Decisiones y sesgos", pill:"Juicio", render: renderSesgos },
+      { id:"escenario", title:"Escenario", pill:"Actividad", render: renderEscenario },
+      { id:"quiz", title:"Evaluación", pill:"Final", render: renderQuiz },
+      { id:"cert", title:"Certificado", pill:"Salida", render: renderCert }
+    ];
+
+    const $ = (sel) => document.querySelector(sel);
+    const el = (tag, attrs={}, children=[]) => {
+      const n = document.createElement(tag);
+      Object.entries(attrs).forEach(([k,v]) => {
+        if(k === "class") n.className = v;
+        else if(k === "html") n.innerHTML = v;
+        else if(k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2), v);
+        else n.setAttribute(k, v);
+      });
+      [].concat(children).filter(Boolean).forEach(c => n.appendChild(typeof c === "string" ? document.createTextNode(c) : c));
+      return n;
+    };
+
+    function toast(msg){
+      const t = $("#toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(()=> t.classList.remove("show"), 2200);
+    }
+
+    function save(){
+      localStorage.setItem(LS.profile, JSON.stringify(state.profile));
+      localStorage.setItem(LS.progress, JSON.stringify(state.progress));
+      localStorage.setItem(LS.score, JSON.stringify(state.score));
+      localStorage.setItem(LS.answers, JSON.stringify(state.answers));
+      localStorage.setItem(LS.flags, JSON.stringify(state.flags));
+      localStorage.setItem(LS.certIssuedAt, JSON.stringify(state.certIssuedAt));
+      updateUIBits();
+      toast("Progreso guardado.");
+    }
+
+    function load(){
+      try{
+        const p = JSON.parse(localStorage.getItem(LS.profile) || "null");
+        const pr = JSON.parse(localStorage.getItem(LS.progress) || "null");
+        const sc = JSON.parse(localStorage.getItem(LS.score) || "null");
+        const an = JSON.parse(localStorage.getItem(LS.answers) || "null");
+        const fl = JSON.parse(localStorage.getItem(LS.flags) || "null");
+        const ci = JSON.parse(localStorage.getItem(LS.certIssuedAt) || "null");
+        if(p) state.profile = { ...state.profile, ...p };
+        if(pr) state.progress = pr;
+        if(Number.isFinite(sc)) state.score = sc;
+        if(an) state.answers = an;
+        if(fl) state.flags = { ...state.flags, ...fl };
+        if(typeof ci === "string") state.certIssuedAt = ci;
+      }catch(e){
+        console.warn("Load error", e);
+      }
+    }
+
+    function resetAll(){
+      Object.values(LS).forEach(k => localStorage.removeItem(k));
+      state.profile = { name: "", role: "Piloto UAS", ops: "Operación rutinaria" };
+      state.current = "inicio";
+      state.progress = {};
+      state.score = 0;
+      state.answers = {};
+      state.flags = { matchDone:false, scenarioDone:false, briefingDone:false };
+      state.certIssuedAt = "";
+      renderNav();
+      renderLesson("inicio");
+      toast("Progreso reiniciado.");
+    }
+
+    function pctComplete(){
+      const contentLessons = lessons.filter(x => x.id !== "inicio");
+      const done = Object.keys(state.progress).filter(k => state.progress[k]).length;
+      const total = contentLessons.length;
+      const pct = total ? Math.round((done/total)*100) : 0;
+      return {done, total, pct};
+    }
+
+    function markDone(id){
+      if(!state.progress[id]){
+        state.progress[id] = true;
+        updateUIBits();
+      }
+    }
+
+    function updateUIBits(){
+      const {pct} = pctComplete();
+      $("#chipProgress").textContent = pct + "%";
+      $("#badgePct").textContent = pct + "%";
+      $("#barFill").style.width = pct + "%";
+
+      const max = 10;
+      $("#chipScore").textContent = `${state.score}/${max}`;
+
+      const dScore = $("#chipDotScore");
+      dScore.classList.remove("ok","warn","bad");
+      if(state.score >= 8) dScore.classList.add("ok");
+      else if(state.score >= 5) dScore.classList.add("warn");
+      else dScore.classList.add("bad");
+
+      const dProg = $("#chipDot");
+      dProg.classList.remove("ok","warn","bad");
+      if(pct >= 80) dProg.classList.add("ok");
+      else if(pct >= 40) dProg.classList.add("warn");
+      else dProg.classList.add("bad");
+
+      renderNav(false);
+    }
+
+    function nextLessonId(){
+      const idx = lessons.findIndex(l => l.id === state.current);
+      return lessons[Math.min(idx+1, lessons.length-1)].id;
+    }
+
+    function renderNav(focusActive=true){
+      const nav = $("#nav");
+      nav.innerHTML = "";
+      nav.appendChild(el("h3", {html:"Ruta"}));
+      lessons.forEach(lsn => {
+        const done = !!state.progress[lsn.id];
+        const btn = el("button", {
+          class: "navbtn" + (state.current===lsn.id ? " active" : ""),
+          type:"button",
+          onclick: () => renderLesson(lsn.id)
+        }, [
+          el("span", {class:"left"}, [
+            el("span", {class:"dot " + (done ? "ok" : (lsn.id==="inicio" ? "ok" : ""))}),
+            el("span", {class:"title"}, lsn.title)
+          ]),
+          el("span", {class:"pill"}, lsn.pill)
+        ]);
+        nav.appendChild(btn);
+      });
+      if(focusActive){
+        const active = nav.querySelector(".navbtn.active");
+        if(active) active.scrollIntoView({block:"nearest"});
+      }
+    }
+
+    function renderLesson(id){
+      state.current = id;
+      const lesson = lessons.find(l => l.id === id) || lessons[0];
+      $("#badgeLesson").textContent = "Lección: " + lesson.title;
+      $("#content").innerHTML = "";
+      lesson.render($("#content"));
+      updateUIBits();
+      $("#content").focus();
+    }
+
+    function makeChecks(groupName, items){
+      const box = el("div",{});
+      items.forEach((txt, i)=>{
+        const id = `${groupName}_${i}`;
+        const wrap = el("div",{class:"opt"});
+        const cb = el("input",{type:"checkbox", id, name:groupName, value:txt});
+        const lbl = el("label",{for:id, style:"margin:0; cursor:pointer;"},[txt]);
+        wrap.appendChild(cb);
+        wrap.appendChild(lbl);
+        box.appendChild(wrap);
+      });
+      return box;
+    }
+
+    function stableCode(input){
+      let h = 2166136261;
+      for(let i=0;i<input.length;i++){
+        h ^= input.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      const out = (h >>> 0).toString(16).toUpperCase().padStart(8,"0");
+      return out.slice(0,4) + "-" + out.slice(4,8);
+    }
+
+    /* Lessons */
+    function renderInicio(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Bienvenida"]),
+        el("p",{},[
+          "OVA interactiva de ",
+          el("b",{style:"color:var(--d-green)"},["Decimetrix"]),
+          " sobre Factores Humanos en Operaciones UAS. Incluye actividades, evaluación y certificado listo para imprimir."
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"grid"},[
+        el("div",{class:"card"},[
+          el("h3",{},["Perfil del participante"]),
+          el("p",{},["La información se guarda localmente en este navegador."]),
+          el("div",{class:"hr"}),
+          el("div",{class:"formRow"},[
+            el("div",{},[
+              el("label",{for:"name"},["Nombre del participante"]),
+              el("input",{id:"name", placeholder:"Ej: Oscar Eduardo", value: state.profile.name})
+            ]),
+            el("div",{},[
+              el("label",{for:"role"},["Rol"]),
+              (()=>{
+                const s = el("select",{id:"role"});
+                ["Piloto UAS","Observador","Jefe de operación","Mantenimiento","Instructor"].forEach(v=>{
+                  const o = el("option",{value:v},[v]);
+                  if(v===state.profile.role) o.selected = true;
+                  s.appendChild(o);
+                });
+                return s;
+              })()
+            ])
+          ]),
+          el("div",{style:"height:10px"}),
+          el("div",{},[
+            el("label",{for:"ops"},["Tipo de operación (referencia)"]),
+            (()=>{
+              const s = el("select",{id:"ops"});
+              ["Operación rutinaria","Operación en entorno urbano","Operación con público cerca","Inspección técnica","Fotogrametría / mapeo","Entrenamiento / práctica"].forEach(v=>{
+                const o = el("option",{value:v},[v]);
+                if(v===state.profile.ops) o.selected = true;
+                s.appendChild(o);
+              });
+              return s;
+            })()
+          ]),
+          el("div",{style:"height:12px"}),
+          el("div",{class:"btnrow"},[
+            el("button",{class:"btn primary", type:"button", onclick: ()=>{
+              const nm = $("#name").value.trim();
+              if(!nm) return toast("Ingrese el nombre del participante.");
+              state.profile.name = nm;
+              state.profile.role = $("#role").value;
+              state.profile.ops = $("#ops").value;
+              save();
+              markDone("inicio");
+              renderLesson("fundamentos");
+            }},["Guardar y comenzar"])
+          ]),
+          el("div",{class:"callout"},[
+            el("b",{},["Alcance: "]),
+            "Contenido académico enfocado en criterio, comunicación y prevención."
+          ])
+        ]),
+        el("div",{class:"card"},[
+          el("h3",{},["Uso"]),
+          el("p",{},[
+            "Navegue por la ruta. Complete actividades y presente la evaluación final. El certificado se genera con nombres incorporados y queda listo para imprimir."
+          ]),
+          el("div",{class:"hr"}),
+          el("p",{class:"mini"},[
+            "Atajo de teclado: N para siguiente lección (no interfiere cuando escribe en campos de texto)."
+          ])
+        ])
+      ]));
+    }
+
+    function renderFundamentos(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Factores Humanos"]),
+        el("p",{},[
+          "Factores Humanos integra persona, contexto, decisiones, herramientas y procedimientos. En UAS, el riesgo suele aparecer por cadenas de pequeñas fallas."
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"grid"},[
+        el("div",{class:"card"},[
+          el("h3",{},["Principios"]),
+          el("p",{},[
+            "1) El error es posible. 2) La detección temprana reduce consecuencias. 3) Las barreras operacionales mejoran el desempeño bajo presión."
+          ])
+        ]),
+        el("div",{class:"card"},[
+          el("h3",{},["Modelo SHELL (referencia)"]),
+          el("p",{},[
+            "Software/procedimientos, Hardware/equipo, Entorno, Liveware/persona, Liveware-equipo humano. Busque desalineaciones."
+          ]),
+          el("div",{class:"tagline"},["Pregunta guía: ¿qué componente está desalineado hoy?"])
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Micro-chequeo"]),
+        el("p",{class:"mini"},["Seleccione lo que más afecta sus operaciones (selección libre)."]),
+        el("div",{class:"activity"},[
+          makeChecks("fundChecks", [
+            "Interrupciones y presión externa",
+            "Cambios de clima o visibilidad",
+            "Fatiga o sueño insuficiente",
+            "Tareas simultáneas",
+            "Rutina y exceso de confianza",
+            "Señales previas de equipo/enlaces inestables"
+          ])
+        ]),
+        el("div",{class:"btnrow"},[
+          el("button",{class:"btn primary", type:"button", onclick: ()=>{
+            markDone("fundamentos");
+            save();
+          }},["Marcar como completada"])
+        ])
+      ]));
+    }
+
+    function renderSA(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Conciencia situacional"]),
+        el("p",{},[
+          "Se compone de percibir, comprender y anticipar. Una caída de SA incrementa la probabilidad de decisiones tardías o incompletas."
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"grid"},[
+        el("div",{class:"card"},[
+          el("h3",{},["Tres niveles"]),
+          el("p",{},["1) Percepción. 2) Comprensión. 3) Proyección."])
+        ]),
+        el("div",{class:"card"},[
+          el("h3",{},["Indicadores de alerta"]),
+          el("p",{},["Túnel atencional, sorpresas repetidas, omisión de pasos simples, pérdida de referencia del plan."]),
+          el("div",{class:"tagline"},["Técnica: pausa breve para reconstruir el mapa mental."])
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Actividad"]),
+        el("p",{class:"mini"},["Escriba tres verificaciones rápidas si detecta un cambio relevante durante la operación."]),
+        el("textarea",{id:"saNotes", placeholder:"Ej: entorno/obstáculos; energía disponible; plan alterno y criterio de terminación."}),
+        el("div",{style:"height:10px"}),
+        el("div",{class:"btnrow"},[
+          el("button",{class:"btn primary", type:"button", onclick: ()=>{
+            const v = $("#saNotes").value.trim();
+            if(v.length < 10) return toast("Complete el texto antes de guardar.");
+            markDone("sa");
+            save();
+          }},["Guardar actividad y completar lección"])
+        ])
+      ]));
+    }
+
+    function renderCarga(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Carga mental y fatiga"]),
+        el("p",{},[
+          "La atención es limitada. A mayor variabilidad del entorno y multitarea, mayor riesgo de túnel atencional y errores."
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"grid"},[
+        el("div",{class:"card"},[
+          el("h3",{},["Fatiga"]),
+          el("p",{},["Puede afectar desempeño aun sin sensación intensa: reacción más lenta, peor memoria de trabajo, mayor impulsividad."])
+        ]),
+        el("div",{class:"card"},[
+          el("h3",{},["Gestión de carga"]),
+          el("p",{},["Priorice lo esencial, reduzca multitarea y confirme comunicación. Si la carga sube, simplifique y reevalúe."]),
+          el("div",{class:"tagline"},["Regla: reduzca tareas cuando el entorno se complica."])
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Indicador de carga"]),
+        el("p",{class:"mini"},["Ajuste el control y observe el diagnóstico."]),
+        el("div",{class:"activity"},[
+          el("label",{for:"load"},["Nivel de carga mental"]),
+          el("input",{id:"load", type:"range", min:"0", max:"10", value:"3"}),
+          el("div",{class:"result", id:"loadRes"},["Ajuste el control para ver el diagnóstico."])
+        ]),
+        el("div",{class:"btnrow"},[
+          el("button",{class:"btn primary", type:"button", onclick: ()=>{
+            markDone("carga");
+            save();
+          }},["Completar lección"])
+        ])
+      ]));
+
+      const load = $("#load");
+      const loadRes = $("#loadRes");
+      const update = ()=>{
+        const x = Number(load.value);
+        let msg = "";
+        let cls = "result";
+        if(x <= 3){
+          msg = "Carga baja: buen momento para checklist y decisiones calmadas.";
+          cls += " ok";
+        }else if(x <= 6){
+          msg = "Carga media: priorice lo esencial, evite multitarea y confirme comunicaciones.";
+        }else{
+          msg = "Carga alta: riesgo elevado. Pausa, simplifique, reevalúe y aplique criterio de terminación si corresponde.";
+          cls += " bad";
+        }
+        loadRes.className = cls;
+        loadRes.textContent = msg;
+      };
+      load.addEventListener("input", update);
+      update();
+    }
+
+    function renderComms(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Comunicación y briefings"]),
+        el("p",{},[
+          "La comunicación clara reduce ambigüedad. Un briefing corto y completo mejora coordinación y facilita decisiones seguras bajo presión."
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"grid"},[
+        el("div",{class:"card"},[
+          el("h3",{},["Briefing recomendado"]),
+          el("p",{},["Objetivo, roles, límites, riesgos, criterios de terminación y plan alterno."]),
+          el("div",{class:"tagline"},["Si no se comunica, no se coordina."])
+        ]),
+        el("div",{class:"card"},[
+          el("h3",{},["Prácticas"]),
+          el("p",{},["Confirmaciones, repetición crítica, solicitud de aclaración y pausas operativas documentadas."])
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Actividad"]),
+        el("p",{class:"mini"},["Seleccione al menos cinco elementos que deben estar en un briefing."]),
+        el("div",{class:"activity"},[
+          makeChecks("briefingChecks", [
+            "Objetivo de la misión",
+            "Roles (piloto/observador/responsables)",
+            "Zona segura y límites",
+            "Riesgos del entorno",
+            "Criterios de terminación",
+            "Plan alterno",
+            "Reglas de comunicación",
+            "Improvisación sin criterios (no recomendado)"
+          ])
+        ]),
+        el("div",{class:"btnrow"},[
+          el("button",{class:"btn primary", type:"button", onclick: ()=>{
+            const picks = [...document.querySelectorAll('input[name="briefingChecks"]:checked')].map(x=>x.value);
+            if(picks.length < 5) return toast("Seleccione al menos cinco elementos.");
+            state.flags.briefingDone = true;
+            markDone("comms");
+            save();
+          }},["Validar y completar lección"])
+        ])
+      ]));
+    }
+
+    function renderTEM(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["TEM: Amenazas, Errores y Estados indeseados"]),
+        el("p",{},[
+          "El enfoque TEM permite anticipar riesgos: identificar amenazas, prevenir errores y evitar estados indeseados mediante barreras y decisiones oportunas."
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Actividad de clasificación"]),
+        el("p",{class:"mini"},["Arrastre cada tarjeta a la categoría correcta y luego valide."]),
+        el("div",{class:"matchWrap", id:"matchWrap"})
+      ]));
+
+      const wrap = $("#matchWrap");
+      const items = [
+        { id:"i1", text:"Viento cambiante y racheado", correct:"amenaza" },
+        { id:"i2", text:"Omitir confirmación de energía antes de iniciar", correct:"error" },
+        { id:"i3", text:"Pérdida momentánea de referencia de orientación", correct:"estado" },
+        { id:"i4", text:"Interrupciones y presión del cliente", correct:"amenaza" },
+        { id:"i5", text:"Multitarea no planificada", correct:"error" },
+        { id:"i6", text:"Ingresar a zona no prevista", correct:"estado" }
+      ];
+      const buckets = [
+        { id:"amenaza", title:"Amenaza" },
+        { id:"error", title:"Error" },
+        { id:"estado", title:"Estado indeseado" }
+      ];
+
+      const pool = el("div",{class:"bucket"},[
+        el("h4",{},["Tarjetas", el("span",{class:"pill"},["Arrastrar"])]),
+        el("p",{class:"hint"},["En móvil: toque una tarjeta y luego toque el destino."]),
+        el("div",{class:"zone", id:"pool"})
+      ]);
+
+      const zones = {};
+      buckets.forEach(b=>{
+        zones[b.id] = el("div",{class:"bucket"},[
+          el("h4",{},[b.title, el("span",{class:"pill"},["Destino"])]),
+          el("div",{class:"zone", id:"zone_"+b.id})
+        ]);
+      });
+
+      wrap.appendChild(pool);
+      wrap.appendChild(el("div",{},[
+        zones.amenaza,
+        el("div",{style:"height:12px"}),
+        zones.error,
+        el("div",{style:"height:12px"}),
+        zones.estado
+      ]));
+
+      const poolZone = $("#pool");
+      items.forEach(it=>{
+        const d = el("div",{class:"draggable", draggable:"true", id:it.id},[it.text]);
+        d.dataset.correct = it.correct;
+        d.dataset.item = it.id;
+        poolZone.appendChild(d);
+      });
+
+      let selected = null;
+
+      function bindZone(zoneEl){
+        zoneEl.addEventListener("dragover", (e)=>{ e.preventDefault(); zoneEl.style.borderColor="rgba(94,240,195,.35)"; });
+        zoneEl.addEventListener("dragleave", ()=>{ zoneEl.style.borderColor="rgba(255,255,255,.16)"; });
+        zoneEl.addEventListener("drop", (e)=>{
+          e.preventDefault();
+          zoneEl.style.borderColor="rgba(255,255,255,.16)";
+          const id = e.dataTransfer.getData("text/plain");
+          const node = document.getElementById(id);
+          if(node) zoneEl.appendChild(node);
+        });
+
+        zoneEl.addEventListener("click", ()=>{
+          if(selected){
+            zoneEl.appendChild(selected);
+            selected.classList.remove("active");
+            selected = null;
+          }
+        });
+      }
+
+      [poolZone, $("#zone_amenaza"), $("#zone_error"), $("#zone_estado")].forEach(bindZone);
+
+      document.querySelectorAll(".draggable").forEach(d=>{
+        d.addEventListener("dragstart", (e)=> e.dataTransfer.setData("text/plain", d.id));
+        d.addEventListener("click", ()=>{
+          if(selected && selected !== d) selected.classList.remove("active");
+          if(selected === d){ d.classList.remove("active"); selected = null; return; }
+          d.classList.add("active");
+          selected = d;
+          toast("Tarjeta seleccionada. Elija destino.");
+        });
+      });
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Validación"]),
+        el("p",{class:"mini"},["Valide para completar la lección."]),
+        el("div",{class:"btnrow"},[
+          el("button",{class:"btn primary", type:"button", onclick: ()=>{
+            const remaining = [...poolZone.querySelectorAll(".draggable")].length;
+            if(remaining !== 0) return toast("Faltan tarjetas por clasificar.");
+            state.flags.matchDone = true;
+            markDone("tem");
+            save();
+            toast("Validación registrada.");
+          }},["Validar y completar lección"])
+        ])
+      ]));
+    }
+
+    function renderSesgos(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Decisiones y sesgos"]),
+        el("p",{},[
+          "Los sesgos son atajos mentales. En operaciones, conviene reconocerlos y aplicar pausas de criterio para evitar decisiones impulsivas."
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"grid"},[
+        el("div",{class:"card"},[
+          el("h3",{},["Sesgos frecuentes"]),
+          el("p",{},[
+            "Confirmación, normalización del desvío, presión por continuar, costo hundido, exceso de confianza."
+          ])
+        ]),
+        el("div",{class:"card"},[
+          el("h3",{},["Pausa de criterio"]),
+          el("p",{},["Detenerse brevemente, nombrar el riesgo y decidir con regla clara (criterio de terminación)."]),
+          el("div",{class:"tagline"},["La pausa breve reduce decisiones tardías."])
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Actividad"]),
+        el("p",{class:"mini"},["Responda las tres preguntas para completar la lección."]),
+        el("div",{class:"activity"},[
+          biasQuestion("b1", "“Siempre lo hago así y nunca pasa nada”", ["Sesgo de confirmación","Normalización del desvío","Anclaje"]),
+          biasQuestion("b2", "“El pronóstico dice despejado, entonces ignoro señales locales”", ["Sesgo de confirmación","Efecto halo","Disponibilidad"]),
+          biasQuestion("b3", "“Ya invertimos tiempo, sigamos para no perder”", ["Costo hundido","Anclaje","Dunning-Kruger"])
+        ]),
+        el("div",{class:"btnrow"},[
+          el("button",{class:"btn primary", type:"button", onclick: ()=>{
+            const keys = ["b1","b2","b3"];
+            let picked = 0;
+            keys.forEach(k=>{
+              const v = (document.querySelector(`input[name="${k}"]:checked`)||{}).value;
+              if(v) picked++;
+            });
+            if(picked < 3) return toast("Complete las tres respuestas.");
+            markDone("sesgos");
+            save();
+          }},["Completar lección"])
+        ])
+      ]));
+
+      function biasQuestion(name, prompt, opts){
+        const box = el("div",{class:"q"});
+        box.appendChild(el("h4",{},[prompt]));
+        opts.forEach((o,i)=>{
+          const id = `${name}_${i}`;
+          const radio = el("input",{type:"radio", name, id, value:o});
+          const lbl = el("label",{for:id, style:"margin:0; cursor:pointer;"},[o]);
+          box.appendChild(el("div",{class:"opt"},[radio, lbl]));
+        });
+        return box;
+      }
+    }
+
+    function renderEscenario(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Escenario"]),
+        el("p",{},[
+          "Ejercicio de criterio: seleccione la respuesta más segura frente a variabilidad del entorno y presión externa."
+        ])
+      ]));
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Situación"]),
+        el("p",{class:"mini"},[
+          "Durante una operación, el viento cambia y aumenta la presión del cliente. La energía disponible disminuye y se incrementan interrupciones."
+        ]),
+        el("div",{class:"tagline"},["Seleccione una opción y revise retroalimentación."]),
+        el("div",{class:"choices"},[
+          el("button",{class:"choice", type:"button", onclick: ()=> pick(1)},["A) Continuar para no afectar el cronograma, sin cambios."]),
+          el("button",{class:"choice", type:"button", onclick: ()=> pick(2)},["B) Pausa operativa: reducir carga, confirmar estado, aplicar criterio de terminación si el riesgo supera el umbral."]),
+          el("button",{class:"choice", type:"button", onclick: ()=> pick(3)},["C) Pedir al cliente que decida si se continúa."])
+        ]),
+        el("div",{class:"result", id:"scRes"},["Seleccione una opción."])
+      ]));
+
+      function pick(n){
+        const r = $("#scRes");
+        state.flags.scenarioDone = true;
+        markDone("escenario");
+        save();
+
+        if(n===2){
+          r.className = "result ok";
+          r.innerHTML = "<b>Opción recomendada.</b> Prioriza seguridad, reduce carga mental y aplica criterio de terminación con comunicación clara.";
+        }else if(n===1){
+          r.className = "result bad";
+          r.innerHTML = "<b>Riesgosa.</b> Se asocia a presión por continuar y costo hundido. Lo adecuado es pausar y reevaluar.";
+        }else{
+          r.className = "result bad";
+          r.innerHTML = "<b>No recomendado.</b> La responsabilidad del criterio operativo recae en el equipo, no en el cliente.";
+        }
+      }
+    }
+
+    function renderQuiz(root){
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Evaluación final"]),
+        el("p",{},[
+          "Complete las diez preguntas. El resultado se guarda localmente."
+        ])
+      ]));
+
+      const questions = [
+        { id:"q1", q:"La conciencia situacional se compone de:", opts:["Percepción, comprensión y proyección","Memoria, reflejos y fuerza","Planificación y velocidad"], a:0 },
+        { id:"q2", q:"En TEM, una amenaza es:", opts:["Una acción u omisión del operador","Un factor externo que aumenta complejidad","Un estado inseguro ya presente"], a:1 },
+        { id:"q3", q:"Cuando la carga mental sube, es recomendable:", opts:["Aumentar multitarea","Simplificar, priorizar y comunicar","Ignorar señales"], a:1 },
+        { id:"q4", q:"“Siempre lo hacemos así y nunca pasa nada” se relaciona con:", opts:["Normalización del desvío","Efecto halo","Disponibilidad"], a:0 },
+        { id:"q5", q:"Una señal típica de caída de SA es:", opts:["Túnel atencional y sorpresas frecuentes","Mayor claridad y coordinación","Menor estrés con mejor desempeño"], a:0 },
+        { id:"q6", q:"Un briefing efectivo debería incluir:", opts:["Objetivo, roles, límites, riesgos y criterios de terminación","Solo el objetivo","Solo estado del equipo"], a:0 },
+        { id:"q7", q:"La fatiga:", opts:["Siempre es obvia","Puede afectar desempeño aunque no sea evidente","Solo afecta a principiantes"], a:1 },
+        { id:"q8", q:"Buena práctica de comunicación:", opts:["Evitar confirmaciones","Usar confirmaciones y repetición crítica","Hablar rápido para terminar"], a:1 },
+        { id:"q9", q:"La responsabilidad de decidir límites es:", opts:["Del cliente","Del equipo de operación con criterio y normas","De nadie"], a:1 },
+        { id:"q10", q:"Factores Humanos busca principalmente:", opts:["Culpar a la persona","Diseñar barreras y hábitos para reducir error y consecuencias","Evitar reportes"], a:1 }
+      ];
+
+      const wrap = el("div",{class:"activity"});
+      questions.forEach((qq, idx)=>{
+        const box = el("div",{class:"q"});
+        box.appendChild(el("h4",{},[(idx+1)+". "+qq.q]));
+        qq.opts.forEach((opt,i)=>{
+          const id = `${qq.id}_${i}`;
+          const r = el("input",{type:"radio", name:qq.id, id, value:String(i)});
+          if(state.answers[qq.id] === String(i)) r.checked = true;
+          const lbl = el("label",{for:id, style:"margin:0; cursor:pointer;"},[opt]);
+          box.appendChild(el("div",{class:"opt"},[r, lbl]));
+        });
+        wrap.appendChild(box);
+      });
+
+      root.appendChild(wrap);
+
+      root.appendChild(el("div",{class:"card"},[
+        el("h3",{},["Enviar evaluación"]),
+        el("p",{class:"mini"},["Al enviar, se calcula el resultado y se habilita el certificado."]),
+        el("div",{class:"btnrow"},[
+          el("button",{class:"btn primary", type:"button", onclick: ()=>{
+            let answered = 0;
+            let score = 0;
+            const ans = {};
+            questions.forEach(qq=>{
+              const pick = document.querySelector(`input[name="${qq.id}"]:checked`);
+              if(pick){ answered++; ans[qq.id] = pick.value; if(Number(pick.value)===qq.a) score++; }
+            });
+            if(answered < questions.length){
+              return toast("Complete todas las preguntas antes de enviar.");
+            }
+            state.answers = ans;
+            state.score = score;
+            markDone("quiz");
+            save();
+            renderLesson("cert");
+          }},["Calcular resultado"])
+        ])
+      ]));
+    }
+
+    function renderCert(root){
+      const participantName = state.profile.name || "Participante";
+      const participantRole = state.profile.role || "Rol no indicado";
+      const ops = state.profile.ops || "Operación no indicada";
+      const chiefName = "Oscar Eduardo Cruz";
+      const chiefRole = "Jefe de Pilotos";
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("es-CO", { year:"numeric", month:"long", day:"numeric" });
+
+      if(!state.certIssuedAt){
+        state.certIssuedAt = new Date().toISOString();
+        localStorage.setItem(LS.certIssuedAt, JSON.stringify(state.certIssuedAt));
+      }
+
+      const code = stableCode(`${participantName}|${participantRole}|${ops}|${state.score}|${state.certIssuedAt}`);
+
+      root.appendChild(el("div",{class:"hero"},[
+        el("h2",{},["Certificado"]),
+        el("p",{},[
+          "Certificado Decimetrix listo para imprimir. Si guarda como PDF, active la impresión de fondos para conservar los colores."
+        ])
+      ]));
+
+      const wrap = el("div",{class:"certWrap"},[
+        el("div",{class:"certTop"},[
+          el("div",{class:"row"},[
+            el("div",{class:"certBrand"},[
+              el("div",{class:"certBadge", "aria-hidden":"true"}),
+              el("div",{},[
+                el("h3",{},["Decimetrix Academy"]),
+                el("p",{},["Certificación académica - Factores Humanos en Operaciones UAS"])
+              ])
+            ]),
+            el("div",{class:"certCode"},[`Código: ${code}`])
+          ])
+        ]),
+        el("div",{class:"certBody"},[
+          el("div",{class:"certDoc"},[
+            el("h3",{class:"certTitle"},["Certificado de Finalización"]),
+            el("p",{class:"certText"},[
+              "Se certifica que ",
+              el("b",{style:"color:var(--d-green)"},[participantName]),
+              " completó la OVA “Factores Humanos en Operaciones UAS” de Decimetrix, cumpliendo con los contenidos académicos, actividades y evaluación final."
+            ]),
+            el("div",{class:"certMeta"},[
+              el("div",{class:"metaCard"},[
+                el("div",{},[el("b",{},["Rol: "]), participantRole]),
+                el("div",{},[el("b",{},["Operación (referencia): "]), ops]),
+              ]),
+              el("div",{class:"metaCard"},[
+                el("div",{},[el("b",{},["Resultado evaluación: "]), `${state.score}/10`]),
+                el("div",{},[el("b",{},["Fecha: "]), dateStr]),
+              ])
+            ]),
+            el("div",{class:"sigRow"},[
+              el("div",{class:"sigBlock"},[
+                el("p",{class:"sigLabel"},["Firma (participante)"]),
+                el("div",{class:"sigLine"}),
+                el("p",{class:"sigSignature"},[participantName]),
+                el("p",{class:"sigName"},[participantName]),
+                el("p",{class:"sigRole"},[participantRole])
+              ]),
+              el("div",{class:"sigBlock"},[
+                el("p",{class:"sigLabel"},["Firma (aprobación)"]),
+                el("div",{class:"sigLine"}),
+                el("p",{class:"sigSignature"},[chiefName]),
+                el("p",{class:"sigName"},[chiefName]),
+                el("p",{class:"sigRole"},[`${chiefRole} - Decimetrix`])
+              ])
+            ]),
+            el("div",{class:"certFooter"},[
+              el("div",{},["Certificado académico. No sustituye normatividad ni entrenamiento certificado."]),
+              el("div",{},["Decimetrix"])
+            ])
+          ])
+        ])
+      ]);
+
+      root.appendChild(wrap);
+
+      root.appendChild(el("div",{class:"card printHide"},[
+        el("h3",{},["Impresión"]),
+        el("p",{class:"mini"},["Use imprimir para guardar en PDF o imprimir en papel."]),
+        el("div",{class:"btnrow"},[
+          el("button",{class:"btn primary", type:"button", onclick: ()=>{
+            markDone("cert");
+            save();
+            window.print();
+          }},["Imprimir / Guardar PDF"])
+        ])
+      ]));
+    }
+
+    /* Acciones sidebar */
+    $("#btnNext").addEventListener("click", ()=> renderLesson(nextLessonId()));
+    $("#btnSave").addEventListener("click", save);
+    $("#btnReset").addEventListener("click", ()=>{
+      if(confirm("¿Desea reiniciar todo el progreso en este navegador?")){
+        resetAll();
+      }
+    });
+
+    $("#btnExport").addEventListener("click", ()=>{
+      const payload = {
+        brand: "Decimetrix",
+        module: "OVA Factores Humanos UAS",
+        exportedAt: new Date().toISOString(),
+        profile: state.profile,
+        progress: state.progress,
+        score: state.score,
+        answers: state.answers,
+        flags: state.flags,
+        certIssuedAt: state.certIssuedAt
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "decimetrix_ova_factores_humanos_uas_progreso.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast("Exportación completada.");
+    });
+
+    /* Atajo: N para siguiente lección (NO se activa cuando se escribe en campos) */
+    document.addEventListener("keydown", (e)=>{
+      if(e.ctrlKey || e.metaKey || e.altKey) return;
+
+      const key = (e.key || "").toLowerCase();
+      if(key !== "n") return;
+
+      // Si el usuario está escribiendo en un input/textarea/select o en un editable, no navegar
+      const t = e.target;
+      const inEditable = t && (t.closest?.('input, textarea, select, [contenteditable="true"]'));
+      if(inEditable) return;
+
+      // Si el usuario está en composición (IME), no navegar
+      if(e.isComposing) return;
+
+      e.preventDefault();
+      renderLesson(nextLessonId());
+    });
+
+    /* Init */
+    load();
+    renderNav();
+    renderLesson(state.current);
+    updateUIBits();
+  </script>
+</body>
+</html>
