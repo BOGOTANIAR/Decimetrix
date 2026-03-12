@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Decimetrix | Evidencia Operación UAS - Checklist Piloto</title>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,.06);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --muted2: rgba(255,255,255,.55);
+      --line: rgba(255,255,255,.14);
+      --ok: #39d98a;
+      --warn: #ffcc00;
+      --bad: #ff5c7a;
+      --accent: #7aa7ff;
+      --accent2:#7fffd4;
+      --shadow: 0 18px 45px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    *{ box-sizing:border-box; }
+    html, body { height:100%; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(122,167,255,.20), transparent 60%),
+        radial-gradient(1000px 650px at 90% 20%, rgba(127,255,212,.12), transparent 60%),
+        radial-gradient(900px 650px at 50% 95%, rgba(255,92,122,.10), transparent 55%),
+        var(--bg);
+      line-height:1.35;
+    }
+
+    .wrap{ max-width: 1060px; margin: 28px auto; padding: 0 18px 60px; }
+    .topbar{
+      display:flex; gap:14px; align-items:flex-start; justify-content:space-between;
+      padding: 18px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+    }
+
+    /* ---------- LOGO REAL ---------- */
+    .brand{
+      display:flex; gap:14px; align-items:center;
+      min-width: 320px;
+    }
+    .brand-logo{
+      width: 175px;
+      height: auto;
+      display:block;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+    }
+    @media (max-width: 520px){
+      .brand{ min-width: unset; }
+      .brand-logo{ width: 145px; }
+    }
+
+    .brand h1{
+      font-size: 16px; margin:0;
+      font-weight: 750;
+      letter-spacing:.2px;
+    }
+    .brand p{ margin:3px 0 0; color: var(--muted); font-size: 12.8px; }
+
+    .meta{
+      display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end;
+      text-align:right;
+    }
+    .pill{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      display:flex; gap:8px; align-items:center;
+      white-space: nowrap;
+    }
+    .dot{
+      width:9px; height:9px; border-radius:99px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(122,167,255,.12);
+    }
+    .dot.ok{ background: var(--ok); box-shadow: 0 0 0 4px rgba(57,217,138,.14);}
+    .dot.warn{ background: var(--warn); box-shadow: 0 0 0 4px rgba(255,204,0,.14);}
+    .dot.bad{ background: var(--bad); box-shadow: 0 0 0 4px rgba(255,92,122,.14);}
+
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top: 14px;}
+    button{
+      font: inherit;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+    }
+    button:hover{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22); }
+    button:active{ transform: scale(.99); }
+    .primary{
+      background: linear-gradient(135deg, rgba(122,167,255,.95), rgba(127,255,212,.75));
+      border-color: transparent;
+      color:#071023;
+      font-weight: 750;
+    }
+    .danger{
+      background: rgba(255,92,122,.15);
+      border-color: rgba(255,92,122,.35);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 960px){
+      .grid{ grid-template-columns: 1fr; }
+      .meta{ justify-content:flex-start; text-align:left; }
+      .topbar{ align-items:flex-start; }
+    }
+
+    .card{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.05);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 15px;
+      letter-spacing:.2px;
+    }
+    .sub{ color: var(--muted); font-size: 12.6px; margin-top: 4px; }
+
+    .fields{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 700px){
+      .fields{ grid-template-columns: 1fr; }
+    }
+    label{ display:block; font-size: 12.2px; color: var(--muted); margin-bottom: 6px; }
+    input, select, textarea{
+      width:100%;
+      font: inherit;
+      padding: 10px 11px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(122,167,255,.55);
+      box-shadow: 0 0 0 4px rgba(122,167,255,.14);
+    }
+    textarea{ min-height: 110px; resize: vertical; }
+
+    .progress{
+      display:flex; align-items:center; gap:10px;
+      margin-top: 10px;
+      padding: 12px;
+      border: 1px dashed rgba(255,255,255,.22);
+      border-radius: var(--radius2);
+      background: rgba(255,255,255,.03);
+    }
+    .bar{
+      flex:1;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .fill{
+      height:100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(122,167,255,.95), rgba(127,255,212,.80));
+      border-radius: 999px;
+      transition: width .2s ease;
+    }
+    .pct{ font-family: var(--mono); font-size: 12px; color: var(--muted); min-width: 110px; text-align:right; }
+
+    .section{
+      margin-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 14px;
+    }
+
+    .checklist{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .item{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+    }
+    .item:hover{ border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.05); }
+    .item .tag{
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      color: var(--muted);
+      background: rgba(255,255,255,.04);
+      white-space: nowrap;
+    }
+    .item .tag.req{ border-color: rgba(255,204,0,.40); color: rgba(255,204,0,.90); background: rgba(255,204,0,.08); }
+    .item .tag.crit{ border-color: rgba(255,92,122,.45); color: rgba(255,92,122,.92); background: rgba(255,92,122,.10); }
+
+    .cb{
+      margin-top: 2px;
+      width: 20px; height: 20px;
+      accent-color: #7aa7ff;
+      flex: 0 0 20px;
+      cursor:pointer;
+    }
+    .txt{ flex:1; }
+    .txt b{ display:block; font-size: 13.5px; }
+    .txt small{ display:block; color: var(--muted); margin-top: 4px; }
+
+    .mini{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .mini .pill{ padding: 7px 9px; }
+
+    .photos{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 700px){
+      .photos{ grid-template-columns: 1fr 1fr; }
+    }
+    .photo{
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(255,255,255,.03);
+      min-height: 120px;
+      display:grid;
+      place-items:center;
+      color: var(--muted2);
+      font-size: 12px;
+      position: relative;
+    }
+    .photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .photo .x{
+      position:absolute; top:8px; right:8px;
+      border-radius: 10px;
+      padding: 6px 8px;
+      font-size: 12px;
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.9);
+      cursor:pointer;
+    }
+
+    .sign{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 900px){
+      .sign{ grid-template-columns: 1fr; }
+    }
+    .sigpad{
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 14px;
+      background: rgba(0,0,0,.18);
+      padding: 10px;
+    }
+    canvas{
+      width:100%;
+      height: 170px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.02);
+      border: 1px dashed rgba(255,255,255,.18);
+      touch-action: none;
+    }
+    .sig-actions{ display:flex; gap:10px; margin-top: 10px; flex-wrap:wrap; }
+
+    .foot{
+      margin-top: 16px;
+      color: var(--muted2);
+      font-size: 12px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 14px;
+    }
+    .mono{ font-family: var(--mono); }
+
+    /* ---- Print/PDF ---- */
+    @media print{
+      body{ background: #fff !important; color:#111 !important; }
+      .topbar, .card{ box-shadow:none !important; }
+      .topbar, .card{ border-color:#cfcfcf !important; }
+      input, select, textarea{ background:#fff !important; color:#111 !important; border-color:#cfcfcf !important; }
+      .item{ background:#fff !important; border-color:#d6d6d6 !important; }
+      .pill{ background:#fff !important; border-color:#d6d6d6 !important; color:#222 !important; }
+      .tag{ background:#fff !important; }
+      .actions, .no-print{ display:none !important; }
+      .wrap{ margin: 0 !important; max-width: none !important; padding: 0 10mm 10mm !important; }
+      .photo .x{ display:none !important; }
+      .sig-actions{ display:none !important; }
+      .brand-logo{ filter:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <!-- IMPORTANTE: pon el logo al lado del HTML con este nombre -->
+        <img class="brand-logo" src="decimetrix_logo.png" alt="Decimetrix" />
+
+        <div>
+          <h1>Evidencia de Operación UAS | Checklist Piloto</h1>
+          <p>Decimetrix · Basado en Manual de Operaciones UAS (MO) y Manual de Gestión de Seguridad Operacional (MSMS)</p>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div class="pill"><span class="dot" id="statusDot"></span> <span id="statusText">Borrador</span></div>
+        <div class="pill"><span class="dot ok"></span> Código evidencia: <span class="mono" id="evidenceCode">DCX-UAS-XXXX</span></div>
+        <div class="pill">Fecha: <span class="mono" id="today"></span></div>
+      </div>
+    </header>
+
+    <div class="actions no-print" role="group" aria-label="Acciones">
+      <button class="primary" type="button" id="btnPdf">Descargar PDF</button>
+      <button type="button" id="btnSave">Guardar en este navegador</button>
+      <button type="button" id="btnLoad">Cargar último guardado</button>
+      <button class="danger" type="button" id="btnClear">Limpiar</button>
+      <button type="button" id="btnJson">Descargar evidencia (JSON)</button>
+    </div>
+
+    <div class="grid">
+      <!-- Datos de misión -->
+      <section class="card" aria-label="Datos de la misión">
+        <h2>1) Datos de la misión</h2>
+        <div class="sub">Completa estos campos antes de operar. Esto queda como soporte para SG-SST / ARL.</div>
+
+        <div class="fields">
+          <div>
+            <label for="pilotName">Piloto UAS (nombre completo) *</label>
+            <input id="pilotName" placeholder="Ej: Oscar Eduardo Cruz" required />
+          </div>
+          <div>
+            <label for="pilotId">Documento / ID *</label>
+            <input id="pilotId" placeholder="CC / ID" required />
+          </div>
+
+          <div>
+            <label for="role">Rol</label>
+            <select id="role">
+              <option>Piloto UAS</option>
+              <option>Piloto UAS (en entrenamiento)</option>
+              <option>Observador</option>
+              <option>Jefe de Pilotos</option>
+            </select>
+          </div>
+          <div>
+            <label for="blood">Grupo sanguíneo (para chaleco)</label>
+            <input id="blood" placeholder="Ej: O+ / A+ / B- ..." />
+          </div>
+
+          <div>
+            <label for="operationType">Tipo de operación *</label>
+            <select id="operationType" required>
+              <option value="">Selecciona…</option>
+              <option>Inspección / Fotogrametría</option>
+              <option>Audiovisual / Marketing</option>
+              <option>Industrial (planta/obra)</option>
+              <option>Infraestructura / Vías</option>
+              <option>Energía (cercanía eléctrica)</option>
+              <option>Interior (bodega / nave)</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div>
+            <label for="droneModel">UAS (marca/modelo) *</label>
+            <input id="droneModel" placeholder="Ej: DJI Mavic 3 / Matrice..." required />
+          </div>
+
+          <div>
+            <label for="location">Lugar exacto *</label>
+            <input id="location" placeholder="Ciudad, dirección, referencia" required />
+          </div>
+          <div>
+            <label for="client">Cliente / Frente de trabajo</label>
+            <input id="client" placeholder="Cliente / Proyecto" />
+          </div>
+
+          <div>
+            <label for="startTime">Hora inicio (servicio) *</label>
+            <input id="startTime" type="datetime-local" required />
+          </div>
+          <div>
+            <label for="endTime">Hora fin (servicio)</label>
+            <input id="endTime" type="datetime-local" />
+          </div>
+        </div>
+
+        <div class="progress" aria-label="Progreso del checklist">
+          <div class="bar"><div class="fill" id="fill"></div></div>
+          <div class="pct" id="pct">0% (0/0)</div>
+        </div>
+
+        <div class="mini">
+          <div class="pill"><span class="dot ok"></span> Marcadas: <span class="mono" id="done">0</span></div>
+          <div class="pill"><span class="dot warn"></span> Pendientes: <span class="mono" id="todo">0</span></div>
+          <div class="pill"><span class="dot bad"></span> Críticas sin marcar: <span class="mono" id="critMiss">0</span></div>
+        </div>
+
+        <div class="section">
+          <h2 style="margin:0 0 8px">2) Evidencia visual (opcional)</h2>
+          <div class="sub">Adjunta fotos del dronpuerto, demarcación, EPP, condiciones del sitio, etc. Quedarán en el PDF.</div>
+          <div class="fields" style="grid-template-columns: 1fr;">
+            <div>
+              <label for="photos">Subir fotos</label>
+              <input id="photos" type="file" accept="image/*" multiple />
+            </div>
+          </div>
+          <div class="photos" id="photosGrid"></div>
+        </div>
+      </section>
+
+      <!-- Checklist -->
+      <section class="card" aria-label="Checklist">
+        <h2>3) Checklist básico Piloto UAS (Decimetrix)</h2>
+        <div class="sub">Marca cada punto. Si un punto crítico no se cumple, la operación debe ir a NO-GO hasta corregir.</div>
+
+        <div class="checklist" id="checklist">
+          <div class="item">
+            <input class="cb" type="checkbox" data-crit="true" />
+            <div class="txt">
+              <b>A1. Límite de jornada/servicio: cumplo el máximo (10 horas continuas en 24h).</b>
+              <small>Si no se cumple, NO se opera. (Control fatiga y aptitud)</small>
+            </div>
+            <span class="tag crit">CRÍTICO</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-crit="true" />
+            <div class="txt">
+              <b>A2. IMSAFE: estoy apto/a (salud, medicación, estrés, alcohol, fatiga, emociones).</b>
+              <small>Si hay condición adversa: suspender operación y reportar.</small>
+            </div>
+            <span class="tag crit">CRÍTICO</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-req="true" />
+            <div class="txt">
+              <b>B1. EPP completo: casco, gafas, calzado seguridad, ropa adecuada y chaleco reflectivo.</b>
+              <small>Chaleco con identificación (nombre/rol/grupo sanguíneo) según lineamiento interno.</small>
+            </div>
+            <span class="tag req">OBLIG.</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-crit="true" />
+            <div class="txt">
+              <b>C1. Área de seguridad (SA) demarcada y libre de personas durante la operación.</b>
+              <small>Control de acceso y señalización (cinta, conos, avisos).</small>
+            </div>
+            <span class="tag crit">CRÍTICO</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-req="true" />
+            <div class="txt">
+              <b>C2. Briefing al equipo realizado y registrado.</b>
+              <small>Objetivo, roles, meteo, plan de vuelo, riesgos, mitigaciones, emergencias.</small>
+            </div>
+            <span class="tag req">OBLIG.</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-crit="true" />
+            <div class="txt">
+              <b>D1. Preoperacional UAS: estructura/hélices/sensores/control/baterías OK (sin anomalías).</b>
+              <small>Cualquier falla: NO-GO hasta corrección.</small>
+            </div>
+            <span class="tag crit">CRÍTICO</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-req="true" />
+            <div class="txt">
+              <b>D2. Memoria microSD/almacenamiento y respaldos: verificados.</b>
+              <small>Evita pérdida de evidencia operativa.</small>
+            </div>
+            <span class="tag req">OBLIG.</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-crit="true" />
+            <div class="txt">
+              <b>E1. Baterías LiPo: almacenamiento/carga segura y supervisada (sin calor, sin sol).</b>
+              <small>Superficie no inflamable, ventilación, cargador certificado, control incendio según sitio.</small>
+            </div>
+            <span class="tag crit">CRÍTICO</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-req="true" />
+            <div class="txt">
+              <b>F1. Plan de emergencia definido (contactos, botiquín, extintor según riesgo, comunicaciones).</b>
+              <small>Incluye gestión de ingreso no autorizado a dronpuerto y contingencias.</small>
+            </div>
+            <span class="tag req">OBLIG.</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-req="true" />
+            <div class="txt">
+              <b>G1. Cierre post-operación: inspección, registro y resguardo del equipo/datos.</b>
+              <small>Se deja evidencia y se reportan novedades.</small>
+            </div>
+            <span class="tag req">OBLIG.</span>
+          </div>
+
+          <div class="item">
+            <input class="cb" type="checkbox" data-req="true" />
+            <div class="txt">
+              <b>H1. Reporte de sucesos: conozco el canal interno y lo aplicaré si ocurre incidente/condición insegura.</b>
+              <small>En caso de suceso, preservar evidencias (logs, fotos, video) y activar reporte.</small>
+            </div>
+            <span class="tag req">OBLIG.</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2 style="margin:0 0 8px">4) Observaciones y acciones</h2>
+          <div class="sub">Si algo no aplica o hay desviaciones, déjalo por escrito. Esto es clave para auditoría.</div>
+          <label for="notes" style="margin-top:10px">Observaciones / hallazgos / condiciones del sitio</label>
+          <textarea id="notes" placeholder="Ej: viento moderado, público cercano, se amplió perímetro, se suspendió por fatiga, etc."></textarea>
+
+          <label for="actions" style="margin-top:10px">Acciones correctivas / mitigaciones aplicadas</label>
+          <textarea id="actions" placeholder="Ej: se demarcó SA adicional, se cambió FATO, se rotó operador, se aplazó misión, etc."></textarea>
+        </div>
+
+        <div class="section">
+          <h2 style="margin:0 0 8px">5) Firma y declaración</h2>
+          <div class="sub">Firma dibujada + nombre. Esto deja la evidencia formal.</div>
+
+          <div class="sign">
+            <div>
+              <label>Firma (dibujar)</label>
+              <div class="sigpad">
+                <canvas id="sigCanvas" width="900" height="400" aria-label="Firma"></canvas>
+                <div class="sig-actions no-print">
+                  <button type="button" id="btnSigClear">Borrar firma</button>
+                  <button type="button" id="btnSigSave">Guardar firma</button>
+                </div>
+                <input type="hidden" id="sigData" />
+              </div>
+              <div class="sub">Tip: mouse o dedo (pantalla táctil). Luego “Guardar firma”.</div>
+            </div>
+
+            <div>
+              <div class="fields" style="grid-template-columns:1fr;">
+                <div>
+                  <label for="declName">Nombre firma *</label>
+                  <input id="declName" placeholder="Nombre del responsable que firma" required />
+                </div>
+                <div>
+                  <label for="declRole">Cargo</label>
+                  <input id="declRole" placeholder="Piloto UAS / Observador / Jefe de Pilotos" />
+                </div>
+                <div>
+                  <label for="declId">Documento</label>
+                  <input id="declId" placeholder="CC / ID" />
+                </div>
+              </div>
+
+              <div class="section" style="margin-top:10px">
+                <div class="item" style="align-items:flex-start">
+                  <input class="cb" id="declOk" type="checkbox" />
+                  <div class="txt">
+                    <b>Declaro que la información registrada es veraz y que la operación se realizó cumpliendo lineamientos internos (MO/MSMS) y controles aplicables.</b>
+                    <small>Si hubo desviaciones, quedaron reportadas en observaciones/acciones.</small>
+                  </div>
+                  <span class="tag req">OBLIG.</span>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="pill" style="justify-content:space-between; width:100%;">
+                  <span>Huella/Fingerprint evidencia</span>
+                  <span class="mono" id="fingerprint">pendiente</span>
+                </div>
+                <div class="sub">Se genera al guardar o descargar PDF. Sirve para trazabilidad.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="foot">
+            <b>Nota:</b> Este formato es evidencia operativa. No reemplaza permisos/autorizaciones o procedimientos adicionales.
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const pad2 = (n) => String(n).padStart(2,'0');
+    const fmtDate = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+    const fmtTime = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+
+    function genEvidenceCode(){
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = pad2(d.getMonth()+1);
+      const day = pad2(d.getDate());
+      const hh = pad2(d.getHours());
+      const mm = pad2(d.getMinutes());
+      const rand = Math.random().toString(16).slice(2,6).toUpperCase();
+      return `DCX-UAS-${y}${m}${day}-${hh}${mm}-${rand}`;
+    }
+
+    function toLocalInputValue(date){
+      const d = new Date(date);
+      const off = d.getTimezoneOffset();
+      const local = new Date(d.getTime() - off*60*1000);
+      return local.toISOString().slice(0,16);
+    }
+
+    function setStatus(kind, text){
+      const dot = $('statusDot');
+      dot.className = 'dot ' + (kind || '');
+      $('statusText').textContent = text;
+    }
+
+    function getFormData(){
+      const checklist = Array.from(document.querySelectorAll('#checklist .item')).map((item, idx) => {
+        const cb = item.querySelector('input[type="checkbox"]');
+        const title = item.querySelector('b')?.textContent?.trim() || `Item ${idx+1}`;
+        const crit = cb?.dataset?.crit === 'true';
+        const req  = cb?.dataset?.req === 'true';
+        return { idx: idx+1, title, checked: !!cb?.checked, crit, req };
+      });
+
+      const photos = Array.from(document.querySelectorAll('#photosGrid img')).map(img => img.src);
+
+      return {
+        evidenceCode: $('evidenceCode').textContent,
+        createdAt: new Date().toISOString(),
+        mission: {
+          pilotName: $('pilotName').value.trim(),
+          pilotId: $('pilotId').value.trim(),
+          role: $('role').value,
+          blood: $('blood').value.trim(),
+          operationType: $('operationType').value,
+          droneModel: $('droneModel').value.trim(),
+          location: $('location').value.trim(),
+          client: $('client').value.trim(),
+          startTime: $('startTime').value,
+          endTime: $('endTime').value
+        },
+        checklist,
+        notes: $('notes').value.trim(),
+        actions: $('actions').value.trim(),
+        signature: {
+          name: $('declName').value.trim(),
+          role: $('declRole').value.trim(),
+          id: $('declId').value.trim(),
+          signed: $('declOk').checked,
+          sigDataUrl: $('sigData').value || null
+        },
+        photosCount: photos.length,
+        photos
+      };
+    }
+
+    async function sha256(text){
+      const enc = new TextEncoder().encode(text);
+      const buf = await crypto.subtle.digest('SHA-256', enc);
+      const arr = Array.from(new Uint8Array(buf));
+      return arr.map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+
+    async function updateFingerprint(){
+      const data = getFormData();
+      const json = JSON.stringify(data);
+      const hash = await sha256(json);
+      $('fingerprint').textContent = hash.slice(0, 16).toUpperCase();
+      return hash;
+    }
+
+    function countProgress(){
+      const items = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]'));
+      const total = items.length;
+      const done = items.filter(x => x.checked).length;
+      const critMiss = items.filter(x => x.dataset.crit === 'true' && !x.checked).length;
+
+      const pct = total ? Math.round((done/total)*100) : 0;
+      $('fill').style.width = pct + '%';
+      $('pct').textContent = `${pct}% (${done}/${total})`;
+      $('done').textContent = done;
+      $('todo').textContent = (total - done);
+      $('critMiss').textContent = critMiss;
+
+      if(critMiss > 0) setStatus('bad', 'NO-GO (críticos pendientes)');
+      else if(done === total) setStatus('ok', 'Listo para evidencia');
+      else setStatus('warn', 'En progreso');
+    }
+
+    function validateRequired(){
+      const requiredFields = [
+        ['pilotName','Piloto UAS'],
+        ['pilotId','Documento/ID'],
+        ['operationType','Tipo de operación'],
+        ['droneModel','Modelo UAS'],
+        ['location','Lugar'],
+        ['startTime','Hora inicio'],
+        ['declName','Nombre firma']
+      ];
+
+      const missing = requiredFields.filter(([id]) => !$(id).value.trim());
+      if(missing.length){
+        alert('Faltan campos obligatorios:\n- ' + missing.map(x => x[1]).join('\n- '));
+        return false;
+      }
+
+      if(!$('declOk').checked){
+        alert('Para cerrar como evidencia, marca la declaración (firma y veracidad).');
+        return false;
+      }
+
+      const critMiss = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]'))
+        .filter(x => x.dataset.crit === 'true' && !x.checked).length;
+
+      if(critMiss > 0){
+        const go = confirm(
+          'Tienes ítems CRÍTICOS sin marcar. Esto debería ser NO-GO.\n\n' +
+          '¿Aun así quieres generar el PDF como evidencia (quedará reflejado)?'
+        );
+        if(!go) return false;
+      }
+      return true;
+    }
+
+    function download(filename, content, mime){
+      const blob = new Blob([content], {type: mime});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+    // Photos
+    function addPhotoPreview(dataUrl){
+      const div = document.createElement('div');
+      div.className = 'photo';
+
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      img.alt = 'Evidencia fotográfica';
+
+      const x = document.createElement('button');
+      x.type = 'button';
+      x.className = 'x no-print';
+      x.textContent = 'Quitar';
+      x.addEventListener('click', () => div.remove());
+
+      div.appendChild(img);
+      div.appendChild(x);
+      $('photosGrid').appendChild(div);
+    }
+
+    $('photos').addEventListener('change', (e) => {
+      const files = Array.from(e.target.files || []);
+      for(const f of files){
+        const reader = new FileReader();
+        reader.onload = () => addPhotoPreview(reader.result);
+        reader.readAsDataURL(f);
+      }
+      e.target.value = '';
+    });
+
+    // Signature pad
+    const canvas = $('sigCanvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let last = null;
+
+    function getPos(ev){
+      const rect = canvas.getBoundingClientRect();
+      const touch = ev.touches?.[0];
+      const clientX = touch ? touch.clientX : ev.clientX;
+      const clientY = touch ? touch.clientY : ev.clientY;
+      return {
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+        y: (clientY - rect.top)  * (canvas.height/ rect.height)
+      };
+    }
+
+    function startDraw(ev){ drawing = true; last = getPos(ev); ev.preventDefault(); }
+    function moveDraw(ev){
+      if(!drawing) return;
+      const p = getPos(ev);
+      ctx.lineWidth = 4.2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = 'rgba(255,255,255,.92)';
+      ctx.beginPath();
+      ctx.moveTo(last.x, last.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      last = p;
+      ev.preventDefault();
+    }
+    function endDraw(ev){ drawing = false; last = null; ev.preventDefault(); }
+
+    canvas.addEventListener('pointerdown', startDraw);
+    canvas.addEventListener('pointermove', moveDraw);
+    canvas.addEventListener('pointerup', endDraw);
+    canvas.addEventListener('pointercancel', endDraw);
+
+    canvas.addEventListener('touchstart', startDraw, {passive:false});
+    canvas.addEventListener('touchmove', moveDraw, {passive:false});
+    canvas.addEventListener('touchend', endDraw, {passive:false});
+
+    $('btnSigClear').addEventListener('click', () => {
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+      $('sigData').value = '';
+      setStatus('warn','Firma borrada');
+    });
+
+    $('btnSigSave').addEventListener('click', async () => {
+      $('sigData').value = canvas.toDataURL('image/png');
+      await updateFingerprint();
+      setStatus('ok','Firma guardada');
+    });
+
+    // Save/Load
+    async function saveLocal(){
+      const data = getFormData();
+      const hash = await updateFingerprint();
+      const pack = { data, sha256: hash, savedAt: new Date().toISOString() };
+      localStorage.setItem('dcx_uas_checklist_last', JSON.stringify(pack));
+      setStatus('ok', 'Guardado local');
+      alert('Guardado en este navegador ✅');
+    }
+
+    function loadLocal(){
+      const raw = localStorage.getItem('dcx_uas_checklist_last');
+      if(!raw){ alert('No hay guardado previo.'); return; }
+      const pack = JSON.parse(raw);
+      const d = pack.data;
+
+      $('evidenceCode').textContent = d.evidenceCode || genEvidenceCode();
+
+      const m = d.mission || {};
+      $('pilotName').value = m.pilotName || '';
+      $('pilotId').value = m.pilotId || '';
+      $('role').value = m.role || 'Piloto UAS';
+      $('blood').value = m.blood || '';
+      $('operationType').value = m.operationType || '';
+      $('droneModel').value = m.droneModel || '';
+      $('location').value = m.location || '';
+      $('client').value = m.client || '';
+      $('startTime').value = m.startTime || '';
+      $('endTime').value = m.endTime || '';
+
+      const items = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]'));
+      (d.checklist || []).forEach((it, i) => { if(items[i]) items[i].checked = !!it.checked; });
+
+      $('notes').value = d.notes || '';
+      $('actions').value = d.actions || '';
+
+      const s = d.signature || {};
+      $('declName').value = s.name || '';
+      $('declRole').value = s.role || '';
+      $('declId').value = s.id || '';
+      $('declOk').checked = !!s.signed;
+
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+      if(s.sigDataUrl){
+        const img = new Image();
+        img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        img.src = s.sigDataUrl;
+        $('sigData').value = s.sigDataUrl;
+      }else{
+        $('sigData').value = '';
+      }
+
+      $('photosGrid').innerHTML = '';
+      (d.photos || []).forEach(src => addPhotoPreview(src));
+
+      $('fingerprint').textContent = (pack.sha256 || 'pendiente').slice(0,16).toUpperCase();
+      countProgress();
+      setStatus('warn', 'Cargado (revisar)');
+    }
+
+    function clearAll(){
+      if(!confirm('¿Seguro que quieres limpiar todo?')) return;
+      document.querySelectorAll('input, select, textarea').forEach(el => {
+        if(el.type === 'checkbox') el.checked = false;
+        else el.value = '';
+      });
+      $('photosGrid').innerHTML = '';
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+      $('sigData').value = '';
+      $('fingerprint').textContent = 'pendiente';
+      $('evidenceCode').textContent = genEvidenceCode();
+      initTimes();
+      countProgress();
+      setStatus('warn','Borrador');
+    }
+
+    async function downloadPdf(){
+      if(!validateRequired()) return;
+      await updateFingerprint();
+      alert(
+        'Se abrirá el diálogo de impresión.\n' +
+        'Elige "Guardar como PDF" para descargar la evidencia.\n\n' +
+        'Tip: En "Más configuraciones" activa "Gráficos de fondo" si quieres.'
+      );
+      window.print();
+    }
+
+    async function downloadJson(){
+      if(!validateRequired()) return;
+      const hash = await updateFingerprint();
+      const data = getFormData();
+      const pack = { sha256: hash, exportedAt: new Date().toISOString(), data };
+      const fname = `${data.evidenceCode || 'DCX-UAS'}_evidencia.json`;
+      download(fname, JSON.stringify(pack, null, 2), 'application/json');
+    }
+
+    function initTimes(){
+      const now = new Date();
+      $('today').textContent = `${fmtDate(now)} ${fmtTime(now)}`;
+      if(!$('startTime').value) $('startTime').value = toLocalInputValue(now);
+    }
+
+    function bind(){
+      document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          countProgress();
+          updateFingerprint().catch(()=>{});
+        });
+      });
+
+      ['pilotName','pilotId','role','blood','operationType','droneModel','location','client','startTime','endTime','notes','actions','declName','declRole','declId','declOk']
+        .forEach(id => $(id).addEventListener('input', () => { countProgress(); updateFingerprint().catch(()=>{}); }));
+
+      $('btnPdf').addEventListener('click', downloadPdf);
+      $('btnSave').addEventListener('click', saveLocal);
+      $('btnLoad').addEventListener('click', loadLocal);
+      $('btnClear').addEventListener('click', clearAll);
+      $('btnJson').addEventListener('click', downloadJson);
+    }
+
+    $('evidenceCode').textContent = genEvidenceCode();
+    initTimes();
+    bind();
+    countProgress();
+  </script>
+</body>
+</html>
