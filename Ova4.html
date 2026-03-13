@@ -11,23 +11,20 @@
       --line: rgba(255,255,255,.14);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
-      --muted2: rgba(255,255,255,.55);
       --ok:#39d98a;
       --warn:#ffcc00;
       --bad:#ff5c7a;
       --accent:#7aa7ff;
-      --accent2:#7fffd4;
       --shadow: 0 18px 45px rgba(0,0,0,.35);
       --radius:18px;
-      --radius2:14px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
     *{box-sizing:border-box;}
     body{
       margin:0;
-      font-family: var(--sans);
-      color: var(--text);
+      font-family:var(--sans);
+      color:var(--text);
       background:
         radial-gradient(1200px 700px at 20% 10%, rgba(122,167,255,.20), transparent 60%),
         radial-gradient(1000px 650px at 90% 20%, rgba(127,255,212,.12), transparent 60%),
@@ -44,11 +41,7 @@
     }
     .brand{display:flex;gap:14px;align-items:center;min-width:320px;}
     .brand-logo{width:170px;height:auto;display:block;filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));}
-    .logo-fallback{
-      width:170px;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.05);display:none;place-items:center;font-weight:800;letter-spacing:.4px;
-    }
-    .brand h1{margin:0;font-size:16px;font-weight:800;letter-spacing:.2px;}
+    .brand h1{margin:0;font-size:16px;font-weight:900;letter-spacing:.2px;}
     .brand p{margin:3px 0 0;color:var(--muted);font-size:12.8px;}
     .meta{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;text-align:right;}
     .pill{
@@ -70,15 +63,15 @@
     }
     .card h2{margin:0 0 8px;font-size:15px;letter-spacing:.2px;}
     .sub{color:var(--muted);font-size:12.6px;margin-top:4px;}
+
     .fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;}
     @media (max-width: 740px){ .fields{grid-template-columns:1fr;} }
     label{display:block;font-size:12.2px;color:var(--muted);margin-bottom:6px;}
-    input, select, textarea{
+    input{
       width:100%;font:inherit;padding:10px 11px;border-radius:12px;
       border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.18);color:var(--text);outline:none;
     }
-    input:focus, select:focus, textarea:focus{border-color:rgba(122,167,255,.55);box-shadow:0 0 0 4px rgba(122,167,255,.14);}
-    textarea{min-height:92px;resize:vertical;}
+    input:focus{border-color:rgba(122,167,255,.55);box-shadow:0 0 0 4px rgba(122,167,255,.14);}
 
     .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px;}
     button{
@@ -86,80 +79,60 @@
       color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer;
     }
     button:hover{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.22);}
-    .primary{background:linear-gradient(135deg, rgba(122,167,255,.95), rgba(127,255,212,.75));border-color:transparent;color:#071023;font-weight:800;}
+    .primary{background:linear-gradient(135deg, rgba(122,167,255,.95), rgba(127,255,212,.75));border-color:transparent;color:#071023;font-weight:900;}
     .danger{background:rgba(255,92,122,.15);border-color:rgba(255,92,122,.35);}
     .mono{font-family:var(--mono);}
 
     .q{padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03);margin-top:10px;}
     .q h3{margin:0 0 8px;font-size:13.7px;}
-    .opt{display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-radius:12px;}
+    .opt{display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-radius:12px;cursor:pointer;}
     .opt:hover{background:rgba(255,255,255,.05);}
     .opt input{margin-top:3px;accent-color:#7aa7ff;}
     .badge{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.18);color:var(--muted);background:rgba(255,255,255,.04);}
+
     .result{
       margin-top:12px;padding:12px;border-radius:14px;border:1px dashed rgba(255,255,255,.22);
-      background:rgba(255,255,255,.03);display:flex;gap:12px;align-items:flex-start;justify-content:space-between;
+      background:rgba(255,255,255,.03);display:none;gap:12px;align-items:flex-start;justify-content:space-between;
       flex-wrap:wrap;
     }
-    .result strong{font-size:14px;}
     .feedback{color:var(--muted);font-size:12.5px;margin-top:6px;}
 
-    /* Certificado */
-    .certWrap{display:none;margin-top:14px;}
-    .cert{
-      border-radius:18px;border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      padding:18px;
+    .certPreview{
+      margin-top:12px;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.03);display:none;
     }
-    .certTop{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
-    .certTitle{margin:0;font-size:18px;font-weight:900;letter-spacing:.2px;}
-    .certSub{margin:4px 0 0;color:var(--muted);font-size:12.8px;}
-    .certBody{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);}
-    .certBody p{margin:8px 0;color:rgba(255,255,255,.88);}
-    .certLine{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
-    @media (max-width: 740px){ .certLine{grid-template-columns:1fr;} }
-    .signBox{
-      padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);
+    .certPreview .line{height:1px;background:rgba(255,255,255,.14);margin:10px 0;}
+    .okbox{
+      display:inline-flex;gap:8px;align-items:center;padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(57,217,138,.35);background:rgba(57,217,138,.10);color:rgba(57,217,138,.95);font-size:12px;
     }
-    .signBox .line{height:1px;background:rgba(255,255,255,.22);margin:18px 0 6px;}
-    .small{color:var(--muted2);font-size:12px;}
 
-    /* Print: imprimir SOLO el certificado */
-    @media print{
-      body{background:#fff !important;color:#111 !important;}
-      .no-print{display:none !important;}
-      .wrap{margin:0 !important;max-width:none !important;padding:0 12mm 12mm !important;}
-      .topbar, .card{box-shadow:none !important;border-color:#cfcfcf !important;background:#fff !important;}
-      input, select, textarea{background:#fff !important;color:#111 !important;border-color:#cfcfcf !important;}
-      .cert{border-color:#cfcfcf !important;background:#fff !important;}
-      .certBody p{color:#111 !important;}
-      .small{color:#444 !important;}
-      /* Oculta todo menos certificado */
-      #moduleCard, #quizCard{display:none !important;}
-      #certCard{display:block !important;}
+    /* Iframe de impresión oculto (imprime su propio documento) */
+    #printFrame{
+      position:fixed;
+      right:0; bottom:0;
+      width:0; height:0;
+      border:0;
+      opacity:0;
+      pointer-events:none;
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <header class="topbar no-print">
+    <header class="topbar">
       <div class="brand">
-        <!-- Logo online (LinkedIn). Si falla, muestra fallback -->
         <img
           class="brand-logo"
-          id="brandLogo"
           src="https://media.licdn.com/dms/image/v2/C4E0BAQFSM7wKxqL7SQ/company-logo_200_200/company-logo_200_200/0/1650341260696/decimetrix_logo?e=2147483647&v=beta&t=s7ccDHrDYNXpihibDaDyrqjwH1qkadmd4Ga4UJehGa8"
           alt="Decimetrix"
           referrerpolicy="no-referrer"
           crossorigin="anonymous"
-          onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='grid';"
         />
-        <div id="logoFallback" class="logo-fallback">Decimetrix</div>
-
         <div>
           <h1>OVA · Capacitación UAS + SG-SST (ARL)</h1>
-          <p>Evaluación corta (5 preguntas) + Certificado imprimible (PDF)</p>
+          <p>5 preguntas + certificado imprimible (Guardar como PDF)</p>
         </div>
       </div>
 
@@ -171,10 +144,9 @@
     </header>
 
     <div class="grid">
-      <!-- Módulo / Datos -->
-      <section class="card" id="moduleCard" aria-label="Módulo">
+      <section class="card">
         <h2>1) Datos del participante</h2>
-        <div class="sub">Esto se imprimirá en el certificado como evidencia.</div>
+        <div class="sub">Estos datos salen en el certificado como evidencia.</div>
 
         <div class="fields">
           <div>
@@ -188,11 +160,11 @@
 
           <div>
             <label for="name">Nombre completo *</label>
-            <input id="name" placeholder="Ej: Juan Pérez" required />
+            <input id="name" placeholder="Ej: Juan Pérez" />
           </div>
           <div>
             <label for="doc">Documento (CC/ID) *</label>
-            <input id="doc" placeholder="Ej: 1020..." required />
+            <input id="doc" placeholder="Ej: 1020..." />
           </div>
 
           <div>
@@ -200,96 +172,65 @@
             <input id="role" placeholder="Ej: Piloto UAS / HSE / Operaciones" />
           </div>
           <div>
-            <label for="email">Correo</label>
+            <label for="email">Correo (opcional)</label>
             <input id="email" type="email" placeholder="Ej: usuario@decimetrix.com" />
           </div>
         </div>
 
-        <div class="section" style="margin-top:14px;border-top:1px solid rgba(255,255,255,.12);padding-top:14px;">
-          <h2 style="margin:0 0 8px;">2) Recordatorio express (lo que vamos a evaluar)</h2>
-          <div class="sub">Resumen corto para aterrizar la evaluación.</div>
-          <ul style="margin:10px 0 0; color:rgba(255,255,255,.86);">
-            <li>Límite de jornada/servicio del piloto: tope máximo por seguridad (fatiga).</li>
-            <li>IMSAFE: chequeo de aptitud antes de operar.</li>
-            <li>Área segura: demarcación y control de acceso (sin terceros dentro).</li>
-            <li>Baterías LiPo: manejo/carga segura para evitar incendio.</li>
-            <li>Reporte de sucesos: registrar y preservar evidencias (logs/fotos/video).</li>
-          </ul>
-        </div>
-
-        <div class="actions no-print">
+        <div class="actions">
           <button type="button" id="btnSave">Guardar progreso</button>
-          <button type="button" id="btnLoad">Cargar último guardado</button>
+          <button type="button" id="btnLoad">Cargar progreso</button>
           <button class="danger" type="button" id="btnReset">Reiniciar</button>
         </div>
       </section>
 
-      <!-- Quiz -->
-      <section class="card" id="quizCard" aria-label="Evaluación">
-        <h2>3) Evaluación (5 preguntas)</h2>
-        <div class="sub">Aprobación sugerida: <b>80%</b> (mínimo 4/5). Al aprobar se genera certificado.</div>
+      <section class="card">
+        <h2>2) Evaluación (5 preguntas)</h2>
+        <div class="sub">Aprobación: <b>80%</b> (mínimo 4/5). Al aprobar, aparece el certificado.</div>
 
         <div id="quiz"></div>
 
-        <div class="actions no-print" style="justify-content:flex-start;">
-          <button class="primary" type="button" id="btnGrade">Calificar y generar certificado</button>
+        <div class="actions" style="justify-content:flex-start;">
+          <button class="primary" type="button" id="btnGrade">Calificar</button>
           <button type="button" id="btnEvidence">Descargar evidencia (JSON)</button>
         </div>
 
-        <div class="result" id="result" style="display:none;">
+        <div class="result" id="result">
           <div>
-            <strong id="scoreText">Puntaje:</strong>
+            <div class="mono" id="scoreText" style="font-weight:900;"></div>
             <div class="feedback" id="feedback"></div>
           </div>
           <div class="pill"><span class="dot" id="passDot"></span> <span id="passText">—</span></div>
         </div>
 
-        <!-- Certificado -->
-        <div class="certWrap" id="certWrap">
-          <div class="cert" id="certCard">
-            <div class="certTop">
-              <div>
-                <div class="certTitle">Certificado de Aprobación</div>
-                <div class="certSub" id="certCourse"></div>
-              </div>
-              <div class="pill"><span class="dot ok"></span> Código certificado: <span class="mono" id="certCode"></span></div>
-            </div>
+        <div class="certPreview" id="certPreview">
+          <div class="okbox">✅ Certificado listo</div>
+          <div class="line"></div>
+          <div><b>Participante:</b> <span id="pName"></span> · <b>Documento:</b> <span id="pDoc"></span></div>
+          <div style="margin-top:6px;"><b>Curso:</b> <span id="pCourse"></span></div>
+          <div style="margin-top:6px;"><b>Puntaje:</b> <span id="pScore"></span></div>
+          <div style="margin-top:6px;"><b>Código certificado:</b> <span class="mono" id="pCert"></span></div>
+          <div class="line"></div>
 
-            <div class="certBody">
-              <p>Se certifica que <b id="certName"></b>, identificado(a) con <b id="certDoc"></b>, aprobó la OVA con un puntaje de <b id="certScore"></b>.</p>
-              <p>Fecha de emisión: <b id="certDate"></b> · OVA: <span class="mono" id="certOva"></span></p>
-              <p class="small">Este certificado se genera como evidencia interna de capacitación. Conservar junto a la evaluación y registros del proyecto.</p>
-
-              <div class="certLine">
-                <div class="signBox">
-                  <div class="line"></div>
-                  <div><b id="certCoach"></b></div>
-                  <div class="small">Facilitador / Instructor</div>
-                </div>
-                <div class="signBox">
-                  <div class="line"></div>
-                  <div><b>Decimetrix</b></div>
-                  <div class="small">Gestión / SG-SST / Seguridad Operacional</div>
-                </div>
-              </div>
-
-              <div class="actions no-print" style="justify-content:flex-start;margin-top:14px;">
-                <button class="primary" type="button" id="btnPrint">Imprimir / Guardar PDF</button>
-              </div>
-            </div>
+          <div class="actions" style="justify-content:flex-start;">
+            <button class="primary" type="button" id="btnPrint">Imprimir / Guardar PDF</button>
           </div>
         </div>
-
       </section>
     </div>
   </div>
 
+  <!-- Iframe oculto para impresión (esta es la clave para que NO salga en blanco) -->
+  <iframe id="printFrame" title="Print Frame"></iframe>
+
   <script>
     const $ = (id) => document.getElementById(id);
     const pad2 = (n) => String(n).padStart(2,'0');
-    const fmtDate = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-    const fmtDateLong = (d) => d.toLocaleDateString('es-CO', { year:'numeric', month:'long', day:'numeric' });
 
+    function fmtDate(d){ return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
+    function fmtDateLong(d){
+      return d.toLocaleDateString('es-CO', {year:'numeric', month:'long', day:'numeric'});
+    }
     function genCode(prefix){
       const d = new Date();
       const y = d.getFullYear();
@@ -300,69 +241,38 @@
       const rand = Math.random().toString(16).slice(2,6).toUpperCase();
       return `${prefix}-${y}${m}${day}-${hh}${mm}-${rand}`;
     }
-
     function setStatus(kind, text){
       const dot = $('statusDot');
       dot.className = 'dot ' + (kind || '');
       $('statusText').textContent = text;
     }
+    function escapeHtml(str){
+      return String(str ?? '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
 
-    // Preguntas (puedes editarlas fácil aquí)
+    // 5 preguntas (puedes cambiarlas rápido aquí)
     const QUESTIONS = [
-      {
-        text: "¿Cuál es el tope máximo de período de servicio del piloto (según lineamiento interno) dentro de 24 horas?",
-        options: [
-          "6 horas continuas en 24h",
-          "8 horas continuas en 24h",
-          "10 horas continuas en 24h",
-          "12 horas continuas en 24h"
-        ],
-        correct: 2,
-        why: "El control de jornada busca prevenir fatiga: el umbral máximo se fija en 10h/24h."
+      { text:"¿Cuál es el tope máximo de período de servicio del piloto dentro de 24 horas (lineamiento interno)?",
+        options:["6 horas","8 horas","10 horas","12 horas"], correct:2,
+        why:"Control de jornada para prevenir fatiga: umbral máximo 10h/24h."
       },
-      {
-        text: "IMSAFE se usa antes de operar para verificar principalmente:",
-        options: [
-          "Calidad de cámara y resolución",
-          "Aptitud física y mental (enfermedad, medicación, estrés, alcohol, fatiga, emociones)",
-          "Solo la meteorología",
-          "Solo la batería del dron"
-        ],
-        correct: 1,
-        why: "IMSAFE es un chequeo de aptitud personal previo a la operación."
+      { text:"IMSAFE se usa antes de operar para verificar principalmente:",
+        options:["Resolución de cámara","Aptitud física y mental (enfermedad, medicación, estrés, alcohol, fatiga, emociones)","Solo meteorología","Solo batería"], correct:1,
+        why:"IMSAFE es un chequeo de aptitud personal previo a la operación."
       },
-      {
-        text: "Durante el despegue/aterrizaje y operación, el área segura debe estar:",
-        options: [
-          "Con público a 1 metro para ver el dron",
-          "Sin demarcación, basta con avisar verbalmente",
-          "Demarcada y libre de personas/terceros dentro del perímetro",
-          "Con vehículos estacionados dentro del perímetro"
-        ],
-        correct: 2,
-        why: "La demarcación y control de acceso reduce el riesgo de lesiones y daños."
+      { text:"Durante la operación, el área segura debe estar:",
+        options:["Con público cerca para observar","Sin demarcación, basta avisar","Demarcada y libre de personas/terceros dentro del perímetro","Con vehículos dentro del perímetro"], correct:2,
+        why:"Demarcación y control de acceso reducen riesgo de lesiones y daños."
       },
-      {
-        text: "La práctica más segura para carga y manejo de baterías LiPo es:",
-        options: [
-          "Cargar bajo el sol para que sea más rápido",
-          "Cargar sobre superficie no inflamable, ventilada y bajo supervisión",
-          "Cargar encima del vehículo con puertas cerradas",
-          "Cargar con cargador genérico sin supervisión"
-        ],
-        correct: 1,
-        why: "LiPo requiere control térmico, ventilación y supervisión para evitar incendio."
+      { text:"La práctica más segura para carga y manejo de baterías LiPo es:",
+        options:["Cargar bajo el sol","Cargar en superficie no inflamable, ventilada y bajo supervisión","Cargar dentro del carro cerrado","Cargar con cargador genérico sin supervisión"], correct:1,
+        why:"LiPo requiere control térmico, ventilación y supervisión para evitar incendio."
       },
-      {
-        text: "Si ocurre un incidente o condición insegura, lo correcto es:",
-        options: [
-          "No reportar si no hubo daño visible",
-          "Borrar logs para no llenar reportes",
-          "Reportar por el canal definido y preservar evidencias (logs, fotos, video)",
-          "Continuar y reportar al final del mes"
-        ],
-        correct: 2,
-        why: "El reporte temprano y la preservación de evidencia permiten investigar y prevenir recurrencia."
+      { text:"Si ocurre un incidente o condición insegura, lo correcto es:",
+        options:["No reportar si no hubo daño","Borrar logs para evitar reportes","Reportar por el canal definido y preservar evidencias (logs, fotos, video)","Reportar al final del mes"], correct:2,
+        why:"Reporte temprano + evidencia permite investigar y prevenir recurrencia."
       }
     ];
 
@@ -372,20 +282,19 @@
       QUESTIONS.forEach((q, idx) => {
         const box = document.createElement('div');
         box.className = 'q';
-        box.innerHTML = `
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-            <h3>${idx+1}. ${q.text}</h3>
-            <span class="badge">Pregunta ${idx+1} / ${QUESTIONS.length}</span>
-          </div>
-          <div>
-            ${q.options.map((opt, i) => `
-              <label class="opt">
-                <input type="radio" name="q${idx}" value="${i}">
-                <span>${opt}</span>
-              </label>
-            `).join('')}
-          </div>
-        `;
+        box.innerHTML =
+          `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+             <h3>${idx+1}. ${escapeHtml(q.text)}</h3>
+             <span class="badge">Pregunta ${idx+1} / ${QUESTIONS.length}</span>
+           </div>
+           <div>
+             ${q.options.map((opt,i)=>`
+               <label class="opt">
+                 <input type="radio" name="q${idx}" value="${i}">
+                 <span>${escapeHtml(opt)}</span>
+               </label>
+             `).join('')}
+           </div>`;
         quiz.appendChild(box);
       });
     }
@@ -408,6 +317,8 @@
       return true;
     }
 
+    let LAST_CERT = null;
+
     function grade(){
       if(!validateParticipant()) return;
 
@@ -422,66 +333,57 @@
       const detail = answers.map((a, idx) => {
         const ok = a === QUESTIONS[idx].correct;
         if(ok) correct++;
-        return { q: idx+1, ok, chosen: a, correct: QUESTIONS[idx].correct, why: QUESTIONS[idx].why };
+        return { q: idx+1, ok, chosen:a, correct:QUESTIONS[idx].correct, why:QUESTIONS[idx].why };
       });
 
       const total = QUESTIONS.length;
       const pct = Math.round((correct/total)*100);
-      const pass = correct >= 4; // 4/5 = 80%
+      const pass = correct >= 4;
 
       $('result').style.display = 'flex';
       $('scoreText').textContent = `Puntaje: ${correct}/${total} (${pct}%)`;
       $('feedback').innerHTML = pass
-        ? `Aprobado ✅. Puedes generar tu certificado.`
-        : `No aprobado. Revisa: <br>` + detail.filter(d=>!d.ok).map(d=>`• Pregunta ${d.q}: ${d.why}`).join('<br>');
+        ? 'Aprobado ✅. Ya puedes imprimir el certificado.'
+        : 'No aprobado. Revisa estas ideas clave:<br>' + detail.filter(d=>!d.ok).map(d=>`• Pregunta ${d.q}: ${escapeHtml(d.why)}`).join('<br>');
 
-      const passDot = $('passDot');
-      passDot.className = 'dot ' + (pass ? 'ok' : 'bad');
+      $('passDot').className = 'dot ' + (pass ? 'ok' : 'bad');
       $('passText').textContent = pass ? 'Aprobado' : 'No aprobado';
-
       setStatus(pass ? 'ok' : 'warn', pass ? 'Aprobado (certificado listo)' : 'Requiere refuerzo');
 
-      // Generar certificado si aprueba
       if(pass){
-        $('certWrap').style.display = 'block';
-
         const certCode = genCode('DCX-CERT');
-        $('certCode').textContent = certCode;
+        const ovaCode = $('ovaCode').textContent;
 
-        $('certCourse').textContent = $('course').value.trim() || 'Capacitación UAS + SG-SST (ARL)';
-        $('certName').textContent = $('name').value.trim();
-        $('certDoc').textContent = $('doc').value.trim();
-        $('certScore').textContent = `${correct}/${total} (${pct}%)`;
-        $('certDate').textContent = fmtDateLong(new Date());
-        $('certOva').textContent = $('ovaCode').textContent;
-        $('certCoach').textContent = $('coach').value.trim() || 'Facilitador';
+        LAST_CERT = {
+          ovaCode,
+          certCode,
+          emittedAt: new Date().toISOString(),
+          participant: {
+            name: $('name').value.trim(),
+            doc: $('doc').value.trim(),
+            role: $('role').value.trim(),
+            email: $('email').value.trim()
+          },
+          course: {
+            name: $('course').value.trim(),
+            coach: $('coach').value.trim()
+          },
+          result: { correct, total, pct, pass },
+          detail
+        };
 
-        // Guardar evidencia local
-        const pack = buildEvidence(detail, correct, pct, pass, certCode);
-        localStorage.setItem('dcx_ova_last', JSON.stringify(pack));
-      }else{
-        $('certWrap').style.display = 'none';
+        localStorage.setItem('dcx_ova_last', JSON.stringify(LAST_CERT));
+
+        $('certPreview').style.display = 'block';
+        $('pName').textContent = LAST_CERT.participant.name;
+        $('pDoc').textContent = LAST_CERT.participant.doc;
+        $('pCourse').textContent = LAST_CERT.course.name;
+        $('pScore').textContent = `${correct}/${total} (${pct}%)`;
+        $('pCert').textContent = certCode;
+      } else {
+        $('certPreview').style.display = 'none';
+        LAST_CERT = null;
       }
-    }
-
-    function buildEvidence(detail, correct, pct, pass, certCode){
-      return {
-        ovaCode: $('ovaCode').textContent,
-        certCode: certCode || null,
-        emittedAt: new Date().toISOString(),
-        participant: {
-          name: $('name').value.trim(),
-          doc: $('doc').value.trim(),
-          role: $('role').value.trim(),
-          email: $('email').value.trim()
-        },
-        course: {
-          name: $('course').value.trim(),
-          coach: $('coach').value.trim()
-        },
-        result: { correct, total: QUESTIONS.length, pct, pass },
-        detail
-      };
     }
 
     function saveProgress(){
@@ -514,7 +416,6 @@
       $('course').value = pack.course?.name || $('course').value;
       $('coach').value = pack.course?.coach || $('coach').value;
 
-      // set answers
       (pack.answers || []).forEach((a, idx) => {
         if(a === null || a === undefined) return;
         const el = document.querySelector(`input[name="q${idx}"][value="${a}"]`);
@@ -527,55 +428,133 @@
 
     function resetAll(){
       if(!confirm('¿Reiniciar todo?')) return;
-      $('name').value = '';
-      $('doc').value = '';
-      $('role').value = '';
-      $('email').value = '';
-      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-      $('result').style.display = 'none';
-      $('certWrap').style.display = 'none';
+      $('name').value=''; $('doc').value=''; $('role').value=''; $('email').value='';
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked=false);
+      $('result').style.display='none';
+      $('certPreview').style.display='none';
       $('ovaCode').textContent = genCode('DCX-OVA');
+      LAST_CERT = null;
       setStatus('', 'Listo para iniciar');
     }
 
     function downloadEvidence(){
       const raw = localStorage.getItem('dcx_ova_last');
       if(!raw){
-        alert('Primero califica y aprueba para generar la evidencia completa.');
+        alert('Primero aprueba para generar la evidencia completa.');
         return;
       }
       const blob = new Blob([raw], {type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${JSON.parse(raw).ovaCode || 'DCX-OVA'}_evidencia.json`;
+      a.download = (JSON.parse(raw).ovaCode || 'DCX-OVA') + '_evidencia.json';
       document.body.appendChild(a);
       a.click();
       a.remove();
       setTimeout(()=>URL.revokeObjectURL(url), 1500);
     }
 
-    function printCert(){
-      // En impresión ocultamos el módulo y el quiz vía CSS @media print
-      window.print();
+    // ✅ IMPRIMIR POR IFRAME (NO SALE BLANCO)
+    function buildCertificateDoc(data){
+      const logoUrl = "https://media.licdn.com/dms/image/v2/C4E0BAQFSM7wKxqL7SQ/company-logo_200_200/company-logo_200_200/0/1650341260696/decimetrix_logo?e=2147483647&v=beta&t=s7ccDHrDYNXpihibDaDyrqjwH1qkadmd4Ga4UJehGa8";
+      const emitted = fmtDateLong(new Date(data.emittedAt));
+
+      return `<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Certificado ${escapeHtml(data.certCode)}</title>
+<style>
+  @page { size: A4; margin: 14mm; }
+  body{ font-family: Arial, Helvetica, sans-serif; color:#111; margin:0; }
+  .sheet{ border: 1.5px solid #d0d0d0; border-radius: 14px; padding: 18px 18px 16px; }
+  .top{ display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
+  .left{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  img{ width:150px; height:auto; }
+  h1{ margin:0; font-size:20px; letter-spacing:.2px; }
+  .muted{ color:#444; font-size:12.5px; margin-top:4px; }
+  .pill{ border:1px solid #d0d0d0; border-radius:999px; padding:8px 10px; font-size:12px; }
+  .line{ height:1px; background:#e2e2e2; margin:14px 0; }
+  p{ margin:8px 0; font-size:14px; line-height:1.35; }
+  .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px; }
+  .box{ border:1px solid #d0d0d0; border-radius:12px; padding:12px; }
+  .sigline{ height:1px; background:#999; margin:18px 0 6px; }
+  .small{ color:#444; font-size:12px; margin-top:8px; }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="top">
+      <div class="left">
+        <img src="${logoUrl}" alt="Decimetrix" />
+        <div>
+          <h1>Certificado de Aprobación</h1>
+          <div class="muted">${escapeHtml(data.course.name)}</div>
+        </div>
+      </div>
+      <div class="pill"><b>Código:</b> ${escapeHtml(data.certCode)}</div>
+    </div>
+
+    <div class="line"></div>
+
+    <p>Se certifica que <b>${escapeHtml(data.participant.name)}</b>, identificado(a) con <b>${escapeHtml(data.participant.doc)}</b>, aprobó la evaluación OVA.</p>
+    <p><b>Puntaje:</b> ${data.result.correct}/${data.result.total} (${data.result.pct}%)</p>
+    <p><b>Fecha de emisión:</b> ${escapeHtml(emitted)}</p>
+    <p><b>OVA:</b> <span style="font-family: ui-monospace, Menlo, Consolas, monospace;">${escapeHtml(data.ovaCode)}</span></p>
+
+    <div class="small">Este certificado se genera como evidencia interna de capacitación. Conservar junto con la evaluación y registros del proyecto.</div>
+
+    <div class="grid">
+      <div class="box">
+        <div class="sigline"></div>
+        <div><b>${escapeHtml(data.course.coach)}</b></div>
+        <div class="muted">Facilitador / Instructor</div>
+      </div>
+      <div class="box">
+        <div class="sigline"></div>
+        <div><b>Decimetrix</b></div>
+        <div class="muted">SG-SST / Seguridad Operacional</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+    }
+
+    function printCertificate(){
+      const raw = localStorage.getItem('dcx_ova_last');
+      if(!raw){
+        alert('No hay certificado listo. Primero aprueba la evaluación.');
+        return;
+      }
+      const data = JSON.parse(raw);
+
+      const iframe = $('printFrame');
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(buildCertificateDoc(data));
+      doc.close();
+
+      // Fuerza render antes de imprimir (evita blanco)
+      iframe.contentWindow.focus();
+      iframe.contentWindow.document.body.offsetHeight; // reflow
+      iframe.contentWindow.print();
     }
 
     function init(){
       $('ovaCode').textContent = genCode('DCX-OVA');
       $('today').textContent = fmtDate(new Date());
-
       renderQuiz();
+      setStatus('', 'Listo para iniciar');
 
       $('btnGrade').addEventListener('click', grade);
       $('btnSave').addEventListener('click', saveProgress);
       $('btnLoad').addEventListener('click', loadProgress);
       $('btnReset').addEventListener('click', resetAll);
       $('btnEvidence').addEventListener('click', downloadEvidence);
-      $('btnPrint').addEventListener('click', printCert);
-
-      setStatus('', 'Listo para iniciar');
+      $('btnPrint').addEventListener('click', printCertificate);
     }
-
     init();
   </script>
 </body>
